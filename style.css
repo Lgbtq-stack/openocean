@@ -9,7 +9,7 @@
 body {
     background-color: #f9f9f9;
     line-height: 1.6;
-    margin-bottom: 50px;
+    padding-bottom: 60px;
 }
 
 
@@ -181,7 +181,7 @@ body {
     justify-content: center;
     align-items: center;
     gap: -3rem;
-    margin: 75px 0 250px 0;
+    margin: 75px 0 215px 0;
     position: relative;
     transform: rotateX(30deg);
 }
@@ -193,6 +193,7 @@ body {
     position: absolute;
     transform-origin: bottom center;
     transition: transform 0.3s ease;
+    transform: translate(0, 0) rotate(0deg);
 }
 
 .nft-showcase img:nth-child(1) {

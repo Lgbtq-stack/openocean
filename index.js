@@ -1,7 +1,22 @@
 function showSection(sectionId) {
-    const sections = document.querySelectorAll('section');
-    sections.forEach(section => section.style.display = 'none');
-    document.getElementById(sectionId).style.display = 'block';
+    document.querySelectorAll("section").forEach(section => {
+        section.style.display = "none";
+    });
+
+    const section = document.getElementById(sectionId);
+    section.style.display = "block";
+
+    if (sectionId === "hero") {
+        const showcaseImages = document.querySelectorAll(".nft-showcase img");
+        showcaseImages.forEach(image => {
+
+            image.style.transform = "translate(0, 0) rotate(0deg)";
+
+            setTimeout(() => {
+                image.removeAttribute("style");
+            }, 10);
+        });
+    }
 }
 
 document.querySelectorAll('.filter-btn').forEach(button => {
