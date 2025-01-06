@@ -109,7 +109,7 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: .5rem;
-    background-color: #0056b3;
+    background-color: #007bff;
     color: white;
     margin-bottom: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, .5);
@@ -155,8 +155,7 @@ body {
 
 /* Hero Section */
 .hero {
-    background-color: #0056b3;
-    color: white;
+    color: black;
     text-align: center;
     padding: 2rem;
     position: relative;
