@@ -50,17 +50,22 @@ scrollToTopButton.addEventListener('click', () => {
 });
 
 const popup = document.getElementById("popup-module");
+const closePopupButton = document.getElementById("popup-close");
 
 function showPopup(message, canClose = true) {
     if (popup) {
-        popup.querySelector(".popup-content").textContent = message;
+        const messageElement = popup.querySelector("p");
+        if (messageElement) {
+            messageElement.textContent = message;
+        }
+
         popup.style.display = "flex";
         closePopupButton.style.display = canClose ? "block" : "none";
 
         if (canClose) {
-            closePopupButton.addEventListener("click", () => {
+            closePopupButton.onclick = () => {
                 popup.style.display = "none";
-            });
+            };
         }
     }
 }
