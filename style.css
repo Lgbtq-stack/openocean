@@ -10,10 +10,8 @@ body {
     background-color: #f9f9f9;
     line-height: 1.6;
     height: 100%;
-    padding-bottom: 120px; /* Добавляет отступ для учета высоты bottom-panel */
-
+    padding-bottom: 120px;
 }
-
 
 .scroll-to-top {
     position: fixed;
@@ -183,7 +181,7 @@ body {
     justify-content: center;
     align-items: center;
     gap: -3rem;
-    margin: 75px 0 215px 0;
+    margin: 75px 0 210px 0;
     position: relative;
     transform: rotateX(30deg);
 }
