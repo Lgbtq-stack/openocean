@@ -3,67 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NFT Marketplace</title>
-    <link href="styles.css" rel="stylesheet">
+    <title>Open Ocean</title>
+    <link href="style.css" rel="stylesheet">
 </head>
 <body>
 <header>
     <nav class="navbar">
-        <div class="logo">NFTMarket</div>
+        <div class="logo">Open Ocean</div>
         <ul class="nav-links">
-            <li><a href="#">Home</a></li>
-            <li><a href="#trending">Trending</a></li>
-            <li><a href="#categories">Categories</a></li>
-            <li><a href="#contact">Contact</a></li>
+            <li><a href="#" onclick="showSection('hero')">Home</a></li>
+            <li><a href="#" onclick="showSection('trending')">Trending</a></li>
+            <li><a href="#" onclick="showSection('categories')">Categories</a></li>
+            <li><a href="#" onclick="showSection('my-nfts')">My NFTs</a></li>
         </ul>
-        <button class="cta">Connect Wallet</button>
     </nav>
 </header>
 
-<section class="hero">
+<section id="hero" class="hero">
     <div class="hero-content">
         <h1>Discover and Trade Digital Collectibles</h1>
-        <p>Browse trending NFTs, connect your wallet, and become part of the growing NFT community.</p>
-        <button class="cta">Explore NFTs</button>
+        <div class="nft-showcase">
+            <img src="content/nft_1.png" alt="NFT 1">
+            <img src="content/nft_2.png" alt="NFT 2">
+            <img src="content/nft_3.png" alt="NFT 3">
+            <img src="content/nft_4.png" alt="NFT 4">
+            <img src="content/nft_5.png" alt="NFT 5">
+        </div>
+        <p>Browse trending NFTs and become part of the growing NFT community.</p>
+
+        <button class="cta" onclick="showSection('trending')">Explore NFTs</button>
     </div>
 </section>
 
-<section id="trending" class="trending">
+<section id="trending" class="trending" style="display: none;">
     <h2>Trending NFTs</h2>
-    <div class="cards">
-        <div class="card">
-            <img src="nft1.jpg" alt="NFT 1">
-            <h3>Abstract Waves</h3>
-            <p>Floor Price: 0.02 ETH</p>
+    <div class="slider-container">
+        <div class="slider" id="slider">
+            <div class="slider-track" id="sliderTrack">
+                <img src="content/nft_1.png" alt="NFT 1">
+                <img src="content/nft_1.png" alt="NFT 2">
+                <img src="content/nft_1.png" alt="NFT 3">
+                <img src="content/nft_1.png" alt="NFT 4">
+                <img src="content/nft_1.png" alt="NFT 5">
+            </div>
         </div>
-        <div class="card">
-            <img src="nft2.jpg" alt="NFT 2">
-            <h3>Urban House</h3>
-            <p>Floor Price: 0.25 ETH</p>
-        </div>
-        <div class="card">
-            <img src="nft3.jpg" alt="NFT 3">
-            <h3>Winter Serenity</h3>
-            <p>Floor Price: 0.4 ETH</p>
+    </div>
+    <div class="trending-content">
+        <h3>Other Trending NFTs</h3>
+        <div class="cards">
+            <div class="card" data-category="art">
+                <img src="content/nft_1.png" alt="NFT 1">
+                <h3>Abstract Waves</h3>
+                <p>Floor Price: 0.02 ETH</p>
+            </div>
+            <div class="card" data-category="gaming">
+                <img src="content/nft_5.png" alt="NFT 2">
+                <h3>Urban House</h3>
+                <p>Floor Price: 0.25 ETH</p>
+            </div>
+            <div class="card" data-category="photography">
+                <img src="content/nft_3.png" alt="NFT 3">
+                <h3>Winter Serenity</h3>
+                <p>Floor Price: 0.4 ETH</p>
+            </div>
+            <div class="card" data-category="memberships">
+                <img src="content/nft_4.png" alt="NFT 4">
+                <h3>Digital Art</h3>
+                <p>Floor Price: 1.2 ETH</p>
+            </div>
         </div>
     </div>
 </section>
 
-<section id="categories" class="categories">
+<section id="categories" class="categories" style="display: none;">
     <h2>Explore Categories</h2>
     <div class="category-list">
-        <button>Art</button>
-        <button>Gaming</button>
-        <button>Memberships</button>
-        <button>Photography</button>
-        <button>Music</button>
+        <div class="category">
+            <button onclick="showSection('art')">Art</button>
+        </div>
+        <div class="category">
+            <button onclick="showSection('gaming')">Gaming</button>
+        </div>
+        <div class="category">
+            <button onclick="showSection('memberships')">Memberships</button>
+        </div>
+        <div class="category">
+            <button onclick="showSection('music')">Music</button>
+        </div>
+        <div class="category">
+            <button onclick="showSection('photography')">Photography</button>
+        </div>
     </div>
+</section>
+
+<section id="my-nfts" style="display: none;">
+    <h2>My NFTs</h2>
+    <p>Your personal collection of NFTs will be displayed here.</p>
 </section>
 
 <footer>
-    <p>&copy; 2025 NFT Marketplace. All rights reserved.</p>
+    <p>&copy; 2025 Open Ocean. All rights reserved.</p>
 </footer>
-
-<script src="scripts.js"></script>
+<script src="index.js"></script>
 </body>
 </html>
