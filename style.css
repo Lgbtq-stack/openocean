@@ -9,7 +9,6 @@
 body {
     background-color: #f9f9f9;
     line-height: 1.6;
-    padding-bottom: 60px;
 }
 
 
@@ -42,7 +41,7 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 10px 20px;
-    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.25);
     z-index: 1000;
 }
 
@@ -227,13 +226,12 @@ body {
 }
 
 .trending {
-    padding: 2rem;
+    padding: 1rem;
     background-color: white;
 }
 
 .trending h2 {
     text-align: center;
-    margin-bottom: 2rem;
     color: #2c3e50;
 }
 
@@ -309,7 +307,7 @@ body {
     position: relative;
     width: 100%;
     max-width: 600px;
-    margin: 2rem auto;
+    margin: 1rem auto;
     overflow: hidden;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -350,6 +348,7 @@ body {
 .slider-buttons button:hover {
     background-color: rgba(0, 0, 0, 0.8);
 }
+
 /* Categories Section */
 .categories {
     padding: 2rem;
