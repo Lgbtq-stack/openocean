@@ -186,7 +186,7 @@ body {
     justify-content: center;
     align-items: center;
     gap: -3rem;
-    margin: 75px 0 150px 0;
+    margin: 75px 0 250px 0;
     position: relative;
     transform: rotateX(30deg);
 }
