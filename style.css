@@ -9,6 +9,9 @@
 body {
     background-color: #f9f9f9;
     line-height: 1.6;
+    height: 100%;
+    padding-bottom: 120px; /* Добавляет отступ для учета высоты bottom-panel */
+
 }
 
 
