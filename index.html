@@ -101,9 +101,23 @@
     <p>Your personal collection of NFTs will be displayed here.</p>
 </section>
 
-<footer>
-    <p>&copy; 2025 Open Ocean. All rights reserved.</p>
-</footer>
+<div class="bottom-panel">
+    <div class="wallet-info">
+        <p class="wallet-address"><strong>Wallet:</strong> My Wallet</p>
+        <p class="wallet-balance"><strong>Balance:</strong> $1,000</p>
+    </div>
+    <button class="recharge-button">Recharge</button>
+</div>
+<button id="scrollToTop" class="scroll-to-top">↑</button>
+
+<div id="popup-module" class="popup">
+    <div class="popup-content">
+        <span class="popup-close" id="popup-close">&times;</span>
+        <p>Вызываем этот попап в любое время.</p>
+        <button id="popup-refresh" class="popup-refresh">Refresh Page</button>
+    </div>
+</div>
+
 <script src="index.js"></script>
 </body>
 </html>
