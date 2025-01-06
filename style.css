@@ -111,11 +111,8 @@ body {
     padding: .5rem;
     background-color: #0056b3;
     color: white;
-    border-bottom-left-radius: 30px;
-    border-bottom-right-radius: 30px;
     margin-bottom: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, .5);
-
 }
 
 .navbar .logo {
@@ -158,8 +155,6 @@ body {
 
 /* Hero Section */
 .hero {
-    border-top-left-radius: 30px;
-    border-top-right-radius: 30px;
     background-color: #0056b3;
     color: white;
     text-align: center;
