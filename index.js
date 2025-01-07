@@ -1,9 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
     startNFTShowcaseAnimation();
-
-
-
-
 });
 
 function showSection(sectionId) {
