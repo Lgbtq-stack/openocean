@@ -9,7 +9,7 @@
 body {
     background-color: #f9f9f9;
     line-height: 1.6;
-    padding-bottom: 150px;
+    padding-bottom: 120px;
     height: 100%;
     overflow-x: hidden;
 }
@@ -64,22 +64,6 @@ body {
 .bottom-panel .recharge-button:hover {
     background-color: #0056b3;
     color: white;
-}
-
-@media (max-width: 600px) {
-    .bottom-panel {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .bottom-panel .wallet-info {
-        margin-bottom: 10px;
-    }
-
-    .bottom-panel .recharge-button {
-        align-self: stretch;
-        text-align: center;
-    }
 }
 
 #popup-module {
@@ -225,6 +209,7 @@ body {
 .trending {
     padding: 1rem;
     background-color: white;
+    height: 100%;
 }
 
 .trending h2 {
@@ -464,6 +449,20 @@ footer {
 
     .trending-table th, .trending-table td {
         font-size: 0.85rem;
+    }
+
+    .bottom-panel {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .bottom-panel .wallet-info {
+        margin-bottom: 10px;
+    }
+
+    .bottom-panel .recharge-button {
+        align-self: stretch;
+        text-align: center;
     }
 }
 
