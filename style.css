@@ -469,8 +469,8 @@ footer {
 
 .my-nfts h2 {
     text-align: center;
-    margin-bottom: 1rem;
     color: #2c3e50;
+    padding-top: 15px;
 }
 
 .purchased-nfts {
