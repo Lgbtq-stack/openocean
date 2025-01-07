@@ -221,11 +221,6 @@ body {
     z-index: 1;
 }
 
-.nft-showcase img:hover {
-    /*transform: scale(1.2); !* Увеличение при наведении *!*/
-    /*z-index: 10;*/
-}
-
 .trending {
     padding: 1rem;
     background-color: white;
@@ -300,7 +295,7 @@ body {
 }
 
 .buy-button {
-    background-color: #1abc9c;
+    background-color: #007bff;
     color: white;
     border: none;
     padding: 5px 15px;
