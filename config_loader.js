@@ -1,6 +1,7 @@
 // import {getAccountBalance} from "./backend/stellar_helper";
 // import {get_config} from "./backend/datacontoller";
 
+
 const check_token = "CZI:GAATAURKW525OLU4LE27QB5FSM4PQXDSTJ6YEG7E7E6GA2FCWORUSA6Y";
 
 const localConfig = {
@@ -8,6 +9,7 @@ const localConfig = {
         address: "0x123456789abcdef123456789abcdef123456789a",
         balance: "1000"
     },
+    trendingNFTs: [1,2,3],
     purchasedNFTs: [
         {
             id: "1",
@@ -35,6 +37,8 @@ const localConfig = {
         }
     ]
 };
+
+
 
 function getConfigFromURL() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -90,15 +94,13 @@ async function getConfig(useLocalConfig = true) {
                 showPopup("Please add trustline to your wallet for the CZI token. 🛠", false);
                 return null;
             }
-
-            remoteConfig.wallet.balance = 10000;
         }
 
         return remoteConfig;
     } catch (error) {
         console.error("Error loading config:", error);
         showPopup("Failed to load configuration. Using local config as fallback. ⚠️", false);
-        return {...localConfig}; // Используем локальный конфиг как fallback
+        return {...localConfig};
     }
 }
 
@@ -107,6 +109,133 @@ function updateWalletInfo(walletAddress, balance) {
 
 
     document.getElementById("wallet-balance").textContent = `Balance: ${balance} XML`;
+}
+
+async function loadNFTs() {
+    try {
+        const response = await fetch('nft_config.json');
+        const nftData = await response.json();
+
+        const cardsContainer = document.querySelector('.cards');
+        cardsContainer.innerHTML = '';
+
+        nftData.forEach(nft => {
+            const card = document.createElement('div');
+            card.classList.add('card');
+            card.dataset.category = nft.category;
+
+            card.innerHTML = `
+                <img src="${nft.image}" alt="${nft.name}">
+                <h3>${nft.name}</h3>
+                <p>Price: ${nft.price}</p>
+                <button class="buy-button" id="buy-${nft.id}">Buy</button>
+            `;
+
+            cardsContainer.appendChild(card);
+        });
+    } catch (error) {
+        console.error('Ошибка загрузки данных NFT:', error);
+    }
+}
+
+let currentIndex = 0;
+let totalSlides = 0;
+
+const sliderTrack = document.getElementById("sliderTrack");
+
+function showNextSlide() {
+    const slides = document.querySelectorAll(".slider-card img");
+    totalSlides = slides.length;
+
+    if (totalSlides === 0) {
+        console.warn("No slides found!");
+        return;
+    }
+
+    currentIndex = (currentIndex + 1) % totalSlides;
+    sliderTrack.style.transform = `translateX(-${currentIndex * 100}%)`;
+}
+
+async function loadTrendingNFTs() {
+    try {
+        const response = await fetch("nft_config.json");
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const nftData = await response.json();
+        console.log("Loaded NFT data:", nftData);
+
+        const trendingNFTs = nftData.filter((nft) =>
+            localConfig.trendingNFTs.includes(Number(nft.id))
+        );
+
+        if (trendingNFTs.length === 0) {
+            console.warn("No matching trending NFTs found!");
+            return;
+        }
+
+        sliderTrack.innerHTML = "";
+
+        trendingNFTs.forEach((nft) => {
+            const slide = document.createElement("div");
+            slide.classList.add("slider-item");
+            slide.innerHTML = `
+                <div class="slider-card" onclick="showNFTDetails(${nft.id})">
+                    <img src="${nft.image}" alt="${nft.name}">
+                    <div class="slider-card-overlay">
+                        <h3>${nft.name}</h3>
+                        <p>Price: ${nft.price}</p>
+                    </div>
+                </div>
+            `;
+            sliderTrack.appendChild(slide);
+        });
+
+        console.log("Trending NFTs successfully loaded:", trendingNFTs);
+
+    } catch (error) {
+        console.error("Ошибка загрузки трендовых NFT:", error);
+    }
+}
+
+function showNFTDetails(id) {
+    const nft = localConfig.trendingNFTs.find(item => item.id === id.toString());
+
+    if (nft) {
+        document.getElementById("nft-title").textContent = nft.title;
+        document.getElementById("nft-image").src = nft.image;
+        document.getElementById("nft-description").textContent = nft.category;
+        document.getElementById("nft-price").textContent = `Price: ${nft.price} ${nft.currency}`;
+        document.getElementById("nftDetailsPanel").style.display = "flex";
+    } else {
+        console.error(`NFT с id=${id} не найдено.`);
+    }
+}
+
+function closeNFTDetails() {
+    document.getElementById("nftDetailsPanel").style.display = "none";
+}
+
+const popup = document.getElementById("popup-module");
+const closePopupButton = document.getElementById("popup-close");
+
+function showPopup(message, canClose = true) {
+    if (popup) {
+        const messageElement = popup.querySelector("p");
+        if (messageElement) {
+            messageElement.textContent = message;
+        }
+
+        popup.style.display = "flex";
+        closePopupButton.style.display = canClose ? "block" : "none";
+
+        if (canClose) {
+            closePopupButton.onclick = () => {
+                popup.style.display = "none";
+            };
+        }
+    }
 }
 
 async function initializeApp() {
@@ -145,11 +274,11 @@ async function initializeApp() {
         } else {
             console.error("Element with class 'purchased-nfts' not found in DOM.");
         }
+
+        await loadNFTs();
+        await loadTrendingNFTs();
     }
 }
+setInterval(showNextSlide, 5000);
 
 document.addEventListener("DOMContentLoaded", initializeApp);
-
-function showPopup(message, isSuccess) {
-    alert(message);
-}

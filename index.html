@@ -40,41 +40,12 @@
     <div class="slider-container">
         <div class="slider" id="slider">
             <div class="slider-track" id="sliderTrack">
-                <img src="content/nft_1.png" alt="NFT 1">
-                <img src="content/nft_1.png" alt="NFT 2">
-                <img src="content/nft_1.png" alt="NFT 3">
-                <img src="content/nft_1.png" alt="NFT 4">
-                <img src="content/nft_1.png" alt="NFT 5">
             </div>
         </div>
     </div>
     <div class="trending-content">
         <h3>Other Trending NFTs</h3>
         <div class="cards">
-            <div class="card" data-category="art">
-                <img src="content/nft_1.png" alt="NFT 1">
-                <h3>Abstract Waves</h3>
-                <p>Price: 0.02 ETH</p>
-                <button class="buy-button" id="buy-art-1">Buy</button>
-            </div>
-            <div class="card" data-category="gaming">
-                <img src="content/nft_5.png" alt="NFT 2">
-                <h3>Urban House</h3>
-                <p>Price: 0.25 ETH</p>
-                <button class="buy-button" id="buy-gaming-2">Buy</button>
-            </div>
-            <div class="card" data-category="photography">
-                <img src="content/nft_3.png" alt="NFT 3">
-                <h3>Winter Serenity</h3>
-                <p>Price: 0.4 ETH</p>
-                <button class="buy-button" id="buy-photography-3">Buy</button>
-            </div>
-            <div class="card" data-category="memberships">
-                <img src="content/nft_4.png" alt="NFT 4">
-                <h3>Digital Art</h3>
-                <p>Price: 1.2 ETH</p>
-                <button class="buy-button" id="buy-memberships-4">Buy</button>
-            </div>
         </div>
     </div>
 </section>
@@ -82,6 +53,9 @@
 <section id="categories" class="categories" style="display: none;">
     <h2>Explore Categories</h2>
     <div class="category-list">
+        <div class="category">
+            <button onclick="showSection('all')">All</button>
+        </div>
         <div class="category">
             <button onclick="showSection('art')">Art</button>
         </div>
@@ -122,7 +96,18 @@
     </div>
 </div>
 
-<script type="module" src="config_loader.js"></script>
+<div class="nft-details-panel" id="nftDetailsPanel" style="display: none;">
+    <div class="panel-content">
+        <button class="close-panel" onclick="closeNFTDetails()">X</button>
+        <h2 id="nft-title">NFT Title</h2>
+        <img id="nft-image" src="" alt="NFT Image">
+        <p id="nft-description">Description of the NFT will appear here.</p>
+        <p id="nft-price">Price: </p>
+        <button class="buy-button">Buy</button>
+    </div>
+</div>
+
 <script src="index.js"></script>
+<script type="module" src="config_loader.js"></script>
 </body>
 </html>
