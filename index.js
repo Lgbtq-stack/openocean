@@ -3,6 +3,17 @@ document.addEventListener("DOMContentLoaded", () => {
     startNFTShowcaseAnimation();
 });
 
+function startNFTShowcaseAnimation() {
+    const showcaseImages = document.querySelectorAll(".nft-showcase img");
+    showcaseImages.forEach(image => {
+        image.style.transform = "translate(0, 0) rotate(0deg)";
+
+        setTimeout(() => {
+            image.removeAttribute("style");
+        }, 10);
+    });
+}
+
 function showSection(sectionId) {
     document.querySelectorAll("section").forEach(section => {
         section.style.display = "none";
@@ -14,17 +25,6 @@ function showSection(sectionId) {
     if (sectionId === "hero") {
         startNFTShowcaseAnimation();
     }
-}
-
-function startNFTShowcaseAnimation() {
-    const showcaseImages = document.querySelectorAll(".nft-showcase img");
-    showcaseImages.forEach(image => {
-        image.style.transform = "translate(0, 0) rotate(0deg)";
-
-        setTimeout(() => {
-            image.removeAttribute("style");
-        }, 10);
-    });
 }
 
 document.querySelectorAll('.filter-btn').forEach(button => {
