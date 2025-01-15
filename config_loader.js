@@ -4,6 +4,8 @@
 
 const check_token = "CZI:GAATAURKW525OLU4LE27QB5FSM4PQXDSTJ6YEG7E7E6GA2FCWORUSA6Y";
 
+const categories = ["All", "Art", "Photography", "Gaming", "Music", "Collectibles"];
+
 const localConfig = {
     wallet: {
         address: "0x123456789abcdef123456789abcdef123456789a",
@@ -128,7 +130,10 @@ async function loadNFTs() {
                 <img src="${nft.image}" alt="${nft.name}">
                 <h3>${nft.name}</h3>
                 <p>Price: ${nft.price}</p>
-                <button class="buy-button" id="buy-${nft.id}">Buy</button>
+                
+                <button class="details-button" id="details-${nft.id}">Details 
+                    <img class="touch-icon" src="content/touch.png" alt="click"> 
+                </button>
             `;
 
             cardsContainer.appendChild(card);
@@ -245,7 +250,7 @@ async function initializeApp() {
         updateWalletInfo(config.wallet.address, config.wallet.balance);
 
         const nftContainer = document.querySelector(".purchased-nfts");
-
+        createCategories();
         if (nftContainer) {
             nftContainer.innerHTML = "";
 
@@ -279,6 +284,76 @@ async function initializeApp() {
         await loadTrendingNFTs();
     }
 }
+
+function createCategories() {
+    const sliderList = document.querySelector(".slider-category-list");
+
+    if (sliderList) {
+        categories.forEach(category => {
+            const button = document.createElement("button");
+            button.classList.add("slider-category-item");
+            button.textContent = category;
+            sliderList.appendChild(button);
+        });
+
+        document.getElementById("categories").style.display = "block";
+        initializeSlider();
+    } else {
+        console.error("Element with class 'slider-category-list' not found in DOM.");
+    }
+}
+
+function initializeSlider() {
+    const sliderList = document.querySelector(".slider-category-list");
+    const sliderWrapper = document.querySelector(".slider-wrapper");
+    const prevArrow = document.querySelector(".slider-control.prev");
+    const nextArrow = document.querySelector(".slider-control.next");
+
+    function updateArrows() {
+        const scrollLeft = sliderWrapper.scrollLeft;
+        const maxScrollLeft = sliderWrapper.scrollWidth - sliderWrapper.clientWidth;
+
+        prevArrow.style.visibility = scrollLeft <= 0 ? "hidden" : "visible";
+        nextArrow.style.visibility = scrollLeft >= maxScrollLeft ? "hidden" : "visible";
+    }
+
+    function moveSlider(offset) {
+        sliderWrapper.scrollBy({ left: offset, behavior: "smooth" });
+        setTimeout(updateArrows, 300); // Дождаться завершения прокрутки
+    }
+
+    prevArrow.addEventListener("click", () => moveSlider(-1000));
+    nextArrow.addEventListener("click", () => moveSlider(1000));
+
+    let isDragging = false;
+    let startX = 0;
+
+    sliderWrapper.addEventListener("mousedown", (e) => {
+        isDragging = true;
+        startX = e.clientX;
+        sliderWrapper.style.cursor = "grabbing";
+    });
+
+    sliderWrapper.addEventListener("mousemove", (e) => {
+        if (!isDragging) return;
+        sliderWrapper.scrollLeft += startX - e.clientX;
+        startX = e.clientX;
+        updateArrows(); // Обновляем состояние стрелок при перемещении
+    });
+
+    sliderWrapper.addEventListener("mouseup", () => {
+        isDragging = false;
+        sliderWrapper.style.cursor = "grab";
+    });
+
+    sliderWrapper.addEventListener("mouseleave", () => {
+        isDragging = false;
+        sliderWrapper.style.cursor = "grab";
+    });
+
+    updateArrows(); // Установить состояние стрелок при инициализации
+}
+
 setInterval(showNextSlide, 5000);
 
 document.addEventListener("DOMContentLoaded", initializeApp);
