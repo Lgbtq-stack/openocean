@@ -296,7 +296,7 @@ function createCategories() {
             sliderList.appendChild(button);
         });
 
-        document.getElementById("categories").style.display = "block";
+        // document.getElementById("categories").style.display = "block";
         initializeSlider();
     } else {
         console.error("Element with class 'slider-category-list' not found in DOM.");
@@ -304,7 +304,6 @@ function createCategories() {
 }
 
 function initializeSlider() {
-    const sliderList = document.querySelector(".slider-category-list");
     const sliderWrapper = document.querySelector(".slider-wrapper");
     const prevArrow = document.querySelector(".slider-control.prev");
     const nextArrow = document.querySelector(".slider-control.next");
@@ -319,7 +318,7 @@ function initializeSlider() {
 
     function moveSlider(offset) {
         sliderWrapper.scrollBy({ left: offset, behavior: "smooth" });
-        setTimeout(updateArrows, 300); // Дождаться завершения прокрутки
+        setTimeout(updateArrows, 300);
     }
 
     prevArrow.addEventListener("click", () => moveSlider(-1000));
@@ -338,7 +337,7 @@ function initializeSlider() {
         if (!isDragging) return;
         sliderWrapper.scrollLeft += startX - e.clientX;
         startX = e.clientX;
-        updateArrows(); // Обновляем состояние стрелок при перемещении
+        updateArrows();
     });
 
     sliderWrapper.addEventListener("mouseup", () => {
@@ -351,7 +350,7 @@ function initializeSlider() {
         sliderWrapper.style.cursor = "grab";
     });
 
-    updateArrows(); // Установить состояние стрелок при инициализации
+    updateArrows();
 }
 
 setInterval(showNextSlide, 5000);
