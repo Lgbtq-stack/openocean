@@ -137,9 +137,14 @@ async function loadNFTs() {
             `;
 
             cardsContainer.appendChild(card);
+            const detailsButton = card.querySelector('.details-button');
+            detailsButton.addEventListener('click', () => {
+                console.log(`Button clicked for NFT ID: ${nft.id}`);
+                showNFTDetails(nft.id);
+            });
         });
     } catch (error) {
-        console.error('Ошибка загрузки данных NFT:', error);
+        console.error('Error loading NFT:', error);
     }
 }
 
@@ -200,26 +205,31 @@ async function loadTrendingNFTs() {
         console.log("Trending NFTs successfully loaded:", trendingNFTs);
 
     } catch (error) {
-        console.error("Ошибка загрузки трендовых NFT:", error);
+        console.error("Error with trending NFT:", error);
     }
 }
 
-function showNFTDetails(id) {
-    const nft = localConfig.trendingNFTs.find(item => item.id === id.toString());
+async function showNFTDetails(id) {
+
+    const response = await fetch('nft_config.json');
+    const nftData = await response.json();
+
+    const nft = nftData.find(item => item.id === Number(id)); // Преобразуем id в число для сравнения
 
     if (nft) {
-        document.getElementById("nft-title").textContent = nft.title;
-        document.getElementById("nft-image").src = nft.image;
-        document.getElementById("nft-description").textContent = nft.category;
-        document.getElementById("nft-price").textContent = `Price: ${nft.price} ${nft.currency}`;
-        document.getElementById("nftDetailsPanel").style.display = "flex";
+        document.getElementById('nft-title').textContent = nft.name;
+        document.getElementById('nft-image').src = nft.image;
+        document.getElementById('nft-description').textContent = nft.category;
+        document.getElementById('nft-price').textContent = `Price: ${nft.price}`;
+        document.getElementById('nftDetailsPanel').classList.add('show');
     } else {
-        console.error(`NFT с id=${id} не найдено.`);
+        console.error(`NFT id=${id} not found!.`);
     }
 }
 
 function closeNFTDetails() {
-    document.getElementById("nftDetailsPanel").style.display = "none";
+    const panel = document.getElementById("nftDetailsPanel");
+    panel.classList.remove("show");
 }
 
 const popup = document.getElementById("popup-module");
@@ -296,7 +306,6 @@ function createCategories() {
             sliderList.appendChild(button);
         });
 
-        // document.getElementById("categories").style.display = "block";
         initializeSlider();
     } else {
         console.error("Element with class 'slider-category-list' not found in DOM.");
