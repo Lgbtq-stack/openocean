@@ -210,21 +210,50 @@ async function loadTrendingNFTs() {
 }
 
 async function showNFTDetails(id) {
+    try {
+        const response = await fetch('nft_config.json');
+        const nftData = await response.json();
 
-    const response = await fetch('nft_config.json');
-    const nftData = await response.json();
+        const nft = nftData.find(item => item.id === Number(id));
 
-    const nft = nftData.find(item => item.id === Number(id)); // Преобразуем id в число для сравнения
+        if (nft) {
+            document.getElementById('nft-title').textContent = nft.name;
+            document.getElementById('nft-image').src = nft.image;
+            document.getElementById('nft-description').textContent = `Category: ${nft.category}`;
+            document.getElementById('nft-price').textContent = `Price: ${nft.price}`;
 
-    if (nft) {
-        document.getElementById('nft-title').textContent = nft.name;
-        document.getElementById('nft-image').src = nft.image;
-        document.getElementById('nft-description').textContent = nft.category;
-        document.getElementById('nft-price').textContent = `Price: ${nft.price}`;
-        document.getElementById('nftDetailsPanel').classList.add('show');
-    } else {
-        console.error(`NFT id=${id} not found!.`);
+            const panelContent = document.querySelector('.panel-content');
+            let buyButton = document.querySelector('.buy-nft-button');
+
+            if (buyButton) {
+                buyButton.remove();
+            }
+
+            buyButton = document.createElement('button');
+            buyButton.classList.add('buy-nft-button');
+            buyButton.innerHTML = `Buy <img class="touch-icon" src="content/touch.png" alt="click">`;
+
+            buyButton.addEventListener('click', () => {
+                buyNFT(id);
+            });
+
+            panelContent.appendChild(buyButton);
+
+            const closeButton = document.querySelector('.close-panel');
+            closeButton.addEventListener('click', closeNFTDetails);
+
+            document.getElementById('nftDetailsPanel').classList.add('show');
+        } else {
+            console.error(`NFT id=${id} not found!`);
+        }
+    } catch (error) {
+        console.error('Error loading NFT details:', error);
     }
+}
+
+function buyNFT(id) {
+    console.log(`Purchasing NFT with id=${id}`);
+    alert(`NFT with id=${id} purchased successfully!`);
 }
 
 function closeNFTDetails() {
