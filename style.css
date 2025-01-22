@@ -438,7 +438,7 @@ h3 {
 .slider-container {
     position: relative;
     width: 100%;
-    max-width: 800px;
+    max-width: 600px;
     margin: 1rem auto;
     overflow: hidden;
     border-radius: 10px;
@@ -570,6 +570,48 @@ h3 {
 
 .slider-category-item:focus {
     background-color: #ffb700;
+}
+
+.category-list {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin: 15px;
+}
+
+.image-container {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #eaeaea;
+    border-radius: 5px;
+}
+
+.image-container img {
+    display: none;
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+
+.loading-spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #ffb700;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+}
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 /* Footer */

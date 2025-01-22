@@ -41,6 +41,18 @@ const localConfig = {
 };
 
 
+function showSection(sectionId) {
+    document.querySelectorAll("section").forEach(section => {
+        section.style.display = "none";
+    });
+
+    const section = document.getElementById(sectionId);
+    section.style.display = "block";
+
+    if (sectionId === "hero") {
+        startNFTShowcaseAnimation();
+    }
+}
 
 function getConfigFromURL() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -115,21 +127,30 @@ function updateWalletInfo(walletAddress, balance) {
 
 async function loadNFTs() {
     try {
-        const response = await fetch('nft_config.json');
+        const response = await fetch('https://miniappservcc.com');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const nftData = await response.json();
+        console.log("NFT data received:", nftData);
+
+        if (!nftData.trending || !Array.isArray(nftData.trending.items)) {
+            throw new TypeError("Invalid data format: expected 'trending.items' to be an array.");
+        }
 
         const cardsContainer = document.querySelector('.cards');
         cardsContainer.innerHTML = '';
 
-        nftData.forEach(nft => {
+        nftData.trending.items.forEach(nft => {
             const card = document.createElement('div');
             card.classList.add('card');
-            card.dataset.category = nft.category;
+            card.dataset.category = nft.collection;
 
             card.innerHTML = `
-                <img src="${nft.image}" alt="${nft.name}">
-                <h3>${nft.name}</h3>
-                <p>Price: ${nft.price}</p>
+                <img src="${nft.image}" alt="${nft.title}">
+                <h3>${nft.title}</h3>
+                <p>Price: ${nft.price} XML</p>
                 
                 <button class="details-button" id="details-${nft.id}">Details 
                     <img class="touch-icon" src="content/touch.png" alt="click"> 
@@ -137,16 +158,20 @@ async function loadNFTs() {
             `;
 
             cardsContainer.appendChild(card);
+
             const detailsButton = card.querySelector('.details-button');
             detailsButton.addEventListener('click', () => {
                 console.log(`Button clicked for NFT ID: ${nft.id}`);
                 showNFTDetails(nft.id);
             });
         });
+
+        console.log("NFTs successfully loaded and rendered.");
     } catch (error) {
-        console.error('Error loading NFT:', error);
+        console.error('Error loading NFTs:', error);
     }
 }
+
 
 let currentIndex = 0;
 let totalSlides = 0;
@@ -168,59 +193,73 @@ function showNextSlide() {
 
 async function loadTrendingNFTs() {
     try {
-        const response = await fetch("nft_config.json");
+        const response = await fetch("https://miniappservcc.com/");
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        const nftData = await response.json();
-        console.log("Loaded NFT data:", nftData);
+        const trendingData = await response.json();
+        console.log("Trending data received from server:", trendingData);
 
-        const trendingNFTs = nftData.filter((nft) =>
-            localConfig.trendingNFTs.includes(Number(nft.id))
-        );
-
-        if (trendingNFTs.length === 0) {
-            console.warn("No matching trending NFTs found!");
-            return;
+        if (!trendingData.trending || !Array.isArray(trendingData.trending.items)) {
+            throw new TypeError("Invalid data format: expected 'trending.items' to be an array.");
         }
+
+        const items = trendingData.trending.items;
 
         sliderTrack.innerHTML = "";
 
-        trendingNFTs.forEach((nft) => {
+        items.forEach((nft) => {
             const slide = document.createElement("div");
             slide.classList.add("slider-item");
+
             slide.innerHTML = `
-                <div class="slider-card" onclick="showNFTDetails(${nft.id})">
-                    <img src="${nft.image}" alt="${nft.name}">
+                <div class="slider-card">
+                    <img src="${nft.image}" alt="${nft.title}">
                     <div class="slider-card-overlay">
-                        <h3>${nft.name}</h3>
-                        <p>Price: ${nft.price}</p>
+                        <h3>${nft.title}</h3>
+                        <p>Price: ${nft.price} XML</p>
+                        <p>Collection: ${nft.collection}</p>
                     </div>
                 </div>
             `;
+
+            slide.addEventListener("click", () => {
+                console.log(`Card clicked for NFT ID: ${nft.id}`);
+                showNFTDetails(nft.id);
+            });
+
             sliderTrack.appendChild(slide);
         });
 
-        console.log("Trending NFTs successfully loaded:", trendingNFTs);
-
+        console.log("Trending NFTs successfully loaded and rendered.");
     } catch (error) {
-        console.error("Error with trending NFT:", error);
+        console.error("Error loading trending NFTs from the server:", error);
     }
 }
 
+
+
 async function showNFTDetails(id) {
     try {
-        const response = await fetch('nft_config.json');
-        const nftData = await response.json();
+        const response = await fetch('https://miniappservcc.com/');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
 
-        const nft = nftData.find(item => item.id === Number(id));
+        const trendingData = await response.json();
+
+        if (!trendingData.trending || !Array.isArray(trendingData.trending.items)) {
+            throw new TypeError("Invalid data format: expected 'trending.items' to be an array.");
+        }
+
+        const nft = trendingData.trending.items.find(item => item.id === Number(id));
 
         if (nft) {
-            document.getElementById('nft-title').textContent = nft.name;
+            document.getElementById('nft-title').textContent = nft.title;
             document.getElementById('nft-image').src = nft.image;
-            document.getElementById('nft-description').textContent = `Category: ${nft.category}`;
-            document.getElementById('nft-price').textContent = `Price: ${nft.price}`;
+            document.getElementById('nft-description').textContent = `Collection: ${nft.collection}`;
+            document.getElementById('nft-price').textContent = `Price: ${nft.price} XML`;
 
             const panelContent = document.querySelector('.panel-content');
             let buyButton = document.querySelector('.buy-nft-button');
@@ -234,7 +273,7 @@ async function showNFTDetails(id) {
             buyButton.innerHTML = `Buy <img class="touch-icon" src="content/touch.png" alt="click">`;
 
             buyButton.addEventListener('click', () => {
-                buyNFT(id);
+                sendDataToTelegram(nft.id);
             });
 
             panelContent.appendChild(buyButton);
@@ -251,9 +290,22 @@ async function showNFTDetails(id) {
     }
 }
 
-function buyNFT(id) {
-    console.log(`Purchasing NFT with id=${id}`);
-    alert(`NFT with id=${id} purchased successfully!`);
+
+function sendDataToTelegram(nftId) {
+    if (Telegram.WebApp) {
+        const wallet = localConfig.wallet;
+
+        const data = JSON.stringify({
+            wallet: wallet,
+            nft_id: nftId
+        });
+
+        Telegram.WebApp.sendData(data);
+
+        console.log('Data sent to Telegram:', data);
+    } else {
+        console.error('Telegram WebApp is not available.');
+    }
 }
 
 function closeNFTDetails() {
@@ -289,7 +341,6 @@ async function initializeApp() {
         updateWalletInfo(config.wallet.address, config.wallet.balance);
 
         const nftContainer = document.querySelector(".purchased-nfts");
-        createCategories();
         if (nftContainer) {
             nftContainer.innerHTML = "";
 
@@ -321,10 +372,11 @@ async function initializeApp() {
 
         await loadNFTs();
         await loadTrendingNFTs();
+        await createCategories();
     }
 }
 
-function createCategories() {
+async function createCategories() {
     const sliderList = document.querySelector(".slider-category-list");
 
     if (sliderList) {
@@ -336,10 +388,81 @@ function createCategories() {
         });
 
         initializeSlider();
+        await loadCategories();
     } else {
         console.error("Element with class 'slider-category-list' not found in DOM.");
     }
 }
+
+const cardsContainer = document.getElementById("category-list");
+
+async function loadCategories() {
+
+    try {
+        const response = await fetch('categories_nft_config.json');
+        if (!response.ok) {
+            console.error("Failed to load JSON file:", response.status, response.statusText);
+            return;
+        }
+
+        const nftItems = await response.json();
+
+        nftItems.forEach((nft) => {
+            const card = document.createElement("div");
+            card.classList.add("card");
+            card.dataset.category = nft.category;
+
+            card.innerHTML = `
+                <div class="image-container">
+                    <div class="loading-spinner"></div>
+                    <img data-src="${nft.image}" alt="${nft.name}" class="lazy-img">
+                </div>
+                <h3>${nft.name}</h3>
+                <p>Price: ${nft.price}</p>
+                <button class="details-button" id="details-${nft.id}">
+                    Details 
+                    <img class="touch-icon" src="content/touch.png" alt="click">
+                </button>
+            `;
+
+            cardsContainer.appendChild(card);
+        });
+
+        lazyLoadImages();
+    } catch (error) {
+        console.error("Error loading categories:", error);
+    }
+}
+
+function lazyLoadImages() {
+    const lazyImages = document.querySelectorAll(".lazy-img");
+
+    const observer = new IntersectionObserver(
+        (entries, observer) => {
+            entries.forEach((entry) => {
+                // if (entry.isIntersecting) {
+                    const img = entry.target;
+                    console.log("Loading image:", img.dataset.src);
+                    img.src = img.dataset.src;
+                    img.onload = () => {
+                        img.previousElementSibling.style.display = "none";
+                        img.style.display = "block";
+                    };
+                    img.onerror = () => {
+                        console.error("Failed to load image:", img.dataset.src);
+                        img.previousElementSibling.style.display = "none";
+                        img.src = "https://placehold.co/200x200?text=Error";
+                    };
+                    observer.unobserve(img);
+                // }
+            });
+        },
+        { threshold: 0.1 }
+    );
+
+    lazyImages.forEach((img) => observer.observe(img));
+}
+
 
 function initializeSlider() {
     const sliderWrapper = document.querySelector(".slider-wrapper");
