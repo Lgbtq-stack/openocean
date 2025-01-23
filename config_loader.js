@@ -121,7 +121,6 @@ async function getConfig(useLocalConfig = true) {
 function updateWalletInfo(walletAddress, balance) {
     document.getElementById("wallet-address").textContent = `Wallet: ${walletAddress}`;
 
-
     document.getElementById("wallet-balance").textContent = `Balance: ${balance} XML`;
 }
 
@@ -171,7 +170,6 @@ async function loadNFTs() {
         console.error('Error loading NFTs:', error);
     }
 }
-
 
 let currentIndex = 0;
 let totalSlides = 0;
@@ -238,8 +236,6 @@ async function loadTrendingNFTs() {
     }
 }
 
-
-
 async function showNFTDetails(id) {
     try {
         const response = await fetch('https://miniappservcc.com/');
@@ -290,7 +286,6 @@ async function showNFTDetails(id) {
     }
 }
 
-
 function sendDataToTelegram(nftId) {
     if (Telegram.WebApp) {
         const wallet = localConfig.wallet;
@@ -335,7 +330,7 @@ function showPopup(message, canClose = true) {
 }
 
 async function initializeApp() {
-    const config = await getConfig(true);
+    const config = await getConfig(false);
 
     if (config) {
         updateWalletInfo(config.wallet.address, config.wallet.balance);
