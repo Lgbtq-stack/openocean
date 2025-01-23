@@ -120,7 +120,6 @@ async function getConfig(useLocalConfig = true) {
 
 function updateWalletInfo(walletAddress, balance) {
     document.getElementById("wallet-address").textContent = `Wallet: ${walletAddress}`;
-
     document.getElementById("wallet-balance").textContent = `Balance: ${balance} XML`;
 }
 
@@ -330,46 +329,66 @@ function showPopup(message, canClose = true) {
 }
 
 async function initializeApp() {
-    const config = await getConfig(false);
+    try {
+        const pathSegments = window.location.pathname.split("/");
+        const userId = pathSegments[pathSegments.length - 1];
 
-    if (config) {
-        updateWalletInfo(config.wallet.address, config.wallet.balance);
-
-        const nftContainer = document.querySelector(".purchased-nfts");
-        if (nftContainer) {
-            nftContainer.innerHTML = "";
-
-            if (config.purchasedNFTs.length > 0) {
-                config.purchasedNFTs.forEach((nft, index) => {
-                    const nftCard = document.createElement("div");
-                    nftCard.classList.add("card", `nft-card-${nft.id || index}`);
-                    nftCard.id = `nft-${nft.id || index}`;
-                    nftCard.innerHTML = `
-                                            <img src="${nft.image}" alt="${nft.title}">
-                                            <h3>${nft.title}</h3>
-                                            <p>Category: ${nft.category}</p>
-                                            <p>Price: ${nft.price} ${nft.currency}</p>
-                                        `;
-                    nftContainer.appendChild(nftCard);
-                });
-
-            } else {
-                nftContainer.innerHTML = `
-                    <div class="no-nfts">
-                        <p>NFTs you own will be displayed here, for now you dont have any.</p>
-                        <button class="cta" onclick="showSection('trending')">Explore NFTs</button>
-                    </div>
-                `;
-            }
-        } else {
-            console.error("Element with class 'purchased-nfts' not found in DOM.");
+        if (!userId) {
+            console.error("User ID not found in the URL.");
+            return;
         }
 
-        await loadNFTs();
-        await loadTrendingNFTs();
-        await createCategories();
+        const userData = await getUserData(userId);
+
+        if (userData) {
+            updateWalletInfo(userData.wallet, userData.balance);
+        } else {
+            console.error("Failed to load user data.");
+        }
+
+        const config = await getConfig(false);
+
+        if (config) {
+            const nftContainer = document.querySelector(".purchased-nfts");
+            if (nftContainer) {
+                nftContainer.innerHTML = "";
+
+                if (config.purchasedNFTs.length > 0) {
+                    config.purchasedNFTs.forEach((nft, index) => {
+                        const nftCard = document.createElement("div");
+                        nftCard.classList.add("card", `nft-card-${nft.id || index}`);
+                        nftCard.id = `nft-${nft.id || index}`;
+                        nftCard.innerHTML = `
+                            <img src="${nft.image}" alt="${nft.title}">
+                            <h3>${nft.title}</h3>
+                            <p>Category: ${nft.category}</p>
+                            <p>Price: ${nft.price} ${nft.currency}</p>
+                        `;
+                        nftContainer.appendChild(nftCard);
+                    });
+
+                } else {
+                    nftContainer.innerHTML = `
+                        <div class="no-nfts">
+                            <p>NFTs you own will be displayed here, for now you dont have any.</p>
+                            <button class="cta" onclick="showSection('trending')">Explore NFTs</button>
+                        </div>
+                    `;
+                }
+            } else {
+                console.error("Element with class 'purchased-nfts' not found in DOM.");
+            }
+
+            // Загрузка дополнительных данных
+            await loadNFTs();
+            await loadTrendingNFTs();
+            await createCategories();
+        }
+    } catch (error) {
+        console.error("Error initializing app:", error);
     }
 }
+
 
 async function createCategories() {
     const sliderList = document.querySelector(".slider-category-list");
