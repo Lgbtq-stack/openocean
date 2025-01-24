@@ -364,6 +364,7 @@ h3 {
     align-items: center;
     flex-direction: column;
     color: #fff;
+    overflow-y: auto;
 }
 
 .nft-details-panel.show {
@@ -381,8 +382,16 @@ h3 {
     border-radius: 10px;
     text-align: center;
     gap: 16px;
+    max-width: 600px;
+    width: 90%;
+    box-sizing: border-box;
 }
 
+.panel-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
 
 .buy-nft-button {
     display: flex;
@@ -398,6 +407,10 @@ h3 {
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+}
+
+.buy-nft-button:hover {
+    background-color: #e0a800;
 }
 
 .close-panel {
@@ -416,6 +429,65 @@ h3 {
     align-items: center;
     cursor: pointer;
     z-index: 1100;
+}
+
+.buy-nft-button img {
+    width: 40px; /* Установим разумный размер иконки */
+    height: auto; /* Автоматическая высота для сохранения пропорций */
+}
+
+/* === Адаптивные стили === */
+@media (max-width: 768px) {
+    .panel-content {
+        padding: 15px;
+        gap: 12px;
+    }
+
+    .panel-content h2 {
+        font-size: 1.5rem;
+    }
+
+    .panel-content p {
+        font-size: 1rem;
+    }
+
+    .buy-nft-button {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+
+    .close-panel {
+        font-size: 16px;
+        width: 28px;
+        height: 28px;
+    }
+}
+
+@media (max-width: 480px) {
+    .panel-content {
+        padding: 10px;
+        gap: 8px;
+    }
+
+    .panel-content h2 {
+        font-size: 1.2rem;
+    }
+
+    .panel-content p {
+        font-size: 1em;
+        text-transform: capitalize;
+    }
+
+    .buy-nft-button {
+        padding: 6px 12px;
+        font-size: 16px;
+    }
+
+    .close-panel {
+        font-size: 14px;
+        width: 26px;
+        height: 26px;
+    }
 }
 
 /* Trending Table */
@@ -508,7 +580,7 @@ h3 {
     position: relative;
     display: flex;
     align-items: center;
-    padding: 0 10px;
+    padding: 0 20px 0 12px;
 }
 
 .slider-wrapper {
@@ -532,7 +604,7 @@ h3 {
     flex-shrink: 0;
     cursor: pointer;
     border: none;
-
+    text-transform: capitalize;
 }
 
 .slider-control {
@@ -613,6 +685,19 @@ h3 {
     100% {
         transform: rotate(360deg);
     }
+}
+
+#show-more-btn {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: #fbbc04;
+    color: #000;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
 /* Footer */

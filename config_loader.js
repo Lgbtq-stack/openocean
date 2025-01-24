@@ -1,10 +1,7 @@
 // import {getAccountBalance} from "./backend/stellar_helper";
 // import {get_config} from "./backend/datacontoller";
 
-
 const check_token = "CZI:GAATAURKW525OLU4LE27QB5FSM4PQXDSTJ6YEG7E7E6GA2FCWORUSA6Y";
-
-const categories = ["All", "Art", "Photography", "Gaming", "Music", "Collectibles"];
 
 const localConfig = {
     wallet: {
@@ -125,24 +122,31 @@ function updateWalletInfo(walletAddress, balance) {
 
 async function loadNFTs() {
     try {
-        const response = await fetch('https://miniappservcc.com');
+        const response = await fetch("https://miniappservcc.com/api/trends");
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        const nftData = await response.json();
-        console.log("NFT data received:", nftData);
+        const trendingData = await response.json();
+        console.log("Trending data received from server:", trendingData);
 
-        if (!nftData.trending || !Array.isArray(nftData.trending.items)) {
-            throw new TypeError("Invalid data format: expected 'trending.items' to be an array.");
+        // Проверяем, что 'trending' является массивом
+        if (!Array.isArray(trendingData.trending)) {
+            throw new TypeError("Invalid data format: expected 'trending' to be an array.");
         }
 
-        const cardsContainer = document.querySelector('.cards');
-        cardsContainer.innerHTML = '';
+        const items = trendingData.trending;
 
-        nftData.trending.items.forEach(nft => {
-            const card = document.createElement('div');
-            card.classList.add('card');
+        const cardsContainer = document.querySelector('.cards');
+        if (!cardsContainer) {
+            throw new Error("Element with class 'cards' not found in DOM.");
+        }
+
+        cardsContainer.innerHTML = "";
+
+        items.forEach((nft) => {
+            const card = document.createElement("div");
+            card.classList.add("card");
             card.dataset.category = nft.collection;
 
             card.innerHTML = `
@@ -160,13 +164,13 @@ async function loadNFTs() {
             const detailsButton = card.querySelector('.details-button');
             detailsButton.addEventListener('click', () => {
                 console.log(`Button clicked for NFT ID: ${nft.id}`);
-                showNFTDetails(nft.id);
+                showNFTDetails(nft.id, items);
             });
         });
 
         console.log("NFTs successfully loaded and rendered.");
     } catch (error) {
-        console.error('Error loading NFTs:', error);
+        console.error("Error loading NFTs:", error);
     }
 }
 
@@ -190,7 +194,7 @@ function showNextSlide() {
 
 async function loadTrendingNFTs() {
     try {
-        const response = await fetch("https://miniappservcc.com/");
+        const response = await fetch("https://miniappservcc.com/api/trends");
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -198,11 +202,16 @@ async function loadTrendingNFTs() {
         const trendingData = await response.json();
         console.log("Trending data received from server:", trendingData);
 
-        if (!trendingData.trending || !Array.isArray(trendingData.trending.items)) {
-            throw new TypeError("Invalid data format: expected 'trending.items' to be an array.");
+        if (!Array.isArray(trendingData.trending)) {
+            throw new TypeError("Invalid data format: expected 'trending' to be an array.");
         }
 
-        const items = trendingData.trending.items;
+        const items = trendingData.trending;
+
+        const sliderTrack = document.getElementById("sliderTrack");
+        if (!sliderTrack) {
+            throw new Error("Element with ID 'sliderTrack' not found in DOM.");
+        }
 
         sliderTrack.innerHTML = "";
 
@@ -215,7 +224,7 @@ async function loadTrendingNFTs() {
                     <img src="${nft.image}" alt="${nft.title}">
                     <div class="slider-card-overlay">
                         <h3>${nft.title}</h3>
-                        <p>Price: ${nft.price} XML</p>
+                        <p>Price: ${nft.price}</p>
                         <p>Collection: ${nft.collection}</p>
                     </div>
                 </div>
@@ -223,7 +232,7 @@ async function loadTrendingNFTs() {
 
             slide.addEventListener("click", () => {
                 console.log(`Card clicked for NFT ID: ${nft.id}`);
-                showNFTDetails(nft.id);
+                showNFTDetails(nft.id, items);
             });
 
             sliderTrack.appendChild(slide);
@@ -235,27 +244,24 @@ async function loadTrendingNFTs() {
     }
 }
 
-async function showNFTDetails(id) {
+async function showNFTDetails(id, dataSource) {
     try {
-        const response = await fetch('https://miniappservcc.com/');
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+        // Проверяем, что dataSource определен и является массивом
+        if (!dataSource || !Array.isArray(dataSource)) {
+            throw new TypeError("Invalid dataSource: expected an array of objects.");
         }
 
-        const trendingData = await response.json();
-
-        if (!trendingData.trending || !Array.isArray(trendingData.trending.items)) {
-            throw new TypeError("Invalid data format: expected 'trending.items' to be an array.");
-        }
-
-        const nft = trendingData.trending.items.find(item => item.id === Number(id));
+        // Ищем объект с нужным ID
+        const nft = dataSource.find((item) => item.id === Number(id));
 
         if (nft) {
+            // Заполняем данные в панель деталей
             document.getElementById('nft-title').textContent = nft.title;
             document.getElementById('nft-image').src = nft.image;
             document.getElementById('nft-description').textContent = `Collection: ${nft.collection}`;
             document.getElementById('nft-price').textContent = `Price: ${nft.price} XML`;
 
+            // Добавляем кнопку "Buy"
             const panelContent = document.querySelector('.panel-content');
             let buyButton = document.querySelector('.buy-nft-button');
 
@@ -273,12 +279,14 @@ async function showNFTDetails(id) {
 
             panelContent.appendChild(buyButton);
 
+            // Добавляем обработчик для закрытия панели
             const closeButton = document.querySelector('.close-panel');
             closeButton.addEventListener('click', closeNFTDetails);
 
+            // Показываем панель деталей
             document.getElementById('nftDetailsPanel').classList.add('show');
         } else {
-            console.error(`NFT id=${id} not found!`);
+            console.error(`NFT with id=${id} not found in the provided data source.`);
         }
     } catch (error) {
         console.error('Error loading NFT details:', error);
@@ -329,89 +337,112 @@ function showPopup(message, canClose = true) {
 }
 
 async function initializeApp() {
-    try {
-        const pathSegments = window.location.pathname.split("/");
-        const userId = pathSegments[pathSegments.length - 1];
+    const config = await getConfig(true);
 
-        if (!userId) {
-            console.error("User ID not found in the URL.");
+    if (config) {
+        updateWalletInfo(config.wallet.address, config.wallet.balance);
+
+        const nftContainer = document.querySelector(".purchased-nfts");
+        if (nftContainer) {
+            nftContainer.innerHTML = "";
+
+            if (config.purchasedNFTs.length > 0) {
+                config.purchasedNFTs.forEach((nft, index) => {
+                    const nftCard = document.createElement("div");
+                    nftCard.classList.add("card", `nft-card-${nft.id || index}`);
+                    nftCard.id = `nft-${nft.id || index}`;
+                    nftCard.innerHTML = `
+                                            <img src="${nft.image}" alt="${nft.title}">
+                                            <h3>${nft.title}</h3>
+                                            <p>Category: ${nft.category}</p>
+                                            <p>Price: ${nft.price} ${nft.currency}</p>
+                                        `;
+                    nftContainer.appendChild(nftCard);
+                });
+
+            } else {
+                nftContainer.innerHTML = `
+                    <div class="no-nfts">
+                        <p>NFTs you own will be displayed here, for now you dont have any.</p>
+                        <button class="cta" onclick="showSection('trending')">Explore NFTs</button>
+                    </div>
+                `;
+            }
+        } else {
+            console.error("Element with class 'purchased-nfts' not found in DOM.");
+        }
+
+        await loadNFTs();
+        await loadTrendingNFTs();
+        await createCategories();
+    }
+}
+
+async function createCategories() {
+    try {
+        const sliderList = document.querySelector(".slider-category-list");
+
+        if (!sliderList) {
+            console.error("Element with class 'slider-category-list' not found in DOM.");
             return;
         }
 
-        const userData = await getUserData(userId);
+        sliderList.innerHTML = "";
 
-        if (userData) {
-            updateWalletInfo(userData.wallet, userData.balance);
-        } else {
-            console.error("Failed to load user data.");
+        const response = await fetch("https://miniappservcc.com/api/collections");
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        const config = await getConfig(false);
+        const collectionsData = await response.json();
 
-        if (config) {
-            const nftContainer = document.querySelector(".purchased-nfts");
-            if (nftContainer) {
-                nftContainer.innerHTML = "";
-
-                if (config.purchasedNFTs.length > 0) {
-                    config.purchasedNFTs.forEach((nft, index) => {
-                        const nftCard = document.createElement("div");
-                        nftCard.classList.add("card", `nft-card-${nft.id || index}`);
-                        nftCard.id = `nft-${nft.id || index}`;
-                        nftCard.innerHTML = `
-                            <img src="${nft.image}" alt="${nft.title}">
-                            <h3>${nft.title}</h3>
-                            <p>Category: ${nft.category}</p>
-                            <p>Price: ${nft.price} ${nft.currency}</p>
-                        `;
-                        nftContainer.appendChild(nftCard);
-                    });
-
-                } else {
-                    nftContainer.innerHTML = `
-                        <div class="no-nfts">
-                            <p>NFTs you own will be displayed here, for now you dont have any.</p>
-                            <button class="cta" onclick="showSection('trending')">Explore NFTs</button>
-                        </div>
-                    `;
-                }
-            } else {
-                console.error("Element with class 'purchased-nfts' not found in DOM.");
-            }
-
-            // Загрузка дополнительных данных
-            await loadNFTs();
-            await loadTrendingNFTs();
-            await createCategories();
+        if (!Array.isArray(collectionsData.collections)) {
+            throw new TypeError("Invalid data format: expected 'collections' to be an array.");
         }
-    } catch (error) {
-        console.error("Error initializing app:", error);
-    }
-}
 
+        const categories = collectionsData.collections.map((collection) => {
+            return {
+                id: collection.meta.id,
+                name: collection.meta.name,
+                image: collection.meta.image
+            };
+        });
 
-async function createCategories() {
-    const sliderList = document.querySelector(".slider-category-list");
+        const allCategory = {
+            id: 0,
+            name: "All",
+            image: ""
+        };
+        categories.unshift(allCategory);
 
-    if (sliderList) {
-        categories.forEach(category => {
+        categories.forEach((category) => {
             const button = document.createElement("button");
             button.classList.add("slider-category-item");
-            button.textContent = category;
+            button.textContent = category.name;
+
+            button.addEventListener("click", () => {
+                currentCategory = category.name;
+                currentPage = 1;
+                document.getElementById("category-list").innerHTML = "";
+                loadCategories(currentPage, currentCategory);
+            });
+
             sliderList.appendChild(button);
         });
 
+        currentCategory = "All";
+        currentPage = 1;
+        await loadCategories(currentPage, currentCategory);
         initializeSlider();
-        await loadCategories();
-    } else {
-        console.error("Element with class 'slider-category-list' not found in DOM.");
+    } catch (error) {
+        console.error("Error creating categories:", error);
     }
 }
 
-const cardsContainer = document.getElementById("category-list");
+let currentPage = 1;
+const itemsPerPage = 5;
 
-async function loadCategories() {
-
+async function loadCategories(page, category) {
     try {
         const response = await fetch('categories_nft_config.json');
         if (!response.ok) {
@@ -421,7 +452,22 @@ async function loadCategories() {
 
         const nftItems = await response.json();
 
-        nftItems.forEach((nft) => {
+        const filteredItems = category === "All"
+            ? nftItems
+            : nftItems.filter((nft) => nft.category === category);
+
+        const totalItems = filteredItems.length;
+        const startIndex = (page - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const itemsToLoad = filteredItems.slice(startIndex, endIndex);
+
+        const cardsContainer = document.getElementById("category-list");
+        if (!cardsContainer) {
+            console.error("Element with ID 'category-list' not found in DOM.");
+            return;
+        }
+
+        itemsToLoad.forEach((nft) => {
             const card = document.createElement("div");
             card.classList.add("card");
             card.dataset.category = nft.category;
@@ -439,8 +485,20 @@ async function loadCategories() {
                 </button>
             `;
 
+            const detailsButton = card.querySelector(".details-button");
+            detailsButton.addEventListener("click", () => {
+                showNFTDetails(nft.id, itemsToLoad);
+            });
+
             cardsContainer.appendChild(card);
         });
+
+        const showMoreButton = document.getElementById("show-more-btn");
+        if (endIndex >= totalItems) {
+            showMoreButton.style.display = "none";
+        } else {
+            showMoreButton.style.display = "block";
+        }
 
         lazyLoadImages();
     } catch (error) {
@@ -448,6 +506,18 @@ async function loadCategories() {
     }
 }
 
+document.addEventListener("DOMContentLoaded", () => {
+    const showMoreButton = document.getElementById("show-more-btn");
+
+    if (showMoreButton) {
+        showMoreButton.addEventListener("click", () => {
+            currentPage++;
+            loadCategories(currentPage, currentCategory);
+        });
+    } else {
+        console.error("Element with ID 'show-more-btn' not found in DOM.");
+    }
+});
 function lazyLoadImages() {
     const lazyImages = document.querySelectorAll(".lazy-img");
 
