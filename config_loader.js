@@ -913,7 +913,13 @@ function handleConfirm() {
     };
 
     console.log("Sending data to Telegram:", data);
+    if(currentAction === "recharge") {
+        popupDescription.textContent = "Pososi Recharge"
+    }
 
+    if(currentAction === "withdraw") {
+        popupDescription.textContent = "withdraw otsosi"
+    }
     sendBalanceDataToTelegram(data);
     showCountdownPopup();
 }
