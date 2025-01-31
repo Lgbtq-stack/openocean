@@ -943,14 +943,13 @@ function showCountdownPopup() {
             const tg = Telegram.WebApp;
 
             tg.close();
-
         }
     }, 1000);
 }
 
 function sendBalanceDataToTelegram(data) {
-    const jsonData = JSON.stringify(data);
     const tg = Telegram.WebApp;
+    const jsonData = JSON.stringify(data);
 
     tg.ready();
     tg.sendData(jsonData);
