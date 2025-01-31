@@ -921,6 +921,7 @@ function handleConfirm() {
     if(currentAction === "withdraw") {
         popupDescription.textContent = "withdraw otsosi"
     }
+
     sendBalanceDataToTelegram(data);
     showCountdownPopup();
 }
@@ -948,7 +949,8 @@ function showCountdownPopup() {
 function sendBalanceDataToTelegram(data) {
     const jsonData = JSON.stringify(data);
 
-    Telegram.WebApp.sendData(jsonData);
+    tg.ready();
+    tg.sendData(jsonData);
 }
 
 document.querySelector(".recharge-button").addEventListener("click", () => openPopup("recharge"));
@@ -982,6 +984,9 @@ function closeErrorPopup() {
 closeErrorPopupButton.addEventListener("click", closeErrorPopup);
 
 async function initializeApp() {
+
+    const tg = Telegram.WebApp;
+
     const config = await getConfig(true);
 
     if (config) {
