@@ -527,7 +527,7 @@ function setupSliderControls() {
         return;
     }
 
-    function updateArrows() {
+    function updateSliderArrows() {
         const scrollLeft = sliderWrapper.scrollLeft;
         const maxScrollLeft = sliderWrapper.scrollWidth - sliderWrapper.clientWidth;
 
@@ -537,7 +537,7 @@ function setupSliderControls() {
 
     function moveSlider(offset) {
         sliderWrapper.scrollBy({ left: offset, behavior: "smooth" });
-        setTimeout(updateArrows, 300);
+        setTimeout(updateSliderArrows, 300);
     }
 
     prevArrow.addEventListener("click", () => moveSlider(-300));
@@ -568,13 +568,11 @@ function setupSliderControls() {
         if (!isDragging) return;
         e.preventDefault();
         const x = e.clientX;
-        const walk = (x - startX) * 2;  // Ускоряем прокрутку
+        const walk = (x - startX) * 2;
         sliderWrapper.scrollLeft = scrollLeft - walk;
-        console.log("Moving slider...");
-
     });
 
-    updateArrows();
+    updateSliderArrows();
 }
 
 async function createCategories() {
@@ -877,7 +875,7 @@ function handleConfirm() {
         amount: amount
     };
 
-    sendDataToTelegram(data);
+    sendBalanceDataToTelegram(data);
     showCountdownPopup();
 }
 
