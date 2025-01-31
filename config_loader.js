@@ -2,6 +2,13 @@
 // import {get_config} from "./backend/datacontoller";
 
 const userId = "350104566";
+
+let userDataCache = {
+    data: null,
+    timestamp: 0,
+    ttl: 300000
+};
+
 let categoriesCache = [];
 
 const localConfig = {
@@ -417,15 +424,41 @@ function showPopup(message, canClose = true) {
 
 async function fetchUserData(userId) {
     try {
+        const currentTime = new Date().getTime();
+
+        if (userDataCache.data && (currentTime - userDataCache.timestamp) < userDataCache.ttl) {
+            console.log("Using cached data");
+            displayUserInfo(userDataCache.data);
+            return userDataCache.data;
+        }
+
         const apiUrl = `https://miniappservcc.com/api/user?uid=${userId}`;
         const response = await fetch(apiUrl);
 
         if (!response.ok) throw new Error(`Failed to fetch user data: ${response.status}`);
 
         const data = await response.json();
-        updateWalletInfo(data.nickname, data.balance);
+
+        userDataCache = {
+            data: data,
+            timestamp: currentTime,
+            ttl: userDataCache.ttl
+        };
+
+        displayUserInfo(data);
+
+        return data;
     } catch (error) {
         console.error("Error fetching user data:", error);
+    }
+}
+
+function displayUserInfo(userData) {
+    updateWalletInfo(userData.nickname, userData.balance);
+
+    const nftValueElement = document.getElementById("nft-total-value");
+    if (nftValueElement) {
+        nftValueElement.textContent = `NFT Total Value: ${userData.nft_total_value.toFixed(2)} XML`;
     }
 }
 
