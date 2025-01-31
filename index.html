@@ -11,7 +11,7 @@
     <nav class="navbar">
         <div class="upper-side">
             <div class="logo">Open Ocean</div>
-            <div class="my-nfts"><a href="#" onclick="showSection('my-nfts')"> <img src="content/user.png" alt="NFT 1"></a></div>
+            <div class="my-nfts-nav"><a href="#" onclick="showSection('my-nfts')"> <img src="content/user.png" alt="NFT 1"></a></div>
         </div>
         <ul class="nav-links">
             <li><a href="#" onclick="showSection('hero')">Home</a></li>
@@ -68,12 +68,25 @@
             <!-- Place for elements in container-->
         </div>
 
-        <button id="show-more-btn">Show More</button>
+        <div id="pagination-container" class="pagination"></div>
     </div>
 </section>
 
 <section class="my-nfts" id="my-nfts" style="display: none;">
     <h2>My NFTs</h2>
+    <div class="total-value-box">
+        <p id="total-value">Total Value: 00000 XML</p>
+    </div>
+
+    <div class="category-slider">
+        <button class="slider-control prev">&lt;</button>
+        <div class="slider-wrapper">
+            <div class="slider-track" id="my-nft-slider-track">
+                <!-- Кнопки категорий добавятся сюда динамически -->
+            </div>
+        </div>
+        <button class="slider-control next">&gt;</button>
+    </div>
     <div class="purchased-nfts"></div>
 </section>
 
@@ -82,8 +95,13 @@
         <p class="wallet-address" id="wallet-address"><strong>Wallet:</strong></p>
         <p class="wallet-balance" id="wallet-balance"><strong>Balance:</strong></p>
     </div>
-    <button class="recharge-button">Recharge</button>
+
+    <div class="button-group">
+        <button class="recharge-button">Recharge</button>
+        <button class="withdraw-button">Withdraw</button>
+    </div>
 </div>
+
 <button id="scrollToTop" class="scroll-to-top">↑</button>
 
 <div id="popup-module" class="popup">
@@ -94,13 +112,33 @@
     </div>
 </div>
 
+<div id="popup-overlay" class="popup-overlay">
+    <div class="popup-content">
+        <h2 id="popup-title">Recharge</h2>
+        <p id="popup-description">Enter the amount you want to recharge:</p>
+        <input type="number" id="amount-input" placeholder="Min 10 XML" />
+        <div class="popup-buttons">
+            <button id="confirm-button">Confirm</button>
+            <button id="close-popup-button">Cancel</button>
+        </div>
+    </div>
+</div>
+
 <div class="nft-details-panel" id="nftDetailsPanel">
     <div class="panel-content">
         <button class="close-panel">X</button>
         <h2 id="nft-title">NFT Title</h2>
         <img id="nft-image" src="" alt="NFT Image">
+        <p id="nft-category">Collection: </p>
         <p id="nft-description">Description of the NFT will appear here.</p>
         <p id="nft-price">Price: </p>
+        <p id="nft-holders">Holders: </p>
+        <p id="nft-total-bought">Total Bought: </p>
+        <div class="count-container">
+            <button class="count-button" id="decrease-count">-</button>
+            <span id="nft-count-display">1</span>
+            <button class="count-button" id="increase-count">+</button>
+        </div>
     </div>
 </div>
 

@@ -1,7 +1,8 @@
 // import {getAccountBalance} from "./backend/stellar_helper";
 // import {get_config} from "./backend/datacontoller";
 
-const check_token = "CZI:GAATAURKW525OLU4LE27QB5FSM4PQXDSTJ6YEG7E7E6GA2FCWORUSA6Y";
+const userId = "350104566";
+let categoriesCache = [];
 
 const localConfig = {
     wallet: {
@@ -48,6 +49,10 @@ function showSection(sectionId) {
 
     if (sectionId === "hero") {
         startNFTShowcaseAnimation();
+    }
+
+    if (sectionId === "my-nfts") {
+        fetchUserNFTs(userId);
     }
 }
 
@@ -115,9 +120,39 @@ async function getConfig(useLocalConfig = true) {
     }
 }
 
-function updateWalletInfo(walletAddress, balance) {
-    document.getElementById("wallet-address").textContent = `Wallet: ${walletAddress}`;
+function updateWalletInfo(nickname, balance) {
+    document.getElementById("wallet-address").textContent = `User: ${nickname}`;
     document.getElementById("wallet-balance").textContent = `Balance: ${balance} XML`;
+}
+
+async function loadCategoriesOnce() {
+    if (categoriesCache.length > 0) {
+        console.log("Using cached categories.");
+        return categoriesCache;
+    }
+
+    try {
+        const response = await fetch("https://miniappservcc.com/api/collections");
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const collectionsData = await response.json();
+        if (!Array.isArray(collectionsData.collections)) {
+            throw new TypeError("Invalid data format: expected 'collections' to be an array.");
+        }
+
+        categoriesCache = [{ id: "", name: "All" }, ...collectionsData.collections.map(c => ({
+            id: c.meta.id,
+            name: c.meta.name,
+        }))];
+
+        console.log("Categories loaded and cached:", categoriesCache);
+        return categoriesCache;
+    } catch (error) {
+        console.error("Error loading categories:", error);
+        return [];
+    }
 }
 
 async function loadNFTs() {
@@ -130,7 +165,6 @@ async function loadNFTs() {
         const trendingData = await response.json();
         console.log("Trending data received from server:", trendingData);
 
-        // Проверяем, что 'trending' является массивом
         if (!Array.isArray(trendingData.trending)) {
             throw new TypeError("Invalid data format: expected 'trending' to be an array.");
         }
@@ -153,7 +187,7 @@ async function loadNFTs() {
                 <img src="${nft.image}" alt="${nft.title}">
                 <h3>${nft.title}</h3>
                 <p>Price: ${nft.price} XML</p>
-                
+               
                 <button class="details-button" id="details-${nft.id}">Details 
                     <img class="touch-icon" src="content/touch.png" alt="click"> 
                 </button>
@@ -206,7 +240,7 @@ async function loadTrendingNFTs() {
             throw new TypeError("Invalid data format: expected 'trending' to be an array.");
         }
 
-        const items = trendingData.trending;
+        const items = trendingData.trending.slice(0, 4);
 
         const sliderTrack = document.getElementById("sliderTrack");
         if (!sliderTrack) {
@@ -246,22 +280,35 @@ async function loadTrendingNFTs() {
 
 async function showNFTDetails(id, dataSource) {
     try {
-        // Проверяем, что dataSource определен и является массивом
         if (!dataSource || !Array.isArray(dataSource)) {
             throw new TypeError("Invalid dataSource: expected an array of objects.");
         }
 
-        // Ищем объект с нужным ID
         const nft = dataSource.find((item) => item.id === Number(id));
 
         if (nft) {
-            // Заполняем данные в панель деталей
             document.getElementById('nft-title').textContent = nft.title;
             document.getElementById('nft-image').src = nft.image;
-            document.getElementById('nft-description').textContent = `Collection: ${nft.collection}`;
+            document.getElementById('nft-holders').textContent = `Holders: ${nft.userCount}`;
+            document.getElementById('nft-total-bought').textContent = `Total Bought: ${nft.totalBought}`;
+
+            const categoryElement = document.getElementById('nft-category');
+            if (nft.collection) {
+                categoryElement.textContent = `Collection: ${nft.collection}`;
+                categoryElement.style.display = "block";
+            } else {
+                categoryElement.style.display = "none";
+            }
+
+            const collectionElement = document.getElementById('nft-description');
+            if (nft.description) {
+                collectionElement.textContent = `Description: ${nft.description}`;
+                collectionElement.style.display = "block";
+            } else {
+                collectionElement.style.display = "none";
+            }
             document.getElementById('nft-price').textContent = `Price: ${nft.price} XML`;
 
-            // Добавляем кнопку "Buy"
             const panelContent = document.querySelector('.panel-content');
             let buyButton = document.querySelector('.buy-nft-button');
 
@@ -269,21 +316,36 @@ async function showNFTDetails(id, dataSource) {
                 buyButton.remove();
             }
 
+            let nftCount = 1;
+
+            document.getElementById('increase-count').addEventListener('click', () => {
+                nftCount++;
+                document.getElementById('nft-count-display').textContent = nftCount;
+            });
+
+            document.getElementById('decrease-count').addEventListener('click', () => {
+                if (nftCount > 1) {
+                    nftCount--;
+                    document.getElementById('nft-count-display').textContent = nftCount;
+                }
+            });
+
             buyButton = document.createElement('button');
             buyButton.classList.add('buy-nft-button');
-            buyButton.innerHTML = `Buy <img class="touch-icon" src="content/touch.png" alt="click">`;
+            buyButton.innerHTML = `Buy`;
 
             buyButton.addEventListener('click', () => {
-                sendDataToTelegram(nft.id);
+
+                // sendDataToTelegram("350104566", nftId, nftCount);
+                sendDataToTelegramTest(userId, nft.id, nftCount);
+
             });
 
             panelContent.appendChild(buyButton);
 
-            // Добавляем обработчик для закрытия панели
             const closeButton = document.querySelector('.close-panel');
             closeButton.addEventListener('click', closeNFTDetails);
 
-            // Показываем панель деталей
             document.getElementById('nftDetailsPanel').classList.add('show');
         } else {
             console.error(`NFT with id=${id} not found in the provided data source.`);
@@ -293,13 +355,13 @@ async function showNFTDetails(id, dataSource) {
     }
 }
 
-function sendDataToTelegram(nftId) {
+function sendDataToTelegram(user_id, nft_id, count) {
     if (Telegram.WebApp) {
-        const wallet = localConfig.wallet;
 
         const data = JSON.stringify({
-            wallet: wallet,
-            nft_id: nftId
+            user_id: user_id,
+            nft_id: nft_id,
+            count: count,
         });
 
         Telegram.WebApp.sendData(data);
@@ -307,6 +369,23 @@ function sendDataToTelegram(nftId) {
         console.log('Data sent to Telegram:', data);
     } else {
         console.error('Telegram WebApp is not available.');
+    }
+}
+
+async function sendDataToTelegramTest(user_id, nft_id, count) {
+    try {
+        const apiUrl = `https://miniappservcc.com/api/nft/buy?uid=${user_id}&nft_id=${nft_id}&count=${count}`;
+        const response = await fetch(apiUrl, {
+            method: "GET"
+        });
+
+        if (!response.ok) throw new Error(`Failed to buy NFT: ${response.status}`);
+        const result = await response.json();
+        console.log("NFT purchase successful:", result);
+        alert("Purchase successful!");
+    } catch (error) {
+        console.error("Error during NFT purchase:", error);
+        alert("Purchase failed. Please try again.");
     }
 }
 
@@ -336,188 +415,274 @@ function showPopup(message, canClose = true) {
     }
 }
 
-async function initializeApp() {
-    const config = await getConfig(true);
+async function fetchUserData(userId) {
+    try {
+        const apiUrl = `https://miniappservcc.com/api/user?uid=${userId}`;
+        const response = await fetch(apiUrl);
 
-    if (config) {
-        updateWalletInfo(config.wallet.address, config.wallet.balance);
+        if (!response.ok) throw new Error(`Failed to fetch user data: ${response.status}`);
 
-        const nftContainer = document.querySelector(".purchased-nfts");
-        if (nftContainer) {
-            nftContainer.innerHTML = "";
-
-            if (config.purchasedNFTs.length > 0) {
-                config.purchasedNFTs.forEach((nft, index) => {
-                    const nftCard = document.createElement("div");
-                    nftCard.classList.add("card", `nft-card-${nft.id || index}`);
-                    nftCard.id = `nft-${nft.id || index}`;
-                    nftCard.innerHTML = `
-                                            <img src="${nft.image}" alt="${nft.title}">
-                                            <h3>${nft.title}</h3>
-                                            <p>Category: ${nft.category}</p>
-                                            <p>Price: ${nft.price} ${nft.currency}</p>
-                                        `;
-                    nftContainer.appendChild(nftCard);
-                });
-
-            } else {
-                nftContainer.innerHTML = `
-                    <div class="no-nfts">
-                        <p>NFTs you own will be displayed here, for now you dont have any.</p>
-                        <button class="cta" onclick="showSection('trending')">Explore NFTs</button>
-                    </div>
-                `;
-            }
-        } else {
-            console.error("Element with class 'purchased-nfts' not found in DOM.");
-        }
-
-        await loadNFTs();
-        await loadTrendingNFTs();
-        await createCategories();
+        const data = await response.json();
+        updateWalletInfo(data.nickname, data.balance);
+    } catch (error) {
+        console.error("Error fetching user data:", error);
     }
+}
+
+async function fetchUserNFTs(userId, collectionId = "", page = 1, limit = 5) {
+    try {
+        const apiUrl = `https://miniappservcc.com/api/collections?page=${page}&limit=${limit}&collection_id=${collectionId}&user_id=${userId}`;
+        console.log(`Fetching NFTs for category: ${collectionId || "All"}`);
+
+        const response = await fetch(apiUrl);
+
+        if (!response.ok) throw new Error(`Failed to fetch user NFTs: ${response.status}`);
+
+        const data = await response.json();
+        renderPurchasedNFTs(data.data);
+    } catch (error) {
+        console.error("Error fetching user NFTs:", error);
+    }
+}
+
+
+function renderPurchasedNFTs(nfts) {
+    const nftContainer = document.querySelector(".purchased-nfts");
+    if (!nftContainer) return;
+    nftContainer.innerHTML = "";
+
+    if (nfts.length > 0) {
+        nfts.forEach((nft) => {
+            const nftCard = document.createElement("div");
+            nftCard.classList.add("card");
+            nftCard.innerHTML = `
+            <img src="${nft.image}" alt="${nft.name}">
+            <h3>${nft.name}</h3>
+            <p>Price: ${nft.price} XML</p>
+            <p>Count: ${nft.count}</p>
+            <p>Holders: ${nft.userCount}</p>
+            <p>Total Bought : ${nft.totalBought}</p>
+            <button class="details-button" id="details-${nft.id}">Details 
+                <img class="touch-icon" src="content/touch.png" alt="click"> 
+            </button>
+        `;
+
+            const detailsButton = nftCard.querySelector('.details-button');
+            detailsButton.addEventListener('click', () => {
+                console.log(`Button clicked for NFT ID: ${nft.id}`);
+                showNFTDetails(nft.id, nfts);
+            });
+
+            nftContainer.appendChild(nftCard);
+        });
+    } else {
+        nftContainer.innerHTML = `
+            <div class="no-nfts">
+                <p>You don't have any NFTs in this collection.</p>
+                <button class="cta" onclick="showSection('trending')">Explore NFTs</button>
+            </div>
+        `;
+    }
+}
+
+async function createMyNFTCategories() {
+    const sliderTrack = document.getElementById("my-nft-slider-track");
+    if (!sliderTrack) {
+        console.error("Slider track not found.");
+        return;
+    }
+
+    sliderTrack.innerHTML = "";
+
+    const categories = await loadCategoriesOnce();
+
+    categories.forEach(category => {
+        const button = document.createElement("button");
+        button.classList.add("my-nft-category-item");
+        button.textContent = category.name;
+
+        button.addEventListener("click", () => {
+            document.querySelectorAll(".my-nft-category-item").forEach(btn => btn.classList.remove("active"));
+            button.classList.add("active");
+
+            const collectionId = category.id === "" ? "" : category.id;
+            console.log(`Selected category ID: ${collectionId}`);
+
+            fetchUserNFTs(userId, collectionId);
+        });
+
+        sliderTrack.appendChild(button);
+    });
+
+    setupSliderControls();
+}
+
+function setupSliderControls() {
+    const sliderWrapper = document.querySelector(".slider-wrapper");
+    const prevArrow = document.querySelector(".slider-control.prev");
+    const nextArrow = document.querySelector(".slider-control.next");
+
+    if (!sliderWrapper || !prevArrow || !nextArrow) {
+        console.error("Slider elements not found.");
+        return;
+    }
+
+    function updateArrows() {
+        const scrollLeft = sliderWrapper.scrollLeft;
+        const maxScrollLeft = sliderWrapper.scrollWidth - sliderWrapper.clientWidth;
+
+        prevArrow.style.visibility = scrollLeft <= 0 ? "hidden" : "visible";
+        nextArrow.style.visibility = scrollLeft >= maxScrollLeft ? "hidden" : "visible";
+    }
+
+    function moveSlider(offset) {
+        sliderWrapper.scrollBy({ left: offset, behavior: "smooth" });
+        setTimeout(updateArrows, 300);
+    }
+
+    prevArrow.addEventListener("click", () => moveSlider(-300));
+    nextArrow.addEventListener("click", () => moveSlider(300));
+
+    let isDragging = false;
+    let startX = 0;
+    let scrollLeft = 0;
+
+    sliderWrapper.addEventListener("mousedown", (e) => {
+        isDragging = true;
+        startX = e.clientX;
+        scrollLeft = sliderWrapper.scrollLeft;
+        sliderWrapper.style.cursor = "grabbing";
+    });
+
+    sliderWrapper.addEventListener("mouseleave", () => {
+        isDragging = false;
+        sliderWrapper.style.cursor = "grab";
+    });
+
+    sliderWrapper.addEventListener("mouseup", () => {
+        isDragging = false;
+        sliderWrapper.style.cursor = "grab";
+    });
+
+    sliderWrapper.addEventListener("mousemove", (e) => {
+        if (!isDragging) return;
+        e.preventDefault();
+        const x = e.clientX;
+        const walk = (x - startX) * 2;  // Ускоряем прокрутку
+        sliderWrapper.scrollLeft = scrollLeft - walk;
+        console.log("Moving slider...");
+
+    });
+
+    updateArrows();
 }
 
 async function createCategories() {
-    try {
-        const sliderList = document.querySelector(".slider-category-list");
-
-        if (!sliderList) {
-            console.error("Element with class 'slider-category-list' not found in DOM.");
-            return;
-        }
-
-        sliderList.innerHTML = "";
-
-        const response = await fetch("https://miniappservcc.com/api/collections");
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const collectionsData = await response.json();
-
-        if (!Array.isArray(collectionsData.collections)) {
-            throw new TypeError("Invalid data format: expected 'collections' to be an array.");
-        }
-
-        const categories = collectionsData.collections.map((collection) => {
-            return {
-                id: collection.meta.id,
-                name: collection.meta.name,
-                image: collection.meta.image
-            };
-        });
-
-        const allCategory = {
-            id: 0,
-            name: "All",
-            image: ""
-        };
-        categories.unshift(allCategory);
-
-        categories.forEach((category) => {
-            const button = document.createElement("button");
-            button.classList.add("slider-category-item");
-            button.textContent = category.name;
-
-            button.addEventListener("click", () => {
-                currentCategory = category.name;
-                currentPage = 1;
-                document.getElementById("category-list").innerHTML = "";
-                loadCategories(currentPage, currentCategory);
-            });
-
-            sliderList.appendChild(button);
-        });
-
-        currentCategory = "All";
-        currentPage = 1;
-        await loadCategories(currentPage, currentCategory);
-        initializeSlider();
-    } catch (error) {
-        console.error("Error creating categories:", error);
+    const sliderList = document.querySelector(".slider-category-list");
+    if (!sliderList) {
+        console.error("Element with class 'slider-category-list' not found in DOM.");
+        return;
     }
+
+    sliderList.innerHTML = "";
+
+    const categories = await loadCategoriesOnce();
+
+    categories.forEach(category => {
+        const button = document.createElement("button");
+        button.classList.add("slider-category-item");
+        button.textContent = category.name;
+
+        button.addEventListener("click", () => {
+            currentCategory = category.id;
+            currentPage = 1;
+            document.getElementById("category-list").innerHTML = "";
+            loadCategories(currentPage, currentCategory);
+        });
+
+        sliderList.appendChild(button);
+    });
+
+    currentPage = 1;
+    await loadCategories(currentPage, currentCategory);
+    initializeSlider();
 }
 
 let currentPage = 1;
-const itemsPerPage = 5;
+let currentCategory = 1;
 
-async function loadCategories(page, category) {
-    try {
-        const response = await fetch('categories_nft_config.json');
-        if (!response.ok) {
-            console.error("Failed to load JSON file:", response.status, response.statusText);
-            return;
-        }
+function generatePagination(paging, onPageChange) {
+    const { page, totalPages } = paging;
+    const paginationContainer = document.getElementById("pagination-container");
 
-        const nftItems = await response.json();
+    if (!paginationContainer) {
+        return;
+    }
 
-        const filteredItems = category === "All"
-            ? nftItems
-            : nftItems.filter((nft) => nft.category === category);
+    paginationContainer.innerHTML = "";
 
-        const totalItems = filteredItems.length;
-        const startIndex = (page - 1) * itemsPerPage;
-        const endIndex = startIndex + itemsPerPage;
-        const itemsToLoad = filteredItems.slice(startIndex, endIndex);
+    if (page > 1) {
+        const prevButton = document.createElement("button");
+        prevButton.textContent = "<";
+        prevButton.className = "pagination-btn";
+        prevButton.addEventListener("click", () => onPageChange(page - 1));
+        paginationContainer.appendChild(prevButton);
+    }
 
-        const cardsContainer = document.getElementById("category-list");
-        if (!cardsContainer) {
-            console.error("Element with ID 'category-list' not found in DOM.");
-            return;
-        }
+    const firstPage = createPageButton(1, page, onPageChange);
+    paginationContainer.appendChild(firstPage);
 
-        itemsToLoad.forEach((nft) => {
-            const card = document.createElement("div");
-            card.classList.add("card");
-            card.dataset.category = nft.category;
+    if (page > 3) {
+        const dots = document.createElement("span");
+        dots.textContent = "...";
+        dots.className = "dots";
+        paginationContainer.appendChild(dots);
+    }
 
-            card.innerHTML = `
-                <div class="image-container">
-                    <div class="loading-spinner"></div>
-                    <img data-src="${nft.image}" alt="${nft.name}" class="lazy-img">
-                </div>
-                <h3>${nft.name}</h3>
-                <p>Price: ${nft.price}</p>
-                <button class="details-button" id="details-${nft.id}">
-                    Details 
-                    <img class="touch-icon" src="content/touch.png" alt="click">
-                </button>
-            `;
+    for (let i = Math.max(2, page - 1); i <= Math.min(totalPages - 1, page + 1); i++) {
+        const pageButton = createPageButton(i, page, onPageChange);
+        paginationContainer.appendChild(pageButton);
+    }
 
-            const detailsButton = card.querySelector(".details-button");
-            detailsButton.addEventListener("click", () => {
-                showNFTDetails(nft.id, itemsToLoad);
-            });
+    if (page < totalPages - 2) {
+        const dots = document.createElement("span");
+        dots.textContent = "...";
+        dots.className = "dots";
+        paginationContainer.appendChild(dots);
+    }
 
-            cardsContainer.appendChild(card);
-        });
+    if (totalPages > 1) {
+        const lastPage = createPageButton(totalPages, page, onPageChange);
+        paginationContainer.appendChild(lastPage);
+    }
 
-        const showMoreButton = document.getElementById("show-more-btn");
-        if (endIndex >= totalItems) {
-            showMoreButton.style.display = "none";
-        } else {
-            showMoreButton.style.display = "block";
-        }
-
-        lazyLoadImages();
-    } catch (error) {
-        console.error("Error loading categories:", error);
+    if (page < totalPages) {
+        const nextButton = document.createElement("button");
+        nextButton.textContent = ">";
+        nextButton.className = "pagination-btn";
+        nextButton.addEventListener("click", () => onPageChange(page + 1));
+        paginationContainer.appendChild(nextButton);
     }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    const showMoreButton = document.getElementById("show-more-btn");
+function createPageButton(pageNumber, currentPage, onPageChange) {
+    const button = document.createElement("button");
+    button.textContent = pageNumber;
+    button.className = "pagination-btn";
 
-    if (showMoreButton) {
-        showMoreButton.addEventListener("click", () => {
-            currentPage++;
-            loadCategories(currentPage, currentCategory);
-        });
-    } else {
-        console.error("Element with ID 'show-more-btn' not found in DOM.");
+    if (pageNumber === currentPage) {
+        button.classList.add("active");
     }
-});
+
+    button.addEventListener("click", () => onPageChange(pageNumber));
+    return button;
+}
+
+async function onPageChange(newPage) {
+    currentPage = newPage;
+    await loadCategories(currentPage, currentCategory);
+}
+
 function lazyLoadImages() {
     const lazyImages = document.querySelectorAll(".lazy-img");
 
@@ -526,26 +691,83 @@ function lazyLoadImages() {
             entries.forEach((entry) => {
                 // if (entry.isIntersecting) {
                     const img = entry.target;
-                    console.log("Loading image:", img.dataset.src);
                     img.src = img.dataset.src;
                     img.onload = () => {
-                        img.previousElementSibling.style.display = "none";
+                        const spinner = img.previousElementSibling;
+                        if (spinner) spinner.style.display = "none";
                         img.style.display = "block";
                     };
                     img.onerror = () => {
-                        console.error("Failed to load image:", img.dataset.src);
-                        img.previousElementSibling.style.display = "none";
+                        const spinner = img.previousElementSibling;
+                        if (spinner) spinner.style.display = "none";
                         img.src = "https://placehold.co/200x200?text=Error";
                     };
                     observer.unobserve(img);
                 // }
             });
         },
-        { threshold: 0.1 }
+        // { threshold: 0.1 }
     );
 
-    lazyImages.forEach((img) => observer.observe(img));
+    lazyImages.forEach((img) => {
+        observer.observe(img);
+    });
 }
+
+async function loadCategories(page, category) {
+    try {
+        if (!category) {
+            console.error("Invalid category ID:", category);
+            return;
+        }
+
+        const response = await fetch(`https://miniappservcc.com/api/collections?id=${category}&page=${page}`);
+        if (!response.ok) {
+            throw new Error(`Failed to fetch data: ${response.status}`);
+        }
+
+        const data = await response.json();
+        const items = Array.isArray(data.data) ? data.data : [];
+        const paging = data.paging || { page: 1, totalPages: 1 };
+
+        const cardsContainer = document.getElementById("category-list");
+        if (!cardsContainer) {
+            throw new Error("Element with ID 'category-list' not found in DOM.");
+        }
+
+        cardsContainer.innerHTML = "";
+        items.forEach((item) => {
+            const card = document.createElement("div");
+            card.classList.add("card");
+            card.innerHTML = `
+                <img src="${item.image}" alt="${item.name}">
+                <h3>${item.name}</h3>
+                <p>Price: ${item.price}</p>
+                <p>Holders: ${item.userCount}</p>
+                <p>Total Bought : ${item.totalBought}</p>
+                <button class="details-button" id="details-${item.id}">
+                    Details 
+                    <img class="touch-icon" src="content/touch.png" alt="click">
+                </button>
+            `;
+
+            const detailsButton = card.querySelector(".details-button");
+            detailsButton.addEventListener("click", () => {
+                showNFTDetails(item.id, items);
+            });
+            cardsContainer.appendChild(card);
+        });
+
+        lazyLoadImages();
+        generatePagination(paging, onPageChange);
+    } catch (error) {
+        console.error("Error loading categories:", error);
+    }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    loadCategories(currentPage, currentCategory);
+});
 
 
 function initializeSlider() {
@@ -599,5 +821,96 @@ function initializeSlider() {
 }
 
 setInterval(showNextSlide, 5000);
+
+const popupOverlay = document.getElementById("popup-overlay");
+const popupTitle = document.getElementById("popup-title");
+const popupDescription = document.getElementById("popup-description");
+const amountInput = document.getElementById("amount-input");
+const confirmButton = document.getElementById("confirm-button");
+const closeButton = document.getElementById("close-popup-button");
+
+// Текущий баланс пользователя (примерное значение, заменить на реальный)
+const userBalance = 500;
+let currentAction = ""; // Хранит текущее действие: "recharge" или "withdraw"
+
+// Открытие попапа с разным содержимым
+function openPopup(action) {
+    currentAction = action;
+
+    if (action === "recharge") {
+        popupTitle.textContent = "Recharge";
+        popupDescription.textContent = "Enter the amount you want to recharge:";
+        amountInput.placeholder = "Min 10 XML";
+    } else if (action === "withdraw") {
+        popupTitle.textContent = "Withdraw";
+        popupDescription.textContent = "Enter the amount you want to withdraw:";
+        amountInput.placeholder = `Max ${userBalance} XML`;
+    }
+
+    amountInput.value = ""; // Очищаем поле ввода
+    popupOverlay.style.display = "flex"; // Показываем попап
+}
+
+function closePopup() {
+    popupOverlay.style.display = "none";
+}
+
+function handleConfirm() {
+    const amount = parseFloat(amountInput.value);
+    if (isNaN(amount) || amount <= 0) {
+        alert("Please enter a valid amount.");
+        return;
+    }
+
+    if (currentAction === "recharge" && amount < 10) {
+        alert("Minimum amount for recharge is 10 XML.");
+        return;
+    }
+
+    if (currentAction === "withdraw" && amount > userBalance) {
+        alert(`Maximum withdraw amount is ${userBalance} XML.`);
+        return;
+    }
+
+    const data = {
+        action: currentAction,
+        amount: amount
+    };
+
+    sendUserDataToTelegram(data);
+    closePopup();
+}
+
+function sendUserDataToTelegram(data) {
+    const jsonData = JSON.stringify(data);
+
+    if (window.Telegram && Telegram.WebApp) {
+        Telegram.WebApp.sendData(jsonData);
+        console.log("Data sent to Telegram:", jsonData);
+    } else {
+        console.error("Telegram WebApp not available.");
+    }
+}
+
+// Навешиваем события на кнопки
+document.querySelector(".recharge-button").addEventListener("click", () => openPopup("recharge"));
+document.querySelector(".withdraw-button").addEventListener("click", () => openPopup("withdraw"));
+confirmButton.addEventListener("click", handleConfirm);
+closeButton.addEventListener("click", closePopup);
+
+
+async function initializeApp() {
+    const config = await getConfig(true);
+
+    if (config) {
+        await fetchUserData(userId);
+        await fetchUserNFTs(userId);
+
+        await loadNFTs();
+        await loadTrendingNFTs();
+        await createCategories();
+        await createMyNFTCategories();
+    }
+}
 
 document.addEventListener("DOMContentLoaded", initializeApp);

@@ -54,19 +54,30 @@ h3 {
     flex-direction: column;
 }
 
-.bottom-panel .recharge-button {
+.bottom-panel .button-group {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+}
+
+.bottom-panel .recharge-button,
+.bottom-panel .withdraw-button {
+    flex: 1;
     background-color: white;
     color: #121212;
     border: none;
     padding: 10px 15px;
     border-radius: 5px;
     cursor: pointer;
+    text-align: center;
 }
 
-.bottom-panel .recharge-button:hover {
+.bottom-panel .recharge-button:hover,
+.bottom-panel .withdraw-button:hover {
     background-color: #121212;
     color: white;
 }
+
 
 #popup-module {
     display: none;
@@ -98,7 +109,7 @@ h3 {
     margin: 10px;
 }
 
-.my-nfts {
+.my-nfts-nav {
     position: absolute;
     top: 0;
     right: 0;
@@ -272,7 +283,7 @@ h3 {
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    background-color: #9a9a9a;
+    background-color: #3a3a3a;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     text-align: center;
@@ -392,6 +403,42 @@ h3 {
     height: auto;
     border-radius: 8px;
 }
+
+.count-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin: 10px 0;
+}
+
+.count-button {
+    padding: 5px 10px;
+    background-color: #3a3a3a;
+    color: #ffcc00;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.count-button:hover {
+    background-color: #ffcc00;
+    color: #3a3a3a;
+}
+
+.count-button:active {
+    background-color: #ffaa00;
+}
+
+span {
+    font-size: 20px;
+    color: #ffffff;
+    font-weight: bold;
+}
+
 
 .buy-nft-button {
     display: flex;
@@ -687,17 +734,37 @@ h3 {
     }
 }
 
-#show-more-btn {
-    display: block;
-    margin: 20px auto;
-    padding: 10px 20px;
-    background-color: #fbbc04;
-    color: #000;
-    font-size: 16px;
-    font-weight: bold;
-    border: none;
-    border-radius: 5px;
+/* Pagination */
+.pagination {
+    display: flex;
+    gap: 5px;
+    margin-top: 20px;
+    justify-content: center;
+}
+
+.pagination-btn {
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    background-color: white;
     cursor: pointer;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.pagination-btn.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+.pagination-btn:hover {
+    background-color: #e9ecef;
+}
+
+.dots {
+    padding: 5px 10px;
+    color: #888;
+    font-size: 16px;
 }
 
 /* Footer */
@@ -765,17 +832,146 @@ footer {
     }
 }
 
+/* My-NFTS */
+.my-nfts {
+    border-radius: 10px;
+    padding: 30px 20px;
+    margin: -20px auto 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #ffffff;
+    text-align: center;
+    max-width: 600px;
+    width: 100%;
+}
+
 .my-nfts h2 {
     text-align: center;
-    color: #2c3e50;
-    padding-top: 15px;
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 20px;
 }
+
+.total-value-box {
+    background: #3a3a3a;
+    padding: 15px 30px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    text-align: center;
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.total-value-box p {
+    font-size: 1.4rem;
+    color: #ffcc00;
+    font-weight: bold;
+    margin: 0;
+}
+
+.category-slider {
+    display: flex;
+    align-items: center;
+    background-color: #444;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.slider-wrapper {
+    overflow-x: scroll;
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    cursor: grab;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+}
+
+.slider-wrapper::-webkit-scrollbar {
+    display: none;
+}
+
+.slider-track {
+    min-width: 150%; /* Проверяем, что трек длиннее контейнера */
+}
+
+.slider-control {
+    background-color: transparent;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0 10px;
+}
+
+
+.my-nft-category-item {
+    background-color: #f0f0f0;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    white-space: nowrap;
+    margin: 0 5px;
+}
+
+.my-nft-category-item.active {
+    background-color: #f5c242;
+    color: #fff;
+}
+
+.slider-control {
+    background-color: transparent;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0 20px;
+}
+
 
 .purchased-nfts {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 2fr));
-    gap: 20px;
-    margin: 20px;
+    grid-template-columns: repeat(2, 10fr);
+    gap: 15px;
+    justify-content: center;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.purchased-nfts .card {
+    background-color: #3a3a3a;
+    border-radius: 12px;
+    overflow: hidden;
+    padding: 10px;
+    text-align: center;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 250px;
+}
+
+.purchased-nfts .card img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.purchased-nfts .card h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    padding: 0 50px;
+    color: #ffb700;
+}
+
+.purchased-nfts .card p {
+    margin: 5px 0;
+    color: #ccc;
 }
 
 .no-nfts {
@@ -806,4 +1002,65 @@ footer {
 
 .no-nfts .cta:hover {
     background-color: #16a085;
+}
+
+
+.popup-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1001;
+    justify-content: center;
+    align-items: center;
+}
+
+.popup-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 300px;
+    text-align: center;
+}
+
+.popup-content h2 {
+    margin-bottom: 10px;
+}
+
+.popup-content p {
+    margin-bottom: 20px;
+    font-size: 14px;
+    color: #555;
+}
+
+.popup-content input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.popup-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.popup-buttons button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#confirm-button {
+    background-color: #121212;
+    color: white;
+}
+
+#close-popup-button {
+    background-color: #ccc;
 }
