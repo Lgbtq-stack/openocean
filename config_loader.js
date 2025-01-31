@@ -892,31 +892,17 @@ function showCountdownPopup() {
 
         if (secondsLeft <= 0) {
             clearInterval(timer);
-            closeCountdownPopup();
+            Telegram.WebApp.close();
+
         }
     }, 1000);
-}
-
-
-function closeCountdownPopup() {
-    countdownPopup.style.display = "none";
-
-    if (window.Telegram && Telegram.WebApp) {
-        Telegram.WebApp.close();
-    } else {
-        console.log("Telegram WebApp not available.");
-    }
 }
 
 function sendBalanceDataToTelegram(data) {
     const jsonData = JSON.stringify(data);
 
-    if (window.Telegram && Telegram.WebApp) {
-        Telegram.WebApp.sendData(jsonData);
-        console.log("Data sent to Telegram:", jsonData);
-    } else {
-        console.error("Telegram WebApp not available.");
-    }
+    Telegram.WebApp.sendData(jsonData);
+    console.log("Data sent to Telegram:", jsonData);
 }
 
 document.querySelector(".recharge-button").addEventListener("click", () => openPopup("recharge"));
