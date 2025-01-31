@@ -858,7 +858,6 @@ const countdownPopup = document.getElementById("countdown-popup");
 const popupTitle = document.getElementById("popup-title");
 const popupDescription = document.getElementById("popup-description");
 const amountInput = document.getElementById("amount-input");
-const confirmButton = document.getElementById("confirm-button");
 const closeButton = document.getElementById("close-popup-button");
 const countdownTimer = document.getElementById("countdown-timer");
 
@@ -908,8 +907,11 @@ function handleConfirm() {
         return;
     }
 
-    // Формируем данные для отправки в Telegram
-    const data = { action: currentAction, amount: amount };
+    const data = {
+        action: currentAction,
+        amount: amount
+    };
+
     console.log("Sending data to Telegram:", data);
 
     sendBalanceDataToTelegram(data);
@@ -940,16 +942,12 @@ function sendBalanceDataToTelegram(data) {
     const jsonData = JSON.stringify(data);
 
     Telegram.WebApp.sendData(jsonData);
-    console.log("Data sent to Telegram:", jsonData);
 }
 
 document.querySelector(".recharge-button").addEventListener("click", () => openPopup("recharge"));
 document.querySelector(".withdraw-button").addEventListener("click", () => openPopup("withdraw"));
+document.querySelector(".confirm-button").addEventListener("click", () => handleConfirm());
 
-document.addEventListener("DOMContentLoaded", () => {
-    const confirmButton = document.getElementById("confirm-button");
-    confirmButton.addEventListener("click", handleConfirm);
-});
 
 closeButton.addEventListener("click", closePopup);
 
