@@ -102,28 +102,6 @@
     </div>
 </div>
 
-<button id="scrollToTop" class="scroll-to-top">↑</button>
-
-<div id="popup-module" class="popup">
-    <div class="popup-content">
-        <span class="popup-close" id="popup-close">&times;</span>
-        <p></p>
-        <button id="popup-refresh" class="popup-refresh">Refresh Page</button>
-    </div>
-</div>
-
-<div id="popup-overlay" class="popup-overlay">
-    <div class="popup-content">
-        <h2 id="popup-title">Recharge</h2>
-        <p id="popup-description">Enter the amount you want to recharge:</p>
-        <input type="number" id="amount-input" placeholder="Min 10 XML" />
-        <div class="popup-buttons">
-            <button id="confirm-button">Confirm</button>
-            <button id="close-popup-button">Cancel</button>
-        </div>
-    </div>
-</div>
-
 <div class="nft-details-panel" id="nftDetailsPanel">
     <div class="panel-content">
         <button class="close-panel">X</button>
@@ -139,6 +117,36 @@
             <span id="nft-count-display">1</span>
             <button class="count-button" id="increase-count">+</button>
         </div>
+    </div>
+</div>
+
+<button id="scrollToTop" class="scroll-to-top">↑</button>
+
+<div id="popup-overlay" class="popup-overlay">
+    <div class="popup-content">
+        <h2 id="popup-title">Recharge</h2>
+        <p id="popup-description">Enter the amount you want to recharge:</p>
+        <input type="number" id="amount-input" placeholder="Min 10 XML" />
+        <div class="popup-buttons">
+            <button id="confirm-button">Confirm</button>
+            <button id="close-popup-button">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<div id="countdown-popup" class="popup-overlay">
+    <div class="countdown-popup-content">
+        <h2>Confirmation Sent</h2>
+        <p>The MiniApp will close automatically. Please wait...</p>
+        <p id="countdown-timer">Closing in 5 seconds...</p>
+    </div>
+</div>
+
+<div id="error-popup" class="error-popup-overlay">
+    <div class="errpr-popup-content">
+        <h2 id="error-title">Warning</h2>
+        <p id="error-message">Something went wrong. Please try again.</p>
+        <button id="close-error-popup-button">Close</button>
     </div>
 </div>
 

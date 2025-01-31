@@ -823,17 +823,17 @@ function initializeSlider() {
 setInterval(showNextSlide, 5000);
 
 const popupOverlay = document.getElementById("popup-overlay");
+const countdownPopup = document.getElementById("countdown-popup");
 const popupTitle = document.getElementById("popup-title");
 const popupDescription = document.getElementById("popup-description");
 const amountInput = document.getElementById("amount-input");
 const confirmButton = document.getElementById("confirm-button");
 const closeButton = document.getElementById("close-popup-button");
+const countdownTimer = document.getElementById("countdown-timer");
 
-// Текущий баланс пользователя (примерное значение, заменить на реальный)
 const userBalance = 500;
-let currentAction = ""; // Хранит текущее действие: "recharge" или "withdraw"
+let currentAction = "";
 
-// Открытие попапа с разным содержимым
 function openPopup(action) {
     currentAction = action;
 
@@ -847,8 +847,8 @@ function openPopup(action) {
         amountInput.placeholder = `Max ${userBalance} XML`;
     }
 
-    amountInput.value = ""; // Очищаем поле ввода
-    popupOverlay.style.display = "flex"; // Показываем попап
+    amountInput.value = "";
+    popupOverlay.style.display = "flex";
 }
 
 function closePopup() {
@@ -858,17 +858,17 @@ function closePopup() {
 function handleConfirm() {
     const amount = parseFloat(amountInput.value);
     if (isNaN(amount) || amount <= 0) {
-        alert("Please enter a valid amount.");
+        showErrorPopup("error", "Please enter a valid amount.");
         return;
     }
 
     if (currentAction === "recharge" && amount < 10) {
-        alert("Minimum amount for recharge is 10 XML.");
+        showErrorPopup("error", "Minimum amount for recharge is 10 XML.");
         return;
     }
 
     if (currentAction === "withdraw" && amount > userBalance) {
-        alert(`Maximum withdraw amount is ${userBalance} XML.`);
+        showErrorPopup("warning", `Maximum withdraw amount is ${userBalance} XML.`);
         return;
     }
 
@@ -877,11 +877,41 @@ function handleConfirm() {
         amount: amount
     };
 
-    sendUserDataToTelegram(data);
-    closePopup();
+    sendDataToTelegram(data);
+    showCountdownPopup();
 }
 
-function sendUserDataToTelegram(data) {
+
+function showCountdownPopup() {
+    popupOverlay.style.display = "none";
+    countdownPopup.style.display = "flex";
+
+    let secondsLeft = 5;
+    countdownTimer.textContent = `Closing in ${secondsLeft} seconds...`;
+
+    const timer = setInterval(() => {
+        secondsLeft--;
+        countdownTimer.textContent = `Closing in ${secondsLeft} seconds...`;
+
+        if (secondsLeft <= 0) {
+            clearInterval(timer);
+            closeCountdownPopup();
+        }
+    }, 1000);
+}
+
+
+function closeCountdownPopup() {
+    countdownPopup.style.display = "none";
+
+    if (window.Telegram && Telegram.WebApp) {
+        Telegram.WebApp.close();
+    } else {
+        console.log("Telegram WebApp not available.");
+    }
+}
+
+function sendBalanceDataToTelegram(data) {
     const jsonData = JSON.stringify(data);
 
     if (window.Telegram && Telegram.WebApp) {
@@ -892,12 +922,34 @@ function sendUserDataToTelegram(data) {
     }
 }
 
-// Навешиваем события на кнопки
 document.querySelector(".recharge-button").addEventListener("click", () => openPopup("recharge"));
 document.querySelector(".withdraw-button").addEventListener("click", () => openPopup("withdraw"));
 confirmButton.addEventListener("click", handleConfirm);
 closeButton.addEventListener("click", closePopup);
 
+const errorPopup = document.getElementById("error-popup");
+const errorTitle = document.getElementById("error-title");
+const errorMessage = document.getElementById("error-message");
+const closeErrorPopupButton = document.getElementById("close-error-popup-button");
+
+function showErrorPopup(type, message) {
+    if (type === "error") {
+        errorTitle.textContent = "Error";
+        errorTitle.style.color = "#ff0000";
+    } else if (type === "warning") {
+        errorTitle.textContent = "Warning";
+        errorTitle.style.color = "#ffa500";
+    }
+
+    errorMessage.textContent = message;
+    errorPopup.style.display = "flex";
+}
+
+function closeErrorPopup() {
+    errorPopup.style.display = "none";
+}
+
+closeErrorPopupButton.addEventListener("click", closeErrorPopup);
 
 async function initializeApp() {
     const config = await getConfig(true);

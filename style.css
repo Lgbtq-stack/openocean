@@ -1018,7 +1018,8 @@ footer {
     align-items: center;
 }
 
-.popup-content {
+.popup-content,
+.countdown-popup-content {
     background: white;
     padding: 20px;
     border-radius: 10px;
@@ -1034,14 +1035,6 @@ footer {
     margin-bottom: 20px;
     font-size: 14px;
     color: #555;
-}
-
-.popup-content input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin-bottom: 20px;
 }
 
 .popup-buttons {
@@ -1064,3 +1057,59 @@ footer {
 #close-popup-button {
     background-color: #ccc;
 }
+
+/* error popup */
+.error-popup-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1001;
+    justify-content: center;
+    align-items: center;
+}
+
+.errpr-popup-content {
+    background: #fff3f3;
+    border: 2px solid #ff4d4d;
+    padding: 20px;
+    border-radius: 12px;
+    width: 320px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.errpr-popup-content h2 {
+    margin-bottom: 10px;
+    font-size: 22px;
+    font-weight: bold;
+    color: #ff0000;
+}
+
+.errpr-popup-content p {
+    margin-bottom: 20px;
+    font-size: 16px;
+    color: #333;
+    line-height: 1.5;
+}
+
+.errpr-popup-content button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #121212;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    outline: none;
+    transition: background-color 0.3s ease;
+}
+
+.errpr-popup-content button:hover {
+    background-color: #555;
+}
+
