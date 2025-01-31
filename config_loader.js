@@ -940,7 +940,9 @@ function showCountdownPopup() {
 
         if (secondsLeft <= 0) {
             clearInterval(timer);
-            Telegram.WebApp.close();
+            const tg = Telegram.WebApp;
+
+            tg.close();
 
         }
     }, 1000);
@@ -948,6 +950,7 @@ function showCountdownPopup() {
 
 function sendBalanceDataToTelegram(data) {
     const jsonData = JSON.stringify(data);
+    const tg = Telegram.WebApp;
 
     tg.ready();
     tg.sendData(jsonData);
@@ -985,7 +988,6 @@ closeErrorPopupButton.addEventListener("click", closeErrorPopup);
 
 async function initializeApp() {
 
-    const tg = Telegram.WebApp;
 
     const config = await getConfig(true);
 
@@ -1000,4 +1002,7 @@ async function initializeApp() {
     }
 }
 
-document.addEventListener("DOMContentLoaded", initializeApp);
+document.addEventListener("DOMContentLoaded", () => {
+        initializeApp;
+    }
+);
