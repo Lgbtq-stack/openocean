@@ -858,6 +858,7 @@ const countdownPopup = document.getElementById("countdown-popup");
 const popupTitle = document.getElementById("popup-title");
 const popupDescription = document.getElementById("popup-description");
 const amountInput = document.getElementById("amount-input");
+const confirmButton = document.getElementById("confirm-button");
 const closeButton = document.getElementById("close-popup-button");
 const countdownTimer = document.getElementById("countdown-timer");
 
@@ -952,10 +953,9 @@ function sendBalanceDataToTelegram(data) {
 
 document.querySelector(".recharge-button").addEventListener("click", () => openPopup("recharge"));
 document.querySelector(".withdraw-button").addEventListener("click", () => openPopup("withdraw"));
-document.querySelector(".confirm-button").addEventListener("click", () => handleConfirm());
-
 
 closeButton.addEventListener("click", closePopup);
+confirmButton.addEventListener("click", handleConfirm);
 
 const errorPopup = document.getElementById("error-popup");
 const errorTitle = document.getElementById("error-title");
