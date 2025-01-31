@@ -1072,7 +1072,7 @@ footer {
     align-items: center;
 }
 
-.errpr-popup-content {
+.error-popup-content {
     background: #fff3f3;
     border: 2px solid #ff4d4d;
     padding: 20px;
@@ -1082,21 +1082,21 @@ footer {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
-.errpr-popup-content h2 {
+.error-popup-content h2 {
     margin-bottom: 10px;
     font-size: 22px;
     font-weight: bold;
     color: #ff0000;
 }
 
-.errpr-popup-content p {
+.error-popup-content p {
     margin-bottom: 20px;
     font-size: 16px;
     color: #333;
     line-height: 1.5;
 }
 
-.errpr-popup-content button {
+.error-popup-content button {
     padding: 10px 20px;
     border: none;
     background-color: #121212;
@@ -1109,7 +1109,7 @@ footer {
     transition: background-color 0.3s ease;
 }
 
-.errpr-popup-content button:hover {
+.error-popup-content button:hover {
     background-color: #555;
 }
 

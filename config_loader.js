@@ -887,30 +887,35 @@ function closePopup() {
 }
 
 function handleConfirm() {
+    console.log("handleConfirm called");
+
     const amount = parseFloat(amountInput.value);
     if (isNaN(amount) || amount <= 0) {
+        console.log("Invalid amount");
         showErrorPopup("error", "Please enter a valid amount.");
         return;
     }
 
     if (currentAction === "recharge" && amount < 10) {
+        console.log("Recharge amount too low");
         showErrorPopup("error", "Minimum amount for recharge is 10 XML.");
         return;
     }
 
     if (currentAction === "withdraw" && amount > userBalance) {
-        showErrorPopup("error", `Maximum withdraw amount is ${userBalance} XML.`);
+        console.log("Withdraw amount exceeds balance");
+        showErrorPopup("warning", `Maximum withdraw amount is ${userBalance} XML.`);
         return;
     }
 
-    const data = {
-        action: currentAction,
-        amount: amount
-    };
+    // Формируем данные для отправки в Telegram
+    const data = { action: currentAction, amount: amount };
+    console.log("Sending data to Telegram:", data);
 
     sendBalanceDataToTelegram(data);
     showCountdownPopup();
 }
+
 
 function showCountdownPopup() {
     popupOverlay.style.display = "none";
@@ -940,7 +945,12 @@ function sendBalanceDataToTelegram(data) {
 
 document.querySelector(".recharge-button").addEventListener("click", () => openPopup("recharge"));
 document.querySelector(".withdraw-button").addEventListener("click", () => openPopup("withdraw"));
-confirmButton.addEventListener("click", handleConfirm);
+
+document.addEventListener("DOMContentLoaded", () => {
+    const confirmButton = document.getElementById("confirm-button");
+    confirmButton.addEventListener("click", handleConfirm);
+});
+
 closeButton.addEventListener("click", closePopup);
 
 const errorPopup = document.getElementById("error-popup");
