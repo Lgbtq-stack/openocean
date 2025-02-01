@@ -369,7 +369,7 @@ async function showNFTDetails(id, dataSource) {
 }
 
 function sendDataToTelegram(user_id, nft_id, count) {
-    if (Telegram.WebApp) {
+    if (tg) {
 
         const data = JSON.stringify({
             user_id: user_id,
@@ -377,7 +377,7 @@ function sendDataToTelegram(user_id, nft_id, count) {
             count: count,
         });
 
-        Telegram.WebApp.sendData(data);
+        tg.sendData(data);
 
         console.log('Data sent to Telegram:', data);
     } else {
