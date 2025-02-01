@@ -921,7 +921,7 @@ function handleConfirm() {
 
     console.log("Sending data to Telegram:", data);
     if(currentAction === "recharge") {
-        popupDescription.textContent = "Pososi Recharge"
+        popupDescription.textContent = "Pososi Recharge 1"
     }
 
     if(currentAction === "withdraw") {
