@@ -984,7 +984,6 @@ closeErrorPopupButton.addEventListener("click", closeErrorPopup);
 
 async function initializeApp() {
 
-
     // const config = await getConfig(true);
     //
     // if (config) {
@@ -997,5 +996,10 @@ async function initializeApp() {
         await createMyNFTCategories();
     // }
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    const tg = Telegram.WebApp;
+    tg.ready();
+});
 
 document.addEventListener("DOMContentLoaded", initializeApp);
