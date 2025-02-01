@@ -913,23 +913,14 @@ function handleConfirm() {
         showErrorPopup("warning", `Maximum withdraw amount is ${userBalance} XML.`);
         return;
     }
-
-    const data = {
+    const data = JSON.stringify({
         action: currentAction,
         amount: amount
-    };
+    });
 
-    console.log("Sending data to Telegram:", data);
-    if(currentAction === "recharge") {
-        popupDescription.textContent = "Pososi Recharge 3"
-    }
-
-    if(currentAction === "withdraw") {
-        popupDescription.textContent = "withdraw otsosi"
-    }
 
     tg.ready();
-    tg.sendData(JSON.stringify({ action: currentAction, amount: amount }));
+    tg.sendData(data);
     showCountdownPopup();
 }
 
