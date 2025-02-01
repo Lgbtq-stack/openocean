@@ -921,13 +921,14 @@ function handleConfirm() {
 
     console.log("Sending data to Telegram:", data);
     if(currentAction === "recharge") {
-        popupDescription.textContent = "Pososi Recharge 1"
+        popupDescription.textContent = "Pososi Recharge 2"
     }
 
     if(currentAction === "withdraw") {
         popupDescription.textContent = "withdraw otsosi"
     }
 
+    tg.ready();
     tg.sendData(JSON.stringify({ action: currentAction, amount: amount }));
     showCountdownPopup();
 }
