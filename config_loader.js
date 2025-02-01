@@ -948,7 +948,7 @@ function showCountdownPopup() {
         if (secondsLeft <= 0) {
             clearInterval(timer);
 
-            tg.close();
+            // tg.close();
         }
     }, 1000);
 }
