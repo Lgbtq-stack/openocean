@@ -2,11 +2,10 @@
 // import {get_config} from "./backend/datacontoller";
 
 const userId = "350104566";
-
+let tg = null;
 document.addEventListener("DOMContentLoaded", () => {
     Telegram.WebApp.expand();
-    const tg = Telegram.WebApp;
-    tg.ready();
+    tg = Telegram.WebApp;
 });
 
 
