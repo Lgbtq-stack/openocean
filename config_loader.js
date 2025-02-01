@@ -3,6 +3,12 @@
 
 const userId = "350104566";
 
+document.addEventListener("DOMContentLoaded", () => {
+    const tg = Telegram.WebApp;
+    tg.ready();
+});
+
+
 let userDataCache = {
     data: null,
     timestamp: 0,
@@ -997,9 +1003,6 @@ async function initializeApp() {
     // }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    const tg = Telegram.WebApp;
-    tg.ready();
-});
+
 
 document.addEventListener("DOMContentLoaded", initializeApp);
