@@ -985,9 +985,9 @@ closeErrorPopupButton.addEventListener("click", closeErrorPopup);
 async function initializeApp() {
 
 
-    // const config = await getConfig(true);
-    //
-    // if (config) {
+    const config = await getConfig(true);
+
+    if (config) {
         await fetchUserData(userId);
         await fetchUserNFTs(userId);
 
@@ -995,7 +995,7 @@ async function initializeApp() {
         await loadTrendingNFTs();
         await createCategories();
         await createMyNFTCategories();
-    // }
+    }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
