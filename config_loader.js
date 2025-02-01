@@ -4,6 +4,7 @@
 const userId = "350104566";
 
 document.addEventListener("DOMContentLoaded", () => {
+    Telegram.WebApp.expand();
     const tg = Telegram.WebApp;
     tg.ready();
 });
