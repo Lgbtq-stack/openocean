@@ -922,8 +922,6 @@ function handleConfirm() {
         popupDescription.textContent = "withdraw otsosi"
     }
 
-    Telegram.WebApp.ready();
-
     Telegram.WebApp.sendData(JSON.stringify({ action: currentAction, amount: amount }));
     showCountdownPopup();
 }
