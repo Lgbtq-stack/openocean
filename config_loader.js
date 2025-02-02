@@ -135,7 +135,7 @@ async function getConfig(useLocalConfig = true) {
 
 function updateWalletInfo(nickname, balance) {
     document.getElementById("wallet-address").textContent = `User: ${nickname}`;
-    document.getElementById("wallet-balance").textContent = `Balance: ${balance} XML`;
+    document.getElementById("wallet-balance").textContent = `Balance: ${balance} XLM`;
 }
 
 async function loadCategoriesOnce() {
@@ -199,10 +199,11 @@ async function loadNFTs() {
             card.innerHTML = `
                 <img src="${nft.image}" alt="${nft.title}">
                 <h3>${nft.title}</h3>
-                <p>Price: ${nft.price} XML</p>
+                <p>Price: ${nft.price} XLM</p>
                
-                <button class="details-button" id="details-${nft.id}">Details 
-                    <img class="touch-icon" src="content/touch.png" alt="click"> 
+                <button class="details-button" id="details-${nft.id}">
+                    <img class="info-icon" src="content/info.png" alt="click">
+                    Details 
                 </button>
             `;
 
@@ -464,7 +465,7 @@ function displayUserInfo(userData) {
 
     const nftValueElement = document.getElementById("nft-total-value");
     if (nftValueElement) {
-        nftValueElement.textContent = `NFT Total Value: ${userData.nft_total_value.toFixed(2)} XML`;
+        nftValueElement.textContent = `NFT Total Value: ${userData.nft_total_value.toFixed(2)} XLM`;
     }
 }
 
@@ -484,27 +485,30 @@ async function fetchUserNFTs(userId, collectionId = "", page = 1, limit = 5) {
     }
 }
 
-
 function renderPurchasedNFTs(nfts) {
-    const nftContainer = document.querySelector(".purchased-nfts");
+    const nftContainer = document.querySelector(".my-nft-cards");
+    const exploreSection = document.getElementById("explore-section");
+
     if (!nftContainer) return;
     nftContainer.innerHTML = "";
 
     if (nfts.length > 0) {
+        exploreSection.style.display = "block";
         nfts.forEach((nft) => {
             const nftCard = document.createElement("div");
             nftCard.classList.add("card");
             nftCard.innerHTML = `
-            <img src="${nft.image}" alt="${nft.name}">
-            <h3>${nft.name}</h3>
-            <p>Price: ${nft.price} XML</p>
-            <p>Count: ${nft.count}</p>
-            <p>Holders: ${nft.userCount}</p>
-            <p>Total Bought : ${nft.totalBought}</p>
-            <button class="details-button" id="details-${nft.id}">Details 
-                <img class="touch-icon" src="content/touch.png" alt="click"> 
-            </button>
-        `;
+                <img src="${nft.image}" alt="${nft.name}">
+                <h3>${nft.name}</h3>
+                <p>Price: ${nft.price} XML</p>
+                <p>Count: ${nft.count}</p>
+                <p>Holders: ${nft.userCount}</p>
+                <p>Total Bought: ${nft.totalBought}</p>
+                <button class="details-button" id="details-${nft.id}">
+                    <img class="info-icon" src="content/info.png" alt="click">
+                    Details
+                </button>
+            `;
 
             const detailsButton = nftCard.querySelector('.details-button');
             detailsButton.addEventListener('click', () => {
@@ -515,6 +519,7 @@ function renderPurchasedNFTs(nfts) {
             nftContainer.appendChild(nftCard);
         });
     } else {
+        exploreSection.style.display = "none";
         nftContainer.innerHTML = `
             <div class="no-nfts">
                 <p>You don't have any NFTs in this collection.</p>
@@ -783,8 +788,8 @@ async function loadCategories(page, category) {
                 <p>Holders: ${item.userCount}</p>
                 <p>Total Bought : ${item.totalBought}</p>
                 <button class="details-button" id="details-${item.id}">
+                    <img class="info-icon" src="content/info.png" alt="click">
                     Details 
-                    <img class="touch-icon" src="content/touch.png" alt="click">
                 </button>
             `;
 
@@ -864,7 +869,6 @@ const popupTitle = document.getElementById("popup-title");
 const confirmButton = document.getElementById("confirm-button");
 const closeButton = document.getElementById("close-popup-button");
 const popupDescription = document.getElementById("popup-description");
-const amountInput = document.getElementById("amount-input");
 const countdownPopup = document.getElementById("countdown-popup");
 const countdownTimer = document.getElementById("countdown-timer");
 
@@ -873,6 +877,8 @@ let currentAction = "";
 
 const rechargeContent = document.getElementById("recharge-content");
 const withdrawContent = document.getElementById("withdraw-content");
+const walletAddressInput = document.getElementById("wallet-input");
+const amountInput = document.getElementById("amount-input");
 
 function openPopup(action) {
     currentAction = action;
@@ -891,11 +897,12 @@ function openPopup(action) {
 
 function closePopup() {
     popupOverlay.style.display = "none";
+
 }
 
 function handleConfirm() {
-    const walletAddress = document.getElementById("wallet-input").value;
-    const amount = parseFloat(document.getElementById("amount-input").value);
+    let walletAddress = walletAddressInput.value;
+    let amount = parseFloat(amountInput.value);
 
     if (currentAction === "withdraw") {
         if (!walletAddress || isNaN(amount) || amount <= 0) {
@@ -912,6 +919,8 @@ function handleConfirm() {
         tg.ready();
         tg.sendData(data);
         showCountdownPopup();
+        walletAddressInput.value = "";
+        amountInput.value = "";
     }
 }
 function showCountdownPopup() {

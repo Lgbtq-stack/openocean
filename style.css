@@ -36,49 +36,35 @@ h3 {
 }
 
 .bottom-panel {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background-color: #333333;
-    color: white;
+    background-color: white;
+    padding: 15px;
     display: flex;
+    width: 100%;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 20px;
-    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
+    border-top: 1px solid #e0e0e0;
 }
 
-.bottom-panel .wallet-info {
-    display: flex;
-    flex-direction: column;
+.balance-info {
+    font-size: 18px;
+    font-weight: bold;
 }
 
-.bottom-panel .button-group {
+.button-group {
     display: flex;
     gap: 10px;
-    width: 100%;
 }
 
-.bottom-panel .recharge-button,
-.bottom-panel .withdraw-button {
-    flex: 1;
-    background-color: white;
-    color: #121212;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    text-align: center;
-}
-
-.bottom-panel .recharge-button:hover,
-.bottom-panel .withdraw-button:hover {
-    background-color: #121212;
+.recharge-button,
+.withdraw-button {
+    background-color: #ff6f00;
     color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
 }
-
 
 #popup-module {
     display: none;
@@ -102,7 +88,6 @@ h3 {
 }
 
 /* Navbar */
-
 .logo {
     position: absolute;
     top: 0;
@@ -118,12 +103,12 @@ h3 {
 }
 
 .navbar {
+    background-color: white;
+    padding: 15px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem;
-    background-color: #333333;
-    color: white;
+    border-bottom: 1px solid #e0e0e0;
 }
 
 .navbar .logo {
@@ -140,7 +125,7 @@ h3 {
 
 .nav-links a {
     text-decoration: none;
-    color: white;
+    color: black;
     font-weight: 500;
     transition: color 0.3s;
     background-color: rgba(51, 51, 51, 0);
@@ -275,58 +260,33 @@ h3 {
 
 .cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
-    padding: 0 15px;
 }
 
 .card {
-    background-color: #ffffff;
+    background-color: white;
     border-radius: 10px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
     padding: 15px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     text-align: center;
-    transition: transform 0.2s ease-in-out;
 }
-
 
 .card img {
     width: 100%;
-    max-width: 200px;
-    border-radius: 10px;
-    margin-bottom: 15px;
-}
-
-.card h3, .card p {
-    line-height: 1.15;
-
+    border-radius: 8px;
+    margin-bottom: 10px;
 }
 
 .card h3 {
-    font-size: 1.2rem;
+    font-size: 20px;
     color: #333;
-    font-weight: bold;
-    margin-bottom: 8px;
 }
 
 .card p {
-    font-size: 0.9rem;
+    font-size: 16px;
     color: #666;
-    margin-bottom: 5px;
-}
-
-.card-overlay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: rgba(0, 0, 0, 0.7);
-    color: white;
-    padding: 10px;
-    text-align: left;
-    z-index: 10;
-    box-sizing: border-box;
-    border-radius: 0 0 20px 20px;
+    margin: 5px 0;
 }
 
 .card-overlay h3 {
@@ -340,35 +300,25 @@ h3 {
 }
 
 .details-button {
-    background-color: #ff7a00;
-    color: #ffffff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 1rem;
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 8px;
+    justify-content: flex-start;
+    background-color: #f97316;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-top: 15px;
+    gap: 10px;
 }
 
-.touch-icon {
+.info-icon {
     width: 20px;
     height: 20px;
 }
 
-@media (max-width: 768px) {
-    .cards {
-        grid-template-columns: 1fr;
-    }
-
-    .total-value-box {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-    }
-}
 /* NFT Details */
 .nft-details-panel {
     display: none;
@@ -493,6 +443,16 @@ span {
 
 /* === Адаптивные стили === */
 @media (max-width: 768px) {
+    .cards {
+        grid-template-columns: 1fr;
+    }
+
+    .total-value-box {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
     .panel-content {
         padding: 15px;
         gap: 12px;
@@ -842,29 +802,25 @@ footer {
 
 /* My-NFTS */
 .my-nfts {
-    background-color: #ffffff;
-    padding: 20px 15px;
+    background-color: white;
+    padding: 20px;
+    margin: 20px;
     border-radius: 10px;
-    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .my-nfts h2 {
-    font-size: 1.8rem;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 15px;
-    text-align: left;
+    font-size: 24px;
 }
 
 .total-value-box {
-    background-color: #f4f4f4;
-    padding: 10px 20px;
-    border-radius: 8px;
+    padding: 15px;
+    background-color: #e9ecef;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: bold;
     margin-bottom: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    text-align: center;
 }
 
 .total-value-box p {
@@ -882,7 +838,7 @@ footer {
 .category-slider {
     display: flex;
     align-items: center;
-    background-color: #444;
+    background-color: #dee2e5;
     padding: 10px;
     border-radius: 8px;
     margin-bottom: 20px;
@@ -903,7 +859,7 @@ footer {
 }
 
 .slider-track {
-    min-width: 150%; /* Проверяем, что трек длиннее контейнера */
+    min-width: 150%;
 }
 
 .slider-control {
@@ -916,13 +872,15 @@ footer {
 
 
 .my-nft-category-item {
-    background-color: #f0f0f0;
+    background-color: #f46c07;
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
     white-space: nowrap;
     margin: 0 5px;
+    color: white;
+    text-transform: capitalize;
 }
 
 .my-nft-category-item.active {
@@ -938,45 +896,47 @@ footer {
     padding: 0 20px;
 }
 
+.explore-section {
+    display: block;
+    padding: 20px;
+}
 
-.purchased-nfts {
+.explore-section h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.my-nft-cards {
     display: grid;
-    grid-template-columns: repeat(2, 10fr);
-    gap: 15px;
-    justify-content: center;
-    width: 100%;
-    max-width: 500px;
-    margin: 0 auto;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
 }
 
-.purchased-nfts .card {
-    background-color: #3a3a3a;
-    border-radius: 12px;
-    overflow: hidden;
-    padding: 10px;
+.my-nft-cards .card {
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
     text-align: center;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-    width: 100%;
-    max-width: 250px;
+    transition: transform 0.3s;
 }
 
-.purchased-nfts .card img {
+.my-nft-cards .card img {
     width: 100%;
     height: auto;
-    border-radius: 8px;
-    margin-bottom: 10px;
+    border-radius: 10px;
 }
 
-.purchased-nfts .card h3 {
-    font-size: 18px;
-    margin-bottom: 10px;
-    padding: 0 50px;
-    color: #ffb700;
+.my-nft-cards .card h3 {
+    font-size: 1.5rem;
+    color: #333;
+    margin: 15px 0;
 }
 
-.purchased-nfts .card p {
+.my-nft-cards .card p {
+    font-size: 1rem;
+    color: #666;
     margin: 5px 0;
-    color: #ccc;
 }
 
 .no-nfts {
