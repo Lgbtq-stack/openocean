@@ -194,18 +194,22 @@ async function loadNFTs() {
         items.forEach((nft) => {
             const card = document.createElement("div");
             card.classList.add("card");
-            card.dataset.category = nft.collection;
 
             card.innerHTML = `
-                <img src="${nft.image}" alt="${nft.title}">
-                <h3>${nft.title}</h3>
-                <p>Price: ${nft.price} XLM</p>
-               
-                <button class="details-button" id="details-${nft.id}">
-                    <img class="info-icon" src="content/info.png" alt="click">
-                    Details 
-                </button>
-            `;
+        <div class="nft-image-container">
+            <img src="${nft.image}" alt="${nft.title}" class="nft-image">
+        </div>
+        <div class="nft-details">
+            <h3 class="nft-title">${nft.title}</h3>
+            <p class="nft-price">Price: ${nft.price} XLM</p>
+        </div>
+        <div class="nft-button-container">
+            <button class="details-button" id="details-${nft.id}">
+                <img class="info-icon" src="content/info.png" alt="Info">
+                Details
+            </button>
+        </div>
+    `;
 
             cardsContainer.appendChild(card);
 
@@ -215,6 +219,7 @@ async function loadNFTs() {
                 showNFTDetails(nft.id, items);
             });
         });
+
 
         console.log("NFTs successfully loaded and rendered.");
     } catch (error) {
@@ -494,20 +499,28 @@ function renderPurchasedNFTs(nfts) {
 
     if (nfts.length > 0) {
         exploreSection.style.display = "block";
+
         nfts.forEach((nft) => {
             const nftCard = document.createElement("div");
             nftCard.classList.add("card");
+
             nftCard.innerHTML = `
-                <img src="${nft.image}" alt="${nft.name}">
-                <h3>${nft.name}</h3>
-                <p>Price: ${nft.price} XML</p>
-                <p>Count: ${nft.count}</p>
-                <p>Holders: ${nft.userCount}</p>
-                <p>Total Bought: ${nft.totalBought}</p>
-                <button class="details-button" id="details-${nft.id}">
-                    <img class="info-icon" src="content/info.png" alt="click">
-                    Details
-                </button>
+                <div class="nft-image-container">
+                    <img src="${nft.image}" alt="${nft.name}" class="nft-image">
+                </div>
+                <div class="nft-details">
+                    <h3 class="nft-title">${nft.name}</h3>
+                    <p class="nft-price">Price: ${nft.price} XML</p>
+                    <p class="nft-quantity">Count: ${nft.count}</p>
+                    <p class="nft-holders">Holders: ${nft.userCount}</p>
+                    <p class="nft-total-bought">Total Bought: ${nft.totalBought}</p>
+                </div>
+                <div class="nft-button-container">
+                    <button class="details-button" id="details-${nft.id}">
+                        <img class="info-icon" src="content/info.png" alt="Info">
+                        Details
+                    </button>
+                </div>
             `;
 
             const detailsButton = nftCard.querySelector('.details-button');
