@@ -1018,20 +1018,160 @@ footer {
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.5);
-    z-index: 1001;
     justify-content: center;
     align-items: center;
+    z-index: 1000;
 }
 
 .popup-content {
-    background: wheat;
-    padding: 20px;
-    border-radius: 10px;
+    background-color: #ffffff;
+    padding: 25px;
+    border-radius: 12px;
     text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    max-width: 400px;
-    width: 90%;
+    width: 400px;
+    max-width: 90%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
 }
+
+h2 {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.instructions-text {
+    color: #666;
+    font-size: 1rem;
+    margin-bottom: 20px;
+}
+
+.recharge-steps {
+    list-style-type: decimal;
+    padding-left: 20px;
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.recharge-steps li {
+    margin-bottom: 15px;
+}
+
+.copy-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.copy-section strong {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.copy-section p {
+    background-color: #f2f2f2;
+    padding: 8px 12px;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-family: monospace;
+    margin: 0;
+    flex-grow: 1;
+}
+
+.copy-button {
+    background-color: #ffcc00;
+    border: none;
+    padding: 8px 12px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #000;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.copy-button:hover {
+    background-color: #e0b000;
+}
+
+
+.important-text {
+    color: #b22222;
+    font-weight: bold;
+    font-size: 0.95rem;
+    margin-top: 10px;
+}
+
+.ok-button {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.3s;
+}
+
+.ok-button:hover {
+    background-color: #45a049;
+}
+
+/* Withdraw section styles */
+.popup-buttons {
+    display: flex;
+    gap: 50px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+#withdraw-content {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+    justify-content: center;
+}
+
+.input-field {
+    width: 80%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    margin: 5px 0;
+}
+
+.confirm-button {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.confirm-button:hover {
+    background-color: #45a049;
+}
+
+.close-popup-button {
+    background-color: #ccc;
+    color: #333;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.close-popup-button:hover {
+    background-color: #bbb;
+}
+
 
 .countdown-popup-content {
     background: white;
@@ -1039,58 +1179,6 @@ footer {
     border-radius: 10px;
     width: 300px;
     text-align: center;
-}
-
-.popup-content h2 {
-    margin-bottom: 10px;
-}
-
-.popup-content p {
-    margin-bottom: 20px;
-    font-size: 14px;
-    color: #555;
-}
-
-.popup-buttons {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-    margin-top: 20px;
-}
-
-.popup-buttons button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.confirm-button {
-    background-color: #28a745;
-    color: white;
-}
-
-.close-popup-button {
-    background-color: #dc3545;
-    color: white;
-}
-
-.confirm-button,
-.close-popup-button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.copy-button {
-    background-color: #f0f0f0;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    margin-left: 5px;
-    border-radius: 5px;
 }
 
 /* error popup */

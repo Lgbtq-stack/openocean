@@ -124,13 +124,49 @@
 
 <button id="scrollToTop" class="scroll-to-top">↑</button>
 
-<div id="popup-overlay" class="popup-overlay" onclick="closePopup()">
-    <div class="popup-content" onclick="event.stopPropagation()">
-        <h2 id="popup-title">Action</h2>
-        <div id="popup-body"></div>
-        <div class="popup-buttons" id="popup-buttons">
-            <button id="confirm-button" class="confirm-button">Confirm</button>
-            <button id="close-popup-button" class="close-popup-button">Cancel</button>
+<div id="popup-overlay" class="popup-overlay">
+    <div class="popup-content">
+        <h2 id="popup-title">Recharge/Withdraw</h2>
+
+        <div id="recharge-content" style="display: none;">
+            <p class="instructions-text">Follow the instructions to deposit funds:</p>
+            <ol class="recharge-steps">
+                <li>
+                    <p>Transfer funds to the following wallet:</p>
+                    <div class="copy-section">
+                        <strong>Wallet:</strong>
+                        <p><span id="wallet-address-popup">GA5325235252</span></p>
+                        <button class="copy-button" onclick="copyToClipboard('wallet-address-popup')">COPY</button>
+                    </div>
+                </li>
+
+                <li>
+                    <p>Add the following MEMO to your transfer:</p>
+                    <div class="copy-section">
+                        <strong>MEMO:</strong>
+                        <p><span id="memo-value">350104566</span></p>
+                        <button class="copy-button" onclick="copyToClipboard('memo-value')">COPY</button>
+                    </div>
+                </li>
+
+                <li>
+                    <p>The balance will be updated within 5 minutes.</p>
+                </li>
+            </ol>
+            <p class="important-text"><strong>IMPORTANT:</strong> Ensure the MEMO matches exactly to avoid losing your funds.</p>
+            <button class="ok-button" onclick="closePopup()">OK</button>
+        </div>
+
+        <div id="withdraw-content" style="display: none;">
+            <p>Enter the withdrawal details:</p>
+
+            <input type="text" id="wallet-input" class="input-field" placeholder="Recipient Wallet" />
+            <input type="number" id="amount-input" class="input-field" placeholder="Amount" />
+
+            <div class="popup-buttons">
+                <button id="confirm-button" class="confirm-button">Confirm</button>
+                <button id="close-popup-button" class="close-popup-button" onclick="closePopup()">Cancel</button>
+            </div>
         </div>
     </div>
 </div>
