@@ -871,78 +871,101 @@ const countdownTimer = document.getElementById("countdown-timer");
 const userBalance = 500;
 let currentAction = "";
 
+const popupBody = document.getElementById("popup-body");
+
 function openPopup(action) {
     currentAction = action;
+    popupOverlay.style.display = "flex";
 
     if (action === "recharge") {
         popupTitle.textContent = "Recharge";
-        popupDescription.textContent = "Enter the amount you want to recharge:";
-        amountInput.placeholder = "Min 10 XML";
+        popupBody.innerHTML = `
+            <p>Follow the instructions to deposit funds:</p>
+            <ol>
+                <li>Transfer funds to the following wallet:
+                    <p><strong>Wallet:</strong> <span id="wallet-address">GA5325235252</span> 
+                    <button class="copy-button" onclick="copyToClipboard('wallet-address')">COPY</button></p>
+                </li>
+                <li>Add the following MEMO to your transfer:
+                    <p><strong>MEMO:</strong> <span id="memo-value">${userId}</span> 
+                    <button class="copy-button" onclick="copyToClipboard('memo-value')">COPY</button></p>
+                </li>
+                <li>The balance will be updated within 5 minutes.</li>
+            </ol>
+            <p class="important-text"><strong>IMPORTANT:</strong> Ensure the MEMO matches exactly to avoid losing your funds.</p>
+        `;
+        confirmButton.textContent = "OK";
+        confirmButton.onclick = closePopup;
+        closeButton.style.display = "none";
+
     } else if (action === "withdraw") {
         popupTitle.textContent = "Withdraw";
-        popupDescription.textContent = "Enter the amount you want to withdraw:";
-        amountInput.placeholder = `Max ${userBalance} XML`;
+        popupBody.innerHTML = `
+            <p>Enter the wallet address and amount you want to withdraw:</p>
+            <input type="text" id="wallet-input" placeholder="Wallet Address" style="margin-bottom: 10px; width: 100%; padding: 8px;" />
+            <input type="number" id="amount-input" placeholder="Max ${userBalance} XML" style="width: 100%; padding: 8px;" />
+        `;
+        confirmButton.textContent = "Confirm";
+        confirmButton.onclick = handleWithdraw;
+        closeButton.style.display = "inline-block";
     }
-
-    amountInput.value = "";
-    popupOverlay.style.display = "flex";
 }
 
 function closePopup() {
     popupOverlay.style.display = "none";
 }
 
-function handleConfirm() {
-    console.log("handleConfirm called");
+function handleWithdraw() {
+    const walletInput = document.getElementById("wallet-input").value.trim();
+    const amountInput = parseFloat(document.getElementById("amount-input").value);
 
-    const amount = parseFloat(amountInput.value);
-    if (isNaN(amount) || amount <= 0) {
-        console.log("Invalid amount");
-        showErrorPopup("error", "Please enter a valid amount.");
+    if (!walletInput) {
+        alert("Please enter a valid wallet address.");
         return;
     }
 
-    if (currentAction === "recharge" && amount < 10) {
-        console.log("Recharge amount too low");
-        showErrorPopup("error", "Minimum amount for recharge is 10 XML.");
+    if (isNaN(amountInput) || amountInput <= 0) {
+        alert("Please enter a valid amount.");
         return;
     }
 
-    if (currentAction === "withdraw" && amount > userBalance) {
-        console.log("Withdraw amount exceeds balance");
-        showErrorPopup("warning", `Maximum withdraw amount is ${userBalance} XML.`);
+    if (amountInput > userBalance) {
+        alert(`Maximum withdrawable amount is ${userBalance} XML.`);
         return;
     }
-    const data = JSON.stringify({
-        action: currentAction,
-        amount: amount
-    });
 
+    const data = JSON.stringify({ action: "withdraw", wallet: walletInput, amount: amountInput });
+    console.log("Sending withdraw data:", data);
 
     tg.ready();
     tg.sendData(data);
     showCountdownPopup();
+
+    closePopup();
 }
 
-
 function showCountdownPopup() {
-    popupOverlay.style.display = "none";
-    countdownPopup.style.display = "flex";
-
     let secondsLeft = 5;
-    countdownTimer.textContent = `Closing in ${secondsLeft} seconds...`;
+    alert(`Withdraw successful. MiniApp will close in ${secondsLeft} seconds...`);
 
     const timer = setInterval(() => {
         secondsLeft--;
-        countdownTimer.textContent = `Closing in ${secondsLeft} seconds...`;
-
         if (secondsLeft <= 0) {
             clearInterval(timer);
-
-            // tg.close();
+            tg.close();
         }
     }, 1000);
 }
+
+function copyToClipboard(elementId) {
+    const text = document.getElementById(elementId).textContent;
+    navigator.clipboard.writeText(text)
+        .then(() => alert("Copied to clipboard"))
+        .catch(() => alert("Failed to copy"));
+}
+
+closeButton.addEventListener("click", closePopup);
+
 
 function sendBalanceDataToTelegram(data) {
     const jsonData = JSON.stringify(data);

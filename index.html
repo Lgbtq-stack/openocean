@@ -124,12 +124,11 @@
 
 <button id="scrollToTop" class="scroll-to-top">↑</button>
 
-<div id="popup-overlay" class="popup-overlay">
-    <div class="popup-content">
-        <h2 id="popup-title">Recharge</h2>
-        <p id="popup-description">Enter the amount you want to recharge:</p>
-        <input type="number" id="amount-input" placeholder="Min 10 XML" />
-        <div class="popup-buttons">
+<div id="popup-overlay" class="popup-overlay" onclick="closePopup()">
+    <div class="popup-content" onclick="event.stopPropagation()">
+        <h2 id="popup-title">Action</h2>
+        <div id="popup-body"></div>
+        <div class="popup-buttons" id="popup-buttons">
             <button id="confirm-button" class="confirm-button">Confirm</button>
             <button id="close-popup-button" class="close-popup-button">Cancel</button>
         </div>
