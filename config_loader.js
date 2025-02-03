@@ -155,18 +155,19 @@ async function loadCategoriesOnce() {
             throw new TypeError("Invalid data format: expected 'collections' to be an array.");
         }
 
-        categoriesCache = [{ id: "", name: "All" }, ...collectionsData.collections.map(c => ({
+        categoriesCache = collectionsData.collections.map(c => ({
             id: c.meta.id,
             name: c.meta.name,
-        }))];
+        }));
 
         console.log("Categories loaded and cached:", categoriesCache);
         return categoriesCache;
     } catch (error) {
-        console.error("Error loading categories:", error);
+        showErrorPopup("error", `Error loading categories: ${error.message}`);
         return [];
     }
 }
+
 
 async function loadNFTs() {
     try {
@@ -201,9 +202,18 @@ async function loadNFTs() {
         </div>
         <div class="nft-details">
             <h3 class="nft-title">${nft.title}</h3>
-            <p class="nft-price">Price: ${nft.price} XLM</p>
-            <p class="nft-holders">Holders: ${nft.userCount}</p>
-            <p class="nft-total-bought">Total Bought: ${nft.totalBought}</p>
+            <p class="nft-price">
+<!--                <img src="content/icons/price-icon.png" alt="Price" class="info-icon-small">-->
+                💰 Price: ${nft.price} XLM
+            </p>
+            <p class="nft-holders">
+<!--                <img src="content/icons/holders-icon.png" alt="Holders" class="info-icon-small">-->
+                👥 Holders: ${nft.userCount}
+            </p>
+            <p class="nft-total-bought">
+<!--                <img src="content/icons/bought-icon.png" alt="Total Bought" class="info-icon-small">-->
+                📊 Total Bought: ${nft.totalBought}
+            </p>
                 
         </div>
         <div class="nft-button-container">
@@ -279,8 +289,8 @@ async function loadTrendingNFTs() {
                     <img class="nft-image" src="${nft.image}" alt="${nft.title}">
                     <div class="slider-card-overlay">
                         <h3 class="nft-title">${nft.title}</h3>
-                        <p class="nft-price">Price: ${nft.price}</p>
-                        <p class="nft-collection">Collection: ${nft.collection}</p>
+                        <p class="nft-price">💰 Price: ${nft.price}</p>
+                        <p class="nft-collection">🏷️ Collection: ${nft.collection}</p>
                     </div>
                 </div>
             `;
@@ -310,12 +320,12 @@ async function showNFTDetails(id, dataSource) {
         if (nft) {
             document.getElementById('nft-title').textContent = nft.title;
             document.getElementById('nft-image').src = nft.image;
-            document.getElementById('nft-holders').textContent = `Holders: ${nft.userCount}`;
-            document.getElementById('nft-total-bought').textContent = `Total Bought: ${nft.totalBought}`;
+            document.getElementById('nft-holders').textContent = `👥 Holders: ${nft.userCount}`;
+            document.getElementById('nft-total-bought').textContent = `📊 Total Bought: ${nft.totalBought}`;
 
             const categoryElement = document.getElementById('nft-category');
             if (nft.collection) {
-                categoryElement.textContent = `Collection: ${nft.collection}`;
+                categoryElement.textContent = `🏷️ Collection: ${nft.collection}`;
                 categoryElement.style.display = "block";
             } else {
                 categoryElement.style.display = "none";
@@ -323,12 +333,12 @@ async function showNFTDetails(id, dataSource) {
 
             const collectionElement = document.getElementById('nft-description');
             if (nft.description) {
-                collectionElement.textContent = `Description: ${nft.description}`;
+                collectionElement.textContent = `📝 Description: ${nft.description}`;
                 collectionElement.style.display = "block";
             } else {
                 collectionElement.style.display = "none";
             }
-            document.getElementById('nft-price').textContent = `Price: ${nft.price} XLM`;
+            document.getElementById('nft-price').textContent = `💰 Price: ${nft.price} XLM`;
 
             const panelContent = document.querySelector('.panel-content');
             let buyButton = document.querySelector('.buy-nft-button');
@@ -358,8 +368,6 @@ async function showNFTDetails(id, dataSource) {
                     updateBuyButton();
                 }
             });
-
-
 
             buyButton = document.createElement('button');
             buyButton.classList.add('buy-nft-button');
@@ -412,10 +420,8 @@ async function sendDataToTelegramTest(user_id, nft_id, count) {
         if (!response.ok) throw new Error(`Failed to buy NFT: ${response.status}`);
         const result = await response.json();
         console.log("NFT purchase successful:", result);
-        alert("Purchase successful!");
     } catch (error) {
         console.error("Error during NFT purchase:", error);
-        alert("Purchase failed. Please try again.");
     }
 }
 
@@ -500,10 +506,21 @@ function renderPurchasedNFTs(nfts) {
                 </div>
                 <div class="nft-details">
                     <h3 class="nft-title">${nft.name}</h3>
-                    <p class="nft-price">Price: ${nft.price} XLM</p>
-                    <p class="nft-quantity">Count: ${nft.count}</p>
-                    <p class="nft-holders">Holders: ${nft.userCount}</p>
-                    <p class="nft-total-bought">Total Bought: ${nft.totalBought}</p>
+                    <p class="nft-price">
+<!--                        <img src="content/icons/price-icon.png" alt="Price" class="info-icon-small">-->
+                        💰 Price: ${nft.price} XLM
+                    </p>
+                    <p class="nft-quantity">
+<!--                        <img src="content/icons/quantity-icon.png" alt="Quantity" class="info-icon-small">-->
+                        🔢 Count: ${nft.count}
+                    </p>
+                    <p class="nft-holders">
+<!--                        <img src="content/icons/holders-icon.png" alt="Holders" class="info-icon-small">-->
+                        👥 Holders: ${nft.userCount}</p>
+                    <p class="nft-total-bought">
+<!--                        <img src="content/icons/bought-icon.png" alt="Total Bought" class="info-icon-small">-->
+                        📊 Total Bought: ${nft.totalBought}
+                    </p>
                 </div>
                 <div class="nft-button-container">
                     <button class="details-button" id="details-${nft.id}">
@@ -779,10 +796,22 @@ async function loadCategories(page, category) {
             card.innerHTML = `
                 <img src="${item.image}" alt="${item.name}" class="nft-image">
                 <h3 class="nft-title">${item.name}</h3>
-                <p class="nft-price">Price: ${item.price} XLM</p>
-                <p class="nft-quantity">Count: ${item.count}</p>
-                <p class="nft-holders">Holders: ${item.userCount}</p>
-                <p class="nft-total-bought">Total Bought: ${item.totalBought}</p>
+                <p class="nft-price">
+<!--                    <img src="content/icons/price-icon.png" alt="Price" class="info-icon-small">-->
+                    💰 Price: ${item.price} XLM
+                </p>
+                <p class="nft-quantity">
+<!--                    <img src="content/icons/quantity-icon.png" alt="Quantity" class="info-icon-small">-->
+                    🔢 Count: ${item.count}
+                </p>
+                <p class="nft-holders">
+<!--                    <img src="content/icons/holders-icon.png" alt="Holders" class="info-icon-small">-->
+                    👥 Holders: ${item.userCount}
+                </p>
+                <p class="nft-total-bought">
+<!--                    <img src="content/icons/bought-icon.png" alt="Total Bought" class="info-icon-small">-->
+                    📊 Total Bought: ${item.totalBought}
+                </p>
                 <button class="details-button" id="details-${item.id}">
                     <img class="info-icon" src="content/info.png" alt="click">
                     Details 
@@ -847,7 +876,6 @@ function initializeSlider() {
         isDragging = false;
         sliderWrapper.style.cursor = "grab";
     });
-
 }
 
 setInterval(showNextSlide, 5000);
@@ -885,35 +913,58 @@ function openPopup(action) {
 
 function closePopup() {
     popupOverlay.style.display = "none";
-
 }
 
 function handleConfirm() {
-    let walletAddress = walletAddressInput.value;
+    let walletAddress = walletAddressInput.value.trim();
     let amount = parseFloat(amountInput.value);
 
-    if (currentAction === "withdraw") {
-        if (!walletAddress || isNaN(amount) || amount <= 0) {
-            alert("Please enter a valid wallet address and amount.");
-            return;
-        }
-
-        const data = JSON.stringify({
-            action: "withdraw",
-            wallet: walletAddress,
-            amount: amount
-        });
-
-        tg.ready();
-        tg.sendData(data);
-        showCountdownPopup();
-        walletAddressInput.value = "";
-        amountInput.value = "";
+    if (!walletAddress) {
+        showErrorPopup("error", "Wallet address cannot be empty.");
+        return;
     }
+
+    if (!walletAddress.startsWith("G")) {
+        showErrorPopup("error", "Wallet address must start with the letter 'G'.");
+        return;
+    }
+
+    if (walletAddress.length !== 56) {
+        showErrorPopup("error", "Wallet address must be exactly 56 characters long.");
+        return;
+    }
+
+    if (!walletAddress.match(/^[A-Z0-9]+$/)) {
+        showErrorPopup("error", "Wallet address must contain only uppercase letters and digits.");
+        return;
+    }
+
+    if (isNaN(amount) || amount <= 0) {
+        showErrorPopup("error", "Please enter a valid amount.");
+        return;
+    }
+
+    if (amount > userDataCache.data.balance) {
+        showErrorPopup("error", "Entered amount exceeds your balance.");
+        return;
+    }
+
+    const data = JSON.stringify({
+        action: "withdraw",
+        wallet: walletAddress,
+        amount: amount
+    });
+
+    tg.ready();
+    tg.sendData(data);
+    showCountdownPopup();
+    walletAddressInput.value = "";
+    amountInput.value = "";
 }
+
 function showCountdownPopup() {
     let secondsLeft = 5;
-    alert(`Withdraw successful. MiniApp will close in ${secondsLeft} seconds...`);
+    showErrorPopup("warning", `Withdraw successful. MiniApp will close in ${secondsLeft} seconds...`);
 
     const timer = setInterval(() => {
         secondsLeft--;
@@ -927,12 +978,11 @@ function showCountdownPopup() {
 function copyToClipboard(elementId) {
     const text = document.getElementById(elementId).textContent;
     navigator.clipboard.writeText(text)
-        .then(() => alert("Copied to clipboard"))
-        .catch(() => alert("Failed to copy"));
+        .then(() => showErrorPopup("warning", "Copied to clipboard"))
+        .catch(() => showErrorPopup("warning", "Failed to copy"));
 }
 
 closeButton.addEventListener("click", closePopup);
-
 
 document.querySelector(".recharge-button").addEventListener("click", () => openPopup("recharge"));
 document.querySelector(".withdraw-button").addEventListener("click", () => openPopup("withdraw"));
@@ -944,14 +994,15 @@ const errorPopup = document.getElementById("error-popup");
 const errorTitle = document.getElementById("error-title");
 const errorMessage = document.getElementById("error-message");
 const closeErrorPopupButton = document.getElementById("close-error-popup-button");
+const overlayErrorPopupButton = document.getElementById("error-popup");
 
 function showErrorPopup(type, message) {
     if (type === "error") {
-        errorTitle.textContent = "Error";
-        errorTitle.style.color = "#ff0000";
+        errorTitle.textContent = "⛔️ Error";
     } else if (type === "warning") {
-        errorTitle.textContent = "Warning";
-        errorTitle.style.color = "#ffa500";
+        errorTitle.textContent = "⚠️ Warning";
+    } else if (type === "success") {
+        errorTitle.textContent = "✅ Success";
     }
 
     errorMessage.textContent = message;
@@ -963,6 +1014,7 @@ function closeErrorPopup() {
 }
 
 closeErrorPopupButton.addEventListener("click", closeErrorPopup);
+overlayErrorPopupButton.addEventListener("click", closeErrorPopup);
 
 async function initializeApp() {
 

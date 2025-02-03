@@ -304,6 +304,13 @@ h3 {
     border-radius: 12px 12px 20px 20px;
 }
 
+.info-icon-small {
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
 .nft-button-container {
     width: 100%;
 }
@@ -1186,11 +1193,12 @@ footer {
 }
 
 .error-popup-content {
-    background: #fff3f3;
-    border: 2px solid #ff4d4d;
+    background: #545454;
+    border-bottom: 2px solid #ea680f;
+    border-top: 2px solid #ea680f;
     padding: 20px;
     border-radius: 20px;
-    width: 320px;
+    width: 400px;
     text-align: center;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
@@ -1199,20 +1207,20 @@ footer {
     margin-bottom: 10px;
     font-size: 22px;
     font-weight: bold;
-    color: #ff0000;
+    color: #fff;
 }
 
 .error-popup-content p {
     margin-bottom: 20px;
     font-size: 16px;
-    color: #333;
+    color: #fff;
     line-height: 1.5;
 }
 
 .error-popup-content button {
     padding: 10px 20px;
     border: none;
-    background-color: #121212;
+    background-color: #ea680f;
     color: white;
     border-radius: 20px;
     cursor: pointer;
