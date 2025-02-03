@@ -81,13 +81,13 @@
     </div>
 
     <div class="category-slider">
-        <button class="slider-control prev">&lt;</button>
+        <button class="slider-control-nft prev"> <img src="content/arrow.png" alt="arrow"> </button>
         <div class="slider-wrapper">
             <div class="slider-track" id="my-nft-slider-track">
                 <!-- Кнопки категорий добавятся сюда динамически -->
             </div>
         </div>
-        <button class="slider-control next">&gt;</button>
+        <button class="slider-control-nft next"> <img src="content/arrow.png" alt="arrow"> </button>
     </div>
 
     <div class="explore-section" id="explore-section">
@@ -113,13 +113,17 @@
 <div class="nft-details-panel" id="nftDetailsPanel">
     <div class="panel-content">
         <button class="close-panel">X</button>
-        <h2 id="nft-title">NFT Title</h2>
-        <img id="nft-image" src="" alt="NFT Image">
-        <p id="nft-category">Collection: </p>
-        <p id="nft-description">Description of the NFT will appear here.</p>
-        <p id="nft-price">Price: </p>
-        <p id="nft-holders">Holders: </p>
-        <p id="nft-total-bought">Total Bought: </p>
+        <h2 id="nft-title" class="nft-title">NFT Title</h2>
+        <img id="nft-image" class="nft-image" src="" alt="NFT Image">
+
+        <div class="nft-info">
+            <p id="nft-category" class="nft-collection">Collection: </p>
+            <p id="nft-description" class="nft-details">Description of the NFT will appear here.</p>
+            <p id="nft-price" class="nft-price">Price: </p>
+            <p id="nft-holders" class="nft-holders">Holders: </p>
+            <p id="nft-total-bought" class="nft-total-bought">Total Bought: </p>
+        </div>
+
         <div class="count-container">
             <button class="count-button" id="decrease-count">-</button>
             <span id="nft-count-display">1</span>
@@ -163,7 +167,7 @@
             <button class="ok-button" onclick="closePopup()">OK</button>
         </div>
 
-        <div id="withdraw-content" style="display: none;">
+        <div id="withdraw-content" class="withdraw-content" style="display: none;">
             <p>Enter the withdrawal details:</p>
 
             <input type="text" id="wallet-input" class="input-field" placeholder="Recipient Wallet" />

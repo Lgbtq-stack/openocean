@@ -107,7 +107,7 @@ async function getConfig(useLocalConfig = true) {
         }
 
         if (!remoteConfig.wallet || !remoteConfig.wallet.address) {
-            showPopup("You don't have an active wallet. ⚠️", false);
+            showErrorPopup("warning", "You don't have an active wallet. ⚠️");
             return null;
         }
 
@@ -120,7 +120,7 @@ async function getConfig(useLocalConfig = true) {
 
             if (balance === undefined) {
                 console.error("No balance found for check_token");
-                showPopup("Please add trustline to your wallet for the CZI token. 🛠", false);
+                showErrorPopup("error", "Please add trustline to your wallet for the CZI token. 🛠");
                 return null;
             }
         }
@@ -128,7 +128,7 @@ async function getConfig(useLocalConfig = true) {
         return remoteConfig;
     } catch (error) {
         console.error("Error loading config:", error);
-        showPopup("Failed to load configuration. Using local config as fallback. ⚠️", false);
+        showErrorPopup("error", "Failed to load configuration. Using local config as fallback. ⚠️");
         return {...localConfig};
     }
 }
@@ -202,6 +202,9 @@ async function loadNFTs() {
         <div class="nft-details">
             <h3 class="nft-title">${nft.title}</h3>
             <p class="nft-price">Price: ${nft.price} XLM</p>
+            <p class="nft-holders">Holders: ${nft.userCount}</p>
+            <p class="nft-total-bought">Total Bought: ${nft.totalBought}</p>
+                
         </div>
         <div class="nft-button-container">
             <button class="details-button" id="details-${nft.id}">
@@ -219,7 +222,6 @@ async function loadNFTs() {
                 showNFTDetails(nft.id, items);
             });
         });
-
 
         console.log("NFTs successfully loaded and rendered.");
     } catch (error) {
@@ -274,11 +276,11 @@ async function loadTrendingNFTs() {
 
             slide.innerHTML = `
                 <div class="slider-card">
-                    <img src="${nft.image}" alt="${nft.title}">
+                    <img class="nft-image" src="${nft.image}" alt="${nft.title}">
                     <div class="slider-card-overlay">
-                        <h3>${nft.title}</h3>
-                        <p>Price: ${nft.price}</p>
-                        <p>Collection: ${nft.collection}</p>
+                        <h3 class="nft-title">${nft.title}</h3>
+                        <p class="nft-price">Price: ${nft.price}</p>
+                        <p class="nft-collection">Collection: ${nft.collection}</p>
                     </div>
                 </div>
             `;
@@ -326,7 +328,7 @@ async function showNFTDetails(id, dataSource) {
             } else {
                 collectionElement.style.display = "none";
             }
-            document.getElementById('nft-price').textContent = `Price: ${nft.price} XML`;
+            document.getElementById('nft-price').textContent = `Price: ${nft.price} XLM`;
 
             const panelContent = document.querySelector('.panel-content');
             let buyButton = document.querySelector('.buy-nft-button');
@@ -336,26 +338,35 @@ async function showNFTDetails(id, dataSource) {
             }
 
             let nftCount = 1;
+            let totalPrice = nft.price * nftCount;
+
+            function updateBuyButton() {
+                totalPrice = nft.price * nftCount;
+                buyButton.innerHTML = `Buy NFT: ${totalPrice.toFixed(2)} XLM`;
+            }
 
             document.getElementById('increase-count').addEventListener('click', () => {
                 nftCount++;
                 document.getElementById('nft-count-display').textContent = nftCount;
+                updateBuyButton();
             });
 
             document.getElementById('decrease-count').addEventListener('click', () => {
                 if (nftCount > 1) {
                     nftCount--;
                     document.getElementById('nft-count-display').textContent = nftCount;
+                    updateBuyButton();
                 }
             });
 
+
+
             buyButton = document.createElement('button');
             buyButton.classList.add('buy-nft-button');
-            buyButton.innerHTML = `Buy`;
+            buyButton.innerHTML = `Buy NFT: ${totalPrice.toFixed(2)} XLM`;
 
             buyButton.addEventListener('click', () => {
 
-                // sendDataToTelegram("350104566", nftId, nftCount);
                 sendDataToTelegramTest(userId, nft.id, nftCount);
 
             });
@@ -413,27 +424,6 @@ function closeNFTDetails() {
     panel.classList.remove("show");
 }
 
-const popup = document.getElementById("popup-module");
-const closePopupButton = document.getElementById("popup-close");
-
-function showPopup(message, canClose = true) {
-    if (popup) {
-        const messageElement = popup.querySelector("p");
-        if (messageElement) {
-            messageElement.textContent = message;
-        }
-
-        popup.style.display = "flex";
-        closePopupButton.style.display = canClose ? "block" : "none";
-
-        if (canClose) {
-            closePopupButton.onclick = () => {
-                popup.style.display = "none";
-            };
-        }
-    }
-}
-
 async function fetchUserData(userId) {
     try {
         const currentTime = new Date().getTime();
@@ -461,7 +451,7 @@ async function fetchUserData(userId) {
 
         return data;
     } catch (error) {
-        console.error("Error fetching user data:", error);
+        showErrorPopup("error", "Failed to fetch user data.");
     }
 }
 
@@ -486,7 +476,7 @@ async function fetchUserNFTs(userId, collectionId = "", page = 1, limit = 5) {
         const data = await response.json();
         renderPurchasedNFTs(data.data);
     } catch (error) {
-        console.error("Error fetching user NFTs:", error);
+        showErrorPopup("error", "Failed to fetch user NFTs.");
     }
 }
 
@@ -510,7 +500,7 @@ function renderPurchasedNFTs(nfts) {
                 </div>
                 <div class="nft-details">
                     <h3 class="nft-title">${nft.name}</h3>
-                    <p class="nft-price">Price: ${nft.price} XML</p>
+                    <p class="nft-price">Price: ${nft.price} XLM</p>
                     <p class="nft-quantity">Count: ${nft.count}</p>
                     <p class="nft-holders">Holders: ${nft.userCount}</p>
                     <p class="nft-total-bought">Total Bought: ${nft.totalBought}</p>
@@ -584,17 +574,11 @@ function setupSliderControls() {
         return;
     }
 
-    function updateSliderArrows() {
-        const scrollLeft = sliderWrapper.scrollLeft;
-        const maxScrollLeft = sliderWrapper.scrollWidth - sliderWrapper.clientWidth;
-
-        prevArrow.style.visibility = scrollLeft <= 0 ? "hidden" : "visible";
-        nextArrow.style.visibility = scrollLeft >= maxScrollLeft ? "hidden" : "visible";
-    }
+    prevArrow.style.visibility = "visible";
+    nextArrow.style.visibility = "visible";
 
     function moveSlider(offset) {
         sliderWrapper.scrollBy({ left: offset, behavior: "smooth" });
-        setTimeout(updateSliderArrows, 300);
     }
 
     prevArrow.addEventListener("click", () => moveSlider(-300));
@@ -628,8 +612,6 @@ function setupSliderControls() {
         const walk = (x - startX) * 2;
         sliderWrapper.scrollLeft = scrollLeft - walk;
     });
-
-    updateSliderArrows();
 }
 
 async function createCategories() {
@@ -795,11 +777,12 @@ async function loadCategories(page, category) {
             const card = document.createElement("div");
             card.classList.add("card");
             card.innerHTML = `
-                <img src="${item.image}" alt="${item.name}">
-                <h3>${item.name}</h3>
-                <p>Price: ${item.price}</p>
-                <p>Holders: ${item.userCount}</p>
-                <p>Total Bought : ${item.totalBought}</p>
+                <img src="${item.image}" alt="${item.name}" class="nft-image">
+                <h3 class="nft-title">${item.name}</h3>
+                <p class="nft-price">Price: ${item.price} XLM</p>
+                <p class="nft-quantity">Count: ${item.count}</p>
+                <p class="nft-holders">Holders: ${item.userCount}</p>
+                <p class="nft-total-bought">Total Bought: ${item.totalBought}</p>
                 <button class="details-button" id="details-${item.id}">
                     <img class="info-icon" src="content/info.png" alt="click">
                     Details 
@@ -830,17 +813,11 @@ function initializeSlider() {
     const prevArrow = document.querySelector(".slider-control.prev");
     const nextArrow = document.querySelector(".slider-control.next");
 
-    function updateArrows() {
-        const scrollLeft = sliderWrapper.scrollLeft;
-        const maxScrollLeft = sliderWrapper.scrollWidth - sliderWrapper.clientWidth;
-
-        prevArrow.style.visibility = scrollLeft <= 0 ? "hidden" : "visible";
-        nextArrow.style.visibility = scrollLeft >= maxScrollLeft ? "hidden" : "visible";
-    }
+    prevArrow.style.visibility = "visible";
+    nextArrow.style.visibility = "visible";
 
     function moveSlider(offset) {
         sliderWrapper.scrollBy({ left: offset, behavior: "smooth" });
-        setTimeout(updateArrows, 300);
     }
 
     prevArrow.addEventListener("click", () => moveSlider(-1000));
@@ -859,7 +836,6 @@ function initializeSlider() {
         if (!isDragging) return;
         sliderWrapper.scrollLeft += startX - e.clientX;
         startX = e.clientX;
-        updateArrows();
     });
 
     sliderWrapper.addEventListener("mouseup", () => {
@@ -872,7 +848,6 @@ function initializeSlider() {
         sliderWrapper.style.cursor = "grab";
     });
 
-    updateArrows();
 }
 
 setInterval(showNextSlide, 5000);

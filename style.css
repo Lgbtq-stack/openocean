@@ -8,7 +8,7 @@
 
 body {
     line-height: 1.6;
-    background-color: #f7f7f7;
+    background-color: #2c2c2c;
     padding-bottom: 100px;
     color: #333;
 }
@@ -19,10 +19,10 @@ h3 {
 
 .scroll-to-top {
     position: fixed;
-    bottom: 120px;
+    bottom: 90px;
     right: 20px;
-    background-color: #ffffff;
-    color: #121212;
+    background-color: #f97316;
+    color: #ffff;
     border: none;
     border-radius: 50%;
     width: 50px;
@@ -32,22 +32,32 @@ h3 {
     align-items: center;
     cursor: pointer;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    z-index: 1000;
+    z-index: 999;
 }
 
 .bottom-panel {
-    background-color: white;
-    padding: 15px;
-    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
     width: 100%;
+    display: flex;
     justify-content: space-between;
     align-items: center;
-    border-top: 1px solid #e0e0e0;
+    padding: 10px 20px;
+    background-color: #565656;
+    border-top: 2px solid #f97316;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    z-index: 1000;
 }
 
-.balance-info {
-    font-size: 18px;
-    font-weight: bold;
+.wallet-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    color: white;
 }
 
 .button-group {
@@ -57,13 +67,14 @@ h3 {
 
 .recharge-button,
 .withdraw-button {
-    background-color: #ff6f00;
+    padding: 10px 15px;
+    font-size: 14px;
+    background-color: #f97316;
     color: white;
     border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    font-size: 16px;
+    border-radius: 20px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 #popup-module {
@@ -107,18 +118,21 @@ h3 {
 }
 
 .navbar {
-    background-color: white;
+    background-color: #5a5a5a;
     padding: 15px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 2px solid #ea680f;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
 }
 
 .navbar .logo {
     font-size: 1.5rem;
     font-weight: bold;
     margin-right: 1rem;
+    color: #fff;
 }
 
 .nav-links {
@@ -129,7 +143,7 @@ h3 {
 
 .nav-links a {
     text-decoration: none;
-    color: black;
+    color: #ffffff;
     font-weight: 500;
     transition: color 0.3s;
     background-color: rgba(51, 51, 51, 0);
@@ -137,21 +151,22 @@ h3 {
 }
 
 .nav-links a:focus {
-    background-color: #ffb700;
-    color: #121212;
-    border-radius: 10px;
+    background-color: #f97316;
+    color: #fff;
+    border-radius: 20px;
     padding: 10px 14px;
 }
 
 .cta {
-    background-color: #ffb700;
-    color: #121212;
+    background-color: #f97316;
+    color: #fff;
     border: none;
     padding: 0.5rem 1rem;
     cursor: pointer;
     font-weight: bold;
-    border-radius: 5px;
+    border-radius: 20px;
     transition: background-color 0.3s;
+
 }
 
 .cta:hover {
@@ -164,11 +179,16 @@ h3 {
     text-align: center;
     padding: 2rem;
     position: relative;
+    margin: 20px;
+    background-color: #585858;
+    border-bottom: 2px solid #ea680f;
+    border-top: 2px solid #ea680f;
+    border-radius: 20px;
 }
 
 .hero-content h1 {
     font-size: 2.5rem;
-    margin-bottom: 1rem;
+    margin-bottom: 7rem;
     line-height: 1.25;
 }
 
@@ -187,15 +207,15 @@ h3 {
     justify-content: center;
     align-items: center;
     gap: -3rem;
-    margin: 75px 0 210px 0;
+    margin: 75px 0 160px 0;
     position: relative;
     transform: rotateX(30deg);
 }
 
 .nft-showcase img {
-    width: 100px;
+    width: 95px;
     height: auto;
-    border-radius: 8px;
+    border-radius: 20px;
     position: absolute;
     transform-origin: bottom center;
     transition: transform 0.3s ease;
@@ -228,9 +248,15 @@ h3 {
 }
 
 .trending {
-    padding: 1rem;
     background-color: #575757;
     height: 100%;
+    padding: 20px;
+    margin: 20px;
+    border-radius: 20px;
+
+    border-bottom: 2px solid #ea680f;
+    border-top: 2px solid #ea680f;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .trending h2 {
@@ -244,9 +270,12 @@ h3 {
     flex-wrap: nowrap;
     overflow-x: auto;
     gap: 0.5rem;
-    margin-bottom: 2rem;
-    padding: 0.5rem;
     scrollbar-width: thin;
+
+    background-color: #f97316;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 20px;
 }
 
 .categories-bar::-webkit-scrollbar {
@@ -265,13 +294,14 @@ h3 {
 .card {
     width: 100%;
     padding: 15px;
-    background-color: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    background-color: #494949;
+    box-shadow: 0 2px 8px rgba(255, 253, 253, 0.15);
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: 10px;
+    margin-bottom: 10px;
+    border-radius: 12px 12px 20px 20px;
 }
 
 .nft-button-container {
@@ -280,7 +310,7 @@ h3 {
 
 .nft-image-container {
     width: 100%;
-    border-radius: 12px;
+    border-radius: 20px;
     overflow: hidden;
     height: 200px;
 }
@@ -300,14 +330,15 @@ h3 {
 .nft-title {
     font-size: 1.1rem;
     font-weight: bold;
-    color: #333;
+    color: #ffffff;
     margin-bottom: 5px;
+    text-transform: capitalize;
 }
 
-.nft-price, .nft-quantity, .nft-holders, .nft-total-bought {
-    margin: 3px 0;
+.nft-price, .nft-quantity, .nft-holders, .nft-total-bought, .nft-collection {
     font-size: 0.9rem;
-    color: #666;
+    color: #ffffff;
+    text-transform: capitalize;
 }
 
 .details-button {
@@ -316,7 +347,7 @@ h3 {
     color: #ffffff;
     border: none;
     padding: 12px;
-    border-radius: 25px;
+    border-radius: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -352,6 +383,8 @@ h3 {
 }
 
 .panel-content {
+    border-bottom: 2px solid #ea680f;
+    border-top: 2px solid #ea680f;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -359,7 +392,7 @@ h3 {
     justify-content: center;
     background: #333;
     padding: 20px;
-    border-radius: 10px;
+    border-radius: 20px;
     text-align: center;
     gap: 16px;
     max-width: 600px;
@@ -370,93 +403,76 @@ h3 {
 .panel-content img {
     max-width: 100%;
     height: auto;
+    margin-bottom: 15px;
     border-radius: 8px;
+}
+
+.nft-info p {
+    margin: 5px 0;
+    font-size: 1rem;
+    color: #ccc;
 }
 
 .count-container {
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
     gap: 15px;
     margin: 10px 0;
 }
 
 .count-button {
-    padding: 5px 10px;
-    background-color: #3a3a3a;
-    color: #ffcc00;
+    padding: 8px 15px;
+    background-color: #ea680f;
+    color: #fff;
     border: none;
-    border-radius: 5px;
-    font-size: 18px;
-    font-weight: bold;
+    border-radius: 20px;
+    font-size: 1.2rem;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s;
 }
 
-.count-button:hover {
-    background-color: #ffcc00;
-    color: #3a3a3a;
-}
-
-.count-button:active {
-    background-color: #ffaa00;
-}
-
-span {
-    font-size: 20px;
-    color: #ffffff;
+.count-button span {
+    font-size: 1.5rem;
     font-weight: bold;
 }
-
 
 .buy-nft-button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    background-color: #fbbc04;
-    color: black;
-    border: none;
+    background-color: #ea680f;
+    color: #fff;
     padding: 10px 20px;
-    font-size: 16px;
+    font-size: 1.2rem;
     font-weight: bold;
-    border-radius: 5px;
+    border-radius: 20px;
+    border: none;
     cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.buy-nft-button:hover {
-    background-color: #e0a800;
+    width: 100%;
 }
 
 .close-panel {
     position: absolute;
     top: 10px;
     right: 10px;
-    background: red;
+    background: #ff4c4c;
     color: white;
     border: none;
-    font-size: 18px;
-    width: 30px;
-    height: 30px;
-    border-radius: 5px;
+    font-size: 16px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    z-index: 1100;
 }
 
 .buy-nft-button img {
-    width: 40px; /* Установим разумный размер иконки */
-    height: auto; /* Автоматическая высота для сохранения пропорций */
+    width: 40px;
+    height: auto;
 }
 
 /* === Адаптивные стили === */
 @media (max-width: 768px) {
-    /*.cards {*/
-    /*    grid-template-columns: 1fr;*/
-    /*}*/
 
     .total-value-box {
         flex-direction: column;
@@ -594,6 +610,12 @@ span {
     padding: 20px;
     background-color: #575757;
     color: #fff;
+    margin: 20px;
+    border-radius: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+    border-bottom: 2px solid #ea680f;
+    border-top: 2px solid #ea680f;
 }
 
 .categories h2 {
@@ -603,10 +625,13 @@ span {
 }
 
 .slider-category-list-container {
+    background-color: #484848;
+    padding: 10px 30px;
+    border-radius: 20px;
+    margin-bottom: 20px;
     position: relative;
     display: flex;
     align-items: center;
-    padding: 0 20px 0 12px;
 }
 
 .slider-wrapper {
@@ -622,14 +647,14 @@ span {
 }
 
 .slider-category-item {
-    text-align: center;
-    padding: 5px 10px;
-    margin: 5px;
-    background-color: #eee;
-    border-radius: 5px;
-    flex-shrink: 0;
-    cursor: pointer;
+    background-color: #f46c07;
     border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    white-space: nowrap;
+    margin: 0 5px;
+    color: white;
     text-transform: capitalize;
 }
 
@@ -649,12 +674,13 @@ span {
 
 .slider-control.prev {
     position: absolute;
-    left: -12px;
+    left: -5px;
 }
 
 .slider-control.next {
     position: absolute;
-    right: -12px;
+    right: -5px;
+
 }
 
 .slider-control.prev img {
@@ -731,9 +757,11 @@ span {
 }
 
 .pagination-btn.active {
-    background-color: #007bff;
+    background-color: #ea680f;
     color: white;
-    border-color: #007bff;
+    border: none;
+
+    border-radius: 20px;
 }
 
 .pagination-btn:hover {
@@ -780,10 +808,6 @@ footer {
         overflow-x: auto;
     }
 
-    /*.cards {*/
-    /*    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));*/
-    /*}*/
-
     .category-list {
         flex-wrap: wrap;
         justify-content: center;
@@ -794,40 +818,64 @@ footer {
     }
 
     .bottom-panel {
-        position: fixed;
-        bottom: 0;
-        left: 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 10px 10px 10px;
+        width: 100%;
+        background-color: #5a5a5a;
+        border-top: 3px solid #ee701a;
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+    }
+
+    .wallet-info {
+        display: flex;
         flex-direction: column;
-        align-items: flex-start;
+        gap: 5px;
+        color: #fff;
     }
 
-    .bottom-panel .wallet-info {
-        margin-bottom: 10px;
+    .button-group {
+        display: flex;
+        gap: 10px;
     }
 
-    .bottom-panel .recharge-button {
-        align-self: stretch;
-        text-align: center;
+    .recharge-button,
+    .withdraw-button {
+        padding: 10px 15px;
+        font-size: 14px;
+        background-color: #f97316;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
     }
 }
 
 /* My-NFTS */
 .my-nfts {
-    background-color: white;
+    background-color: #5c5c5c;
     padding: 20px;
     margin: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    box-shadow: 0 2px 5px rgba(243, 239, 239, 0.1);
+    border-bottom: 2px solid #ea680f;
+    border-top: 2px solid #ea680f;
 }
 
 .my-nfts h2 {
     font-size: 24px;
+    color: #fff;
+    text-align: center;
+
 }
 
 .total-value-box {
     padding: 15px;
-    background-color: #e9ecef;
-    border-radius: 10px;
+    background-color: #484848;
+    border-radius: 20px;
     font-size: 18px;
     font-weight: bold;
     margin-bottom: 20px;
@@ -836,7 +884,14 @@ footer {
 
 .total-value-box p {
     font-size: 1.3rem;
-    color: #121212;
+    color: #fff;
+    font-weight: 500;
+}
+
+.total-value-box h2 {
+
+    font-size: 1.3rem;
+    color: #fff;
     font-weight: 500;
 }
 
@@ -849,9 +904,9 @@ footer {
 .category-slider {
     display: flex;
     align-items: center;
-    background-color: #dee2e5;
-    padding: 10px;
-    border-radius: 8px;
+    background-color: #484848;
+    padding: 10px 30px;
+    border-radius: 20px;
     margin-bottom: 20px;
 }
 
@@ -876,17 +931,46 @@ footer {
 .slider-control {
     background-color: transparent;
     border: none;
-    font-size: 24px;
     cursor: pointer;
     padding: 0 10px;
 }
 
+.slider-control-nft {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0 10px;
+    color: #fff3f3;
+    margin: 0 50px;
+    top: 280px;
+}
+
+.slider-control-nft.prev {
+    position: absolute;
+    left: -5px;
+}
+
+.slider-control-nft.next {
+    position: absolute;
+    right: -5px;
+
+}
+
+.slider-control-nft.prev img {
+    transform: rotate(180deg);
+}
+
+.slider-control-nft.next img,
+.slider-control-nft.prev img {
+    width: 10px;
+    height: 20px;
+}
 
 .my-nft-category-item {
     background-color: #f46c07;
     border: none;
     padding: 10px 20px;
-    border-radius: 5px;
+    border-radius: 20px;
     cursor: pointer;
     white-space: nowrap;
     margin: 0 5px;
@@ -912,7 +996,7 @@ footer {
     margin-top: 20px;
     padding: 20px;
     background-color: #f9f9f9;
-    border-radius: 10px;
+    border-radius: 20px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
@@ -923,20 +1007,14 @@ footer {
 }
 
 .no-nfts .cta {
-    background-color: #1abc9c;
+    background-color: #f46c07;
     color: white;
     border: none;
     padding: 10px 20px;
     font-size: 1rem;
-    border-radius: 5px;
+    border-radius: 20px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
 }
-
-.no-nfts .cta:hover {
-    background-color: #16a085;
-}
-
 
 .popup-overlay {
     display: none;
@@ -949,26 +1027,30 @@ footer {
     justify-content: center;
     align-items: center;
     z-index: 1000;
+
 }
 
 .popup-content {
-    background-color: #ffffff;
     padding: 25px;
-    border-radius: 12px;
+    border-radius: 20px;
     text-align: center;
     width: 400px;
     max-width: 90%;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    background-color: #565656;
+    border-bottom: 2px solid #ea680f;
+    border-top: 2px solid #ea680f;
+    color: #fff;
 }
 
-h2 {
+.popup-content h2 {
     font-size: 1.8rem;
     font-weight: bold;
-    margin-bottom: 15px;
+    margin-bottom: 5px;
 }
 
 .instructions-text {
-    color: #666;
+    color: #fff;
     font-size: 1rem;
     margin-bottom: 20px;
 }
@@ -993,58 +1075,46 @@ h2 {
 .copy-section strong {
     font-size: 1rem;
     font-weight: bold;
-    color: #333;
+    color: #fff;
 }
 
 .copy-section p {
-    background-color: #f2f2f2;
+    background-color: #959494;
     padding: 8px 12px;
-    border-radius: 5px;
+    border-radius: 20px;
     font-size: 1rem;
-    font-family: monospace;
-    margin: 0;
     flex-grow: 1;
 }
 
 .copy-button {
-    background-color: #ffcc00;
+    background-color: #f46c07;
     border: none;
     padding: 8px 12px;
     font-size: 1rem;
     font-weight: bold;
-    color: #000;
-    border-radius: 5px;
+    color: #fff;
+    border-radius: 20px;
     cursor: pointer;
     transition: background-color 0.3s;
 }
 
-.copy-button:hover {
-    background-color: #e0b000;
-}
-
-
 .important-text {
-    color: #b22222;
+    color: #ffffff;
     font-weight: bold;
     font-size: 0.95rem;
     margin-top: 10px;
 }
 
 .ok-button {
-    background-color: #4caf50;
+    background-color: #f46c07;
     color: white;
     border: none;
     padding: 10px 20px;
     font-size: 1.2rem;
     font-weight: bold;
-    border-radius: 5px;
+    border-radius: 20px;
     cursor: pointer;
     margin-top: 20px;
-    transition: background-color 0.3s;
-}
-
-.ok-button:hover {
-    background-color: #45a049;
 }
 
 /* Withdraw section styles */
@@ -1053,9 +1123,10 @@ h2 {
     gap: 50px;
     justify-content: center;
     margin-top: 20px;
+    border-radius: 20px;
 }
 
-#withdraw-content {
+.withdraw-content {
     display: flex;
     flex-direction: column;
     gap: 15px;
@@ -1067,23 +1138,19 @@ h2 {
     width: 80%;
     padding: 10px;
     border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: 20px;
     font-size: 1rem;
     margin: 5px 0;
 }
 
 .confirm-button {
-    background-color: #4caf50;
+    background-color: #f46c07;
     color: white;
     border: none;
     padding: 10px 20px;
     font-size: 1rem;
-    border-radius: 5px;
+    border-radius: 20px;
     cursor: pointer;
-}
-
-.confirm-button:hover {
-    background-color: #45a049;
 }
 
 .close-popup-button {
@@ -1092,19 +1159,14 @@ h2 {
     border: none;
     padding: 10px 20px;
     font-size: 1rem;
-    border-radius: 5px;
+    border-radius: 20px;
     cursor: pointer;
 }
-
-.close-popup-button:hover {
-    background-color: #bbb;
-}
-
 
 .countdown-popup-content {
     background: white;
     padding: 20px;
-    border-radius: 10px;
+    border-radius: 20px;
     width: 300px;
     text-align: center;
 }
@@ -1127,7 +1189,7 @@ h2 {
     background: #fff3f3;
     border: 2px solid #ff4d4d;
     padding: 20px;
-    border-radius: 12px;
+    border-radius: 20px;
     width: 320px;
     text-align: center;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
@@ -1152,15 +1214,9 @@ h2 {
     border: none;
     background-color: #121212;
     color: white;
-    border-radius: 8px;
+    border-radius: 20px;
     cursor: pointer;
     font-size: 14px;
     font-weight: bold;
     outline: none;
-    transition: background-color 0.3s ease;
 }
-
-.error-popup-content button:hover {
-    background-color: #555;
-}
-
