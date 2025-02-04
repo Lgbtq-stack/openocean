@@ -199,10 +199,10 @@ async function loadNFTs() {
 
             card.innerHTML = `
                 <div class="nft-image-container">
-                    <img src="${nft.image}" alt="${nft.title}" class="nft-image">
+                    <img src="${nft.image}" alt="${nft.name}" class="nft-image">
                 </div>
                 <div class="nft-details">
-                    <h3 class="nft-title">${nft.title}</h3>
+                    <h3 class="nft-title">${nft.name}</h3>
                     
                     <div class="nft-info-row">
                         <div class="nft-info-item">
@@ -291,9 +291,9 @@ async function loadTrendingNFTs() {
 
             slide.innerHTML = `
                 <div class="slider-card">
-                    <img class="nft-image" src="${nft.image}" alt="${nft.title}">
+                    <img class="nft-image" src="${nft.image}" alt="${nft.name}">
                     <div class="slider-card-overlay">
-                        <h3 class="nft-title">${nft.title}</h3>
+                        <h3 class="nft-title">${nft.name}</h3>
                         <p class="nft-collection">🏷️ Collection: ${nft.collection}</p>
                         <p class="nft-price">💰 Price: ${nft.price}</p>
                     </div>
@@ -364,11 +364,19 @@ async function showNFTDetails(id, dataSource) {
         };
 
         buyButton.onclick = () => {
-            sendDataToTelegramTest(userId, nft.id, nftCount);
+            if(nftCount * nft.price > userDataCache.data.balance)
+            {
+                showErrorPopup("error", "You don't have enough XLM!");
+            }
+            else {
+
+                sendDataToTelegramTest(userId, nft.id, nftCount);
+                showErrorPopup("success", `You have bought ${nftCount} "${nft.name}" !`);
+            }
         };
 
         document.querySelector('.close-panel').onclick = closeNFTDetails;
-        document.querySelector('.nft-details-panel').onclick = closeNFTDetails;
+        // document.querySelector('.nft-details-panel').onclick = closeNFTDetails;
         document.getElementById('nftDetailsPanel').classList.add('show');
     } catch (error) {
         console.error('Error loading NFT details:', error);
@@ -385,9 +393,13 @@ async function sendDataToTelegramTest(user_id, nft_id, count) {
         if (!response.ok) throw new Error(`Failed to buy NFT: ${response.status}`);
         const result = await response.json();
         console.log("NFT purchase successful:", result);
+
+        updateWalletInfo(result.nickname, result.balance);
+
     } catch (error) {
         console.error("Error during NFT purchase:", error);
     }
+
 }
 
 function closeNFTDetails() {
@@ -473,25 +485,22 @@ function renderPurchasedNFTs(nfts) {
 
                 <div class="my-nft-info-row">
                     <div class="my-nft-info-item">
-                        <img src="content/icons/collection-icon.png" alt="Collection" class="info-icon">
-                        <span>${nft.collection?.name || "Unknown"}</span>
+                    🏷️ <span>${nft.collection?.name || "Unknown"}</span>
                     </div>
                     <div class="my-nft-info-item">
-                        <img src="content/icons/holders-icon.png" alt="Holders" class="info-icon">
-                        <span>${nft.userCount}</span>
+                    👥 <span>${nft.userCount}</span>
                     </div>
                     <div class="my-nft-info-item">
-                        <img src="content/icons/total-bought-icon.png" alt="Total Bought" class="info-icon">
-                        <span>${nft.totalBought}</span>
+                    📊 <span>${nft.totalBought}</span>
                     </div>
                 </div>
 
                 <div class="my-nft-card-description">
-                    <p><strong>Description:</strong> ${nft.description || "No Description Available."}</p>
+                    <p><strong>📝 </strong> ${nft.description || "No Description Available."}</p>
                 </div>
 
                 <div class="my-nft-card-price">
-                    <p><strong>💰 Price:</strong> ${nft.price} XLM</p>
+                    <p><strong>💰 </strong> ${nft.price} XLM</p>
                 </div>
 
                 <button class="my-nft-details-button" id="details-${nft.id}">
@@ -773,10 +782,6 @@ async function loadCategories(page, category) {
                         <div class="nft-info-item">
                             📊 <span>${item.totalBought}</span>
                         </div>
-                    </div>
-
-                    <div class="nft-description">
-                        <p><strong>📝 </strong> ${item.description || "No description available."}</p>
                     </div>
 
                     <div class="nft-price-row">
