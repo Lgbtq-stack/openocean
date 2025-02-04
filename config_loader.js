@@ -194,6 +194,7 @@ async function loadNFTs() {
         cardsContainer.innerHTML = "";
 
         items.forEach((nft) => {
+            console.log(nft);
             const card = document.createElement("div");
             card.classList.add("card");
 
@@ -774,7 +775,7 @@ async function loadCategories(page, category) {
 
                     <div class="nft-info-row">
                         <div class="nft-info-item">
-                            🏷️ <span>${item.collection?.name || "Unknown"}</span>
+                            🏷️ <span>${item.collection || "Unknown"}</span>
                         </div>
                         <div class="nft-info-item">
                             👥 <span>${item.userCount}</span>
