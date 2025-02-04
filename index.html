@@ -116,14 +116,27 @@
         <h2 id="nft-title" class="nft-title">NFT Title</h2>
         <img id="nft-image" class="nft-image" src="" alt="NFT Image">
 
-        <div class="nft-info">
-            <p id="nft-category" class="nft-collection">Collection: </p>
-            <p id="nft-description" class="nft-details">Description of the NFT will appear here.</p>
-            <p id="nft-price" class="nft-price">Price: </p>
-            <p id="nft-holders" class="nft-holders">Holders: </p>
-            <p id="nft-total-bought" class="nft-total-bought">Total Bought: </p>
+        <div class="nft-info-row">
+            <div class="nft-info-item">
+                <div class="nft-collection-icon-info">🏷️ </div><span id="nft-collection">Box</span>
+            </div>
+            <div class="nft-info-item">
+                <div class="nft-holders-icon-info">👥 </div><span id="nft-holders">0</span>
+            </div>
+            <div class="nft-info-item">
+                <div class="nft-total-bought-icon-info">📊 </div><span id="nft-total-bought">0</span>
+            </div>
         </div>
 
+        <div class="nft-description">
+            <p><strong>📝</strong> <span id="nft-description">No Description Available.</span></p>
+        </div>
+
+        <div class="nft-price-row">
+            <p><strong>💰</strong> <span id="nft-price">37.22 XLM</span></p>
+        </div>
+
+        <!-- Buttons for increasing/decreasing the count -->
         <div class="count-container">
             <button class="count-button" id="decrease-count">-</button>
             <span id="nft-count-display">1</span>
@@ -131,6 +144,8 @@
         </div>
     </div>
 </div>
+
+
 
 <button id="scrollToTop" class="scroll-to-top">↑</button>
 
