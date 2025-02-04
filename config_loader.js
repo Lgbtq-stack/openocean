@@ -138,10 +138,10 @@ function updateWalletInfo(nickname, balance) {
     document.getElementById("wallet-balance").textContent = `Balance: ${balance} XLM`;
 }
 
-async function loadCategoriesOnce() {
+async function loadCategoriesOnce(includeAll = false) {
     if (categoriesCache.length > 0) {
         console.log("Using cached categories.");
-        return categoriesCache;
+        return includeAll ? [{ id: "", name: "All" }, ...categoriesCache] : categoriesCache;
     }
 
     try {
@@ -161,7 +161,8 @@ async function loadCategoriesOnce() {
         }));
 
         console.log("Categories loaded and cached:", categoriesCache);
-        return categoriesCache;
+
+        return includeAll ? [{ id: "", name: "All" }, ...categoriesCache] : categoriesCache;
     } catch (error) {
         showErrorPopup("error", `Error loading categories: ${error.message}`);
         return [];
@@ -558,7 +559,7 @@ async function createMyNFTCategories() {
 
     sliderTrack.innerHTML = "";
 
-    const categories = await loadCategoriesOnce();
+    const categories = await loadCategoriesOnce(true);
 
     categories.forEach(category => {
         const button = document.createElement("button");
@@ -640,7 +641,7 @@ async function createCategories() {
 
     sliderList.innerHTML = "";
 
-    const categories = await loadCategoriesOnce();
+    const categories = await loadCategoriesOnce(false);
 
     categories.forEach(category => {
         const button = document.createElement("button");
@@ -832,9 +833,6 @@ async function loadCategories(page, category) {
     }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    loadCategories(currentPage, currentCategory);
-});
 
 
 function initializeSlider() {
