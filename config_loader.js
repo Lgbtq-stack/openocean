@@ -579,18 +579,13 @@ async function createMyNFTCategories() {
         sliderTrack.appendChild(button);
     });
 
-    setupSliderControls();
+    initializeNFTSlider();
 }
 
-function setupSliderControls() {
-    const sliderWrapper = document.querySelector(".slider-wrapper");
-    const prevArrow = document.querySelector(".slider-control.prev");
-    const nextArrow = document.querySelector(".slider-control.next");
-
-    if (!sliderWrapper || !prevArrow || !nextArrow) {
-        console.error("Slider elements not found.");
-        return;
-    }
+function initializeNFTSlider() {
+    const sliderWrapper = document.querySelector(".nft-slider-wrapper");
+    const prevArrow = document.querySelector(".slider-control-nft.prev");
+    const nextArrow = document.querySelector(".slider-control-nft.next");
 
     prevArrow.style.visibility = "visible";
     nextArrow.style.visibility = "visible";
@@ -599,23 +594,22 @@ function setupSliderControls() {
         sliderWrapper.scrollBy({ left: offset, behavior: "smooth" });
     }
 
-    prevArrow.addEventListener("click", () => moveSlider(-300));
-    nextArrow.addEventListener("click", () => moveSlider(300));
+    prevArrow.addEventListener("click", () => moveSlider(-1000));
+    nextArrow.addEventListener("click", () => moveSlider(1000));
 
     let isDragging = false;
     let startX = 0;
-    let scrollLeft = 0;
 
     sliderWrapper.addEventListener("mousedown", (e) => {
         isDragging = true;
         startX = e.clientX;
-        scrollLeft = sliderWrapper.scrollLeft;
         sliderWrapper.style.cursor = "grabbing";
     });
 
-    sliderWrapper.addEventListener("mouseleave", () => {
-        isDragging = false;
-        sliderWrapper.style.cursor = "grab";
+    sliderWrapper.addEventListener("mousemove", (e) => {
+        if (!isDragging) return;
+        sliderWrapper.scrollLeft += startX - e.clientX;
+        startX = e.clientX;
     });
 
     sliderWrapper.addEventListener("mouseup", () => {
@@ -623,12 +617,9 @@ function setupSliderControls() {
         sliderWrapper.style.cursor = "grab";
     });
 
-    sliderWrapper.addEventListener("mousemove", (e) => {
-        if (!isDragging) return;
-        e.preventDefault();
-        const x = e.clientX;
-        const walk = (x - startX) * 2;
-        sliderWrapper.scrollLeft = scrollLeft - walk;
+    sliderWrapper.addEventListener("mouseleave", () => {
+        isDragging = false;
+        sliderWrapper.style.cursor = "grab";
     });
 }
 
@@ -776,7 +767,7 @@ async function loadCategories(page, category) {
             return;
         }
 
-        const response = await fetch(`https://miniappservcc.com/api/collections?id=${category}&page=${page}`);
+        const response = await fetch(`https://miniappservcc.com/api/collections?collection_id=${category}&page=${page}`);
         if (!response.ok) {
             throw new Error(`Failed to fetch data: ${response.status}`);
         }
@@ -792,30 +783,24 @@ async function loadCategories(page, category) {
 
         cardsContainer.innerHTML = "";
         items.forEach((item) => {
+            const count = item.count ? item.count : 0;
+
             const card = document.createElement("div");
             card.classList.add("card");
+
             card.innerHTML = `
-                <img src="${item.image}" alt="${item.name}" class="nft-image">
-                <h3 class="nft-title">${item.name}</h3>
-                <p class="nft-price">
-<!--                    <img src="content/icons/price-icon.png" alt="Price" class="info-icon-small">-->
-                    💰 Price: ${item.price} XLM
-                </p>
-                <p class="nft-quantity">
-<!--                    <img src="content/icons/quantity-icon.png" alt="Quantity" class="info-icon-small">-->
-                    🔢 Count: ${item.count}
-                </p>
-                <p class="nft-holders">
-<!--                    <img src="content/icons/holders-icon.png" alt="Holders" class="info-icon-small">-->
-                    👥 Holders: ${item.userCount}
-                </p>
-                <p class="nft-total-bought">
-<!--                    <img src="content/icons/bought-icon.png" alt="Total Bought" class="info-icon-small">-->
-                    📊 Total Bought: ${item.totalBought}
-                </p>
+                <div class="nft-image-container">
+                    <img src="${item.image}" alt="${item.name}" class="nft-image">
+                </div>
+                <div class="nft-details">
+                    <h3 class="nft-title">${item.name}</h3>
+                    <p class="nft-price">💰 Price: ${item.price} XLM</p>
+                    <p class="nft-quantity">🔢 Count: ${count}</p>
+                    <p class="nft-holders">👥 Holders: ${item.userCount}</p>
+                    <p class="nft-total-bought">📊 Total Bought: ${item.totalBought}</p>
+                </div>
                 <button class="details-button" id="details-${item.id}">
-                    <img class="info-icon" src="content/info.png" alt="click">
-                    Details 
+                    <img class="info-icon" src="content/info.png" alt="click"> Details
                 </button>
             `;
 
@@ -823,6 +808,7 @@ async function loadCategories(page, category) {
             detailsButton.addEventListener("click", () => {
                 showNFTDetails(item.id, items);
             });
+
             cardsContainer.appendChild(card);
         });
 
@@ -832,6 +818,7 @@ async function loadCategories(page, category) {
         console.error("Error loading categories:", error);
     }
 }
+
 
 
 
