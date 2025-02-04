@@ -900,7 +900,7 @@ function closePopup() {
     popupOverlay.style.display = "none";
 }
 
-function handleConfirm() {
+async function handleConfirm() {
     let walletAddress = walletAddressInput.value.trim();
     let amount = parseFloat(amountInput.value);
 
@@ -933,7 +933,25 @@ function handleConfirm() {
         showErrorPopup("error", "Entered amount exceeds your balance.");
         return;
     }
+    try {
+        const response = await fetch(`https://horizon.stellar.org/accounts/${walletAddress}`);
 
+        if (!response.ok) {
+            showErrorPopup("error", "Wallet address not found on the Stellar network.");
+            return;
+        }
+
+        const walletData = await response.json();
+
+        if (!walletData.paging_token || walletData.paging_token !== walletAddress) {
+            showErrorPopup("error", "This wallet doesn't exist in blockchain.");
+            return;
+        }
+    } catch (error) {
+        console.error("Error fetching wallet data:", error);
+        showErrorPopup("error", "Failed to validate wallet address. Please try again.");
+        return;
+    }
     const data = JSON.stringify({
         action: "withdraw",
         wallet: walletAddress,
@@ -942,7 +960,7 @@ function handleConfirm() {
 
     tg.ready();
     tg.sendData(data);
-    showCountdownPopup();
+    showErrorPopup("success", "Your wallet will be credited within 15 minutes..")
     walletAddressInput.value = "";
     amountInput.value = "";
 }
