@@ -1,3 +1,32 @@
+:root {
+    --primary-bg-color: #2c2c2c;
+    --secondary-bg-color: #5a5a5a;
+    --accent-color: #f97316;
+    --accent-hover-color: #ffb700;
+    --highlight-color: #ea680f;
+    --navbar-bg-color: #5a5a5a;
+    --text-color: #ffffff;
+    --muted-text-color: #ccc;
+    --link-hover-bg-color: rgba(51, 51, 51, 0);
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --border-color: #ffa500;
+    --popup-bg-color: rgba(0, 0, 0, 0.5);
+    --card-bg-color: #494949;
+    --card-shadow-color: rgba(255, 253, 253, 0.15);
+    --panel-bg-color: #333;
+    --table-header-bg: #ffb700;
+    --pagination-bg: #ea680f;
+    --pagination-active-bg: #ffffff;
+    --pagination-active-text: #000;
+    --popup-overlay-bg: rgba(0, 0, 0, 0.6);
+    --popup-content-bg: #545454;
+    --popup-shadow: rgba(0, 0, 0, 0.2);
+    --loading-spinner-border: #f3f3f3;
+    --loading-spinner-highlight: #ffb700;
+    --footer-bg-color: #2c3e50;
+    --footer-text-color: white;
+}
+
 /* General Reset */
 * {
     margin: 0;
@@ -8,21 +37,21 @@
 
 body {
     line-height: 1.6;
-    background-color: #2c2c2c;
+    background-color: var(--primary-bg-color);
     padding-bottom: 100px;
     color: #333;
 }
 
 h3 {
-    color: #fff;
+    color: var(--text-color);
 }
 
 .scroll-to-top {
     position: fixed;
     bottom: 90px;
     right: 20px;
-    background-color: #f97316;
-    color: #ffff;
+    background-color: var(--accent-color);
+    color: var(--text-color);
     border: none;
     border-radius: 50%;
     width: 50px;
@@ -44,8 +73,8 @@ h3 {
     justify-content: space-between;
     align-items: center;
     padding: 10px 20px;
-    background-color: #565656;
-    border-top: 2px solid #f97316;
+    background-color: var(--secondary-bg-color);
+    border-top: 2px solid var(--accent-color);
     box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
 
     border-top-left-radius: 20px;
@@ -69,8 +98,8 @@ h3 {
 .withdraw-button {
     padding: 10px 15px;
     font-size: 14px;
-    background-color: #f97316;
-    color: white;
+    background-color: var(--accent-color);
+    color: var(--text-color);
     border: none;
     border-radius: 20px;
     cursor: pointer;
@@ -118,12 +147,12 @@ h3 {
 }
 
 .navbar {
-    background-color: #5a5a5a;
+    background-color: var(--navbar-bg-color);
+    border-bottom: 2px solid var(--highlight-color);
     padding: 15px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 2px solid #ea680f;
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px;
 }
@@ -131,14 +160,31 @@ h3 {
 .navbar .logo {
     font-size: 1.5rem;
     font-weight: bold;
-    margin-right: 1rem;
     color: #fff;
 }
 
 .nav-links {
-    list-style: none;
     display: flex;
-    margin: 40px 10px 0 0;
+    justify-content: center;
+    list-style-type: none;
+    padding: 0;
+    margin: 40px 0 0 0;
+}
+
+.nav-links li {
+    padding: 0 20px;
+    position: relative;
+}
+
+.nav-links li:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1px;
+    height: 60%;
+    background-color: #ffa500;
 }
 
 .nav-links a {
@@ -146,7 +192,6 @@ h3 {
     color: #ffffff;
     font-weight: 500;
     transition: color 0.3s;
-    background-color: rgba(51, 51, 51, 0);
     padding: 10px 14px;
 }
 
@@ -292,11 +337,11 @@ h3 {
 }
 
 .card {
+    background-color: var(--card-bg-color);
+    box-shadow: 0 2px 8px var(--card-shadow-color);
     width: 100%;
     max-width: 400px;
     padding: 15px;
-    background-color: #494949;
-    box-shadow: 0 2px 8px rgba(255, 253, 253, 0.15);
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -371,18 +416,18 @@ h3 {
 
 /* NFT Details */
 .nft-details-panel {
+    background: var(--popup-bg-color);
+    color: #fff;
     display: none;
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(0, 0, 0, 0.8);
     z-index: 1000;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    color: #fff;
     overflow-y: auto;
 }
 
@@ -418,8 +463,10 @@ h3 {
 .nft-info p {
     margin: 5px 0;
     font-size: 1rem;
+    justify-content: space-between;
     color: #ccc;
 }
+
 
 .count-container {
     display: flex;
@@ -756,18 +803,18 @@ h3 {
 }
 
 .pagination-btn {
+    background-color: var(--pagination-bg);
+    color: #fff;
     padding: 5px 10px;
     border: none;
-    background-color: #ea680f;
-    color: #fff;
     cursor: pointer;
     border-radius: 20px;
     font-size: 14px;
 }
 
 .pagination-btn.active {
-    background-color: #ffffff;
-    color: #000;
+    background-color: var(--pagination-active-bg);
+    color: var(--pagination-active-text);
     border: none;
 
     border-radius: 20px;
@@ -787,8 +834,8 @@ h3 {
 footer {
     text-align: center;
     padding: 1rem;
-    background-color: #2c3e50;
-    color: white;
+    background-color: var(--footer-bg-color);
+    color: var(--footer-text-color);
     font-size: 0.9rem;
 }
 
@@ -1185,14 +1232,14 @@ footer {
 }
 
 .error-popup-content {
-    background: #545454;
+    background: var(--popup-content-bg);
+    box-shadow: 0 4px 15px var(--popup-shadow);
     border-bottom: 2px solid #ea680f;
     border-top: 2px solid #ea680f;
     padding: 20px;
     border-radius: 20px;
     width: 400px;
     text-align: center;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .error-popup-content h2 {

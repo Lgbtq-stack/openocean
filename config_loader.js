@@ -203,9 +203,8 @@ async function loadNFTs() {
         </div>
         <div class="nft-details">
             <h3 class="nft-title">${nft.title}</h3>
-            <p class="nft-price">
-<!--                <img src="content/icons/price-icon.png" alt="Price" class="info-icon-small">-->
-                💰 Price: ${nft.price} XLM
+            <p class="nft-collection">
+                🏷️ Collection: ${nft.collection}
             </p>
             <p class="nft-holders">
 <!--                <img src="content/icons/holders-icon.png" alt="Holders" class="info-icon-small">-->
@@ -214,6 +213,10 @@ async function loadNFTs() {
             <p class="nft-total-bought">
 <!--                <img src="content/icons/bought-icon.png" alt="Total Bought" class="info-icon-small">-->
                 📊 Total Bought: ${nft.totalBought}
+            </p>
+            <p class="nft-price">
+<!--                <img src="content/icons/price-icon.png" alt="Price" class="info-icon-small">-->
+                💰 Price: ${nft.price} XLM
             </p>
                 
         </div>
@@ -290,8 +293,8 @@ async function loadTrendingNFTs() {
                     <img class="nft-image" src="${nft.image}" alt="${nft.title}">
                     <div class="slider-card-overlay">
                         <h3 class="nft-title">${nft.title}</h3>
-                        <p class="nft-price">💰 Price: ${nft.price}</p>
                         <p class="nft-collection">🏷️ Collection: ${nft.collection}</p>
+                        <p class="nft-price">💰 Price: ${nft.price}</p>
                     </div>
                 </div>
             `;
@@ -318,6 +321,7 @@ async function showNFTDetails(id, dataSource) {
 
         const nft = dataSource.find((item) => item.id === Number(id));
 
+        console.log(nft);
         if (nft) {
             document.getElementById('nft-title').textContent = nft.title;
             document.getElementById('nft-image').src = nft.image;
@@ -325,8 +329,13 @@ async function showNFTDetails(id, dataSource) {
             document.getElementById('nft-total-bought').textContent = `📊 Total Bought: ${nft.totalBought}`;
 
             const categoryElement = document.getElementById('nft-category');
-            if (nft.collection) {
-                categoryElement.textContent = `🏷️ Collection: ${nft.collection}`;
+            const imagePath = nft.image;
+
+            const match = imagePath.match(/\/images\/([^/]+)\//);
+            const collectionName = match ? match[1] : "Unknown";
+
+            if (collectionName) {
+                categoryElement.textContent = `🏷️ Collection: ${collectionName}`;
                 categoryElement.style.display = "block";
             } else {
                 categoryElement.style.display = "none";
@@ -500,20 +509,20 @@ function renderPurchasedNFTs(nfts) {
         nfts.forEach((nft) => {
             const nftCard = document.createElement("div");
             nftCard.classList.add("card");
-
+            console.log(nft);
             nftCard.innerHTML = `
                 <div class="nft-image-container">
                     <img src="${nft.image}" alt="${nft.name}" class="nft-image">
                 </div>
                 <div class="nft-details">
                     <h3 class="nft-title">${nft.name}</h3>
-                    <p class="nft-price">
-<!--                        <img src="content/icons/price-icon.png" alt="Price" class="info-icon-small">-->
-                        💰 Price: ${nft.price} XLM
-                    </p>
+                    
                     <p class="nft-quantity">
 <!--                        <img src="content/icons/quantity-icon.png" alt="Quantity" class="info-icon-small">-->
                         🔢 Count: ${nft.count}
+                    </p>
+                    <p class="nft-collection">
+                        🏷️ Collection: ${nft.collection.name}
                     </p>
                     <p class="nft-holders">
 <!--                        <img src="content/icons/holders-icon.png" alt="Holders" class="info-icon-small">-->
@@ -521,6 +530,10 @@ function renderPurchasedNFTs(nfts) {
                     <p class="nft-total-bought">
 <!--                        <img src="content/icons/bought-icon.png" alt="Total Bought" class="info-icon-small">-->
                         📊 Total Bought: ${nft.totalBought}
+                    </p>
+                    <p class="nft-price">
+<!--                        <img src="content/icons/price-icon.png" alt="Price" class="info-icon-small">-->
+                        💰 Price: ${nft.price} XLM
                     </p>
                 </div>
                 <div class="nft-button-container">
@@ -794,10 +807,10 @@ async function loadCategories(page, category) {
                 </div>
                 <div class="nft-details">
                     <h3 class="nft-title">${item.name}</h3>
-                    <p class="nft-price">💰 Price: ${item.price} XLM</p>
                     <p class="nft-quantity">🔢 Count: ${count}</p>
                     <p class="nft-holders">👥 Holders: ${item.userCount}</p>
                     <p class="nft-total-bought">📊 Total Bought: ${item.totalBought}</p>
+                    <p class="nft-price">💰 Price: ${item.price} XLM</p>
                 </div>
                 <button class="details-button" id="details-${item.id}">
                     <img class="info-icon" src="content/info.png" alt="click"> Details
