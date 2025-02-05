@@ -505,7 +505,9 @@ h3 {
     justify-content: center;
     gap: 20px;
     margin-bottom: 15px;
-
+    padding: 10px 0;
+    border-top: 1px solid #5a5a5a;
+    border-bottom: 1px solid #5a5a5a;
 }
 
 .nft-info-item {
@@ -656,6 +658,9 @@ h3 {
     justify-content: center;
     align-items: center;
 
+    padding: 10px 0;
+    border-top: 1px solid #5a5a5a;
+    border-bottom: 1px solid #5a5a5a;
 }
 
 .my-nft-info-item {

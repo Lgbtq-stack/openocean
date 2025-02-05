@@ -280,7 +280,7 @@ async function loadTrendingNFTs() {
     }
 }
 
-async function showNFTDetails(id, dataSource) {
+async function showNFTDetails(id, dataSource, collection, description) {
     try {
         if (!dataSource || !Array.isArray(dataSource)) {
             throw new TypeError("Invalid dataSource: expected an array of objects.");
@@ -294,7 +294,7 @@ async function showNFTDetails(id, dataSource) {
 
         document.getElementById('nft-title').textContent = nft.name;
         document.getElementById('nft-image').src = nft.image;
-        document.getElementById('nft-collection').textContent = nft.collection?.name || "Unknown";
+        document.getElementById('nft-collection').textContent = nft.collection;
         document.getElementById('nft-holders').textContent = `${nft.userCount}`;
         document.getElementById('nft-total-bought').textContent = `${nft.totalBought}`;
         document.getElementById('nft-description').textContent = nft.description || "No Description Available.";
@@ -424,6 +424,7 @@ async function fetchUserNFTs(userId, collectionId = "", page = 1, limit = 5) {
         if (!response.ok) throw new Error(`Failed to fetch user NFTs: ${response.status}`);
 
         const data = await response.json();
+        console.log(data);
         renderPurchasedNFTs(data.data);
     } catch (error) {
         showErrorPopup("error", "Failed to fetch user NFTs.");
