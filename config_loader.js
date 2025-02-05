@@ -1,8 +1,8 @@
 // import {getAccountBalance} from "./backend/stellar_helper";
 // import {get_config} from "./backend/datacontoller";
 
-// const userId = "350104566";
-let user_Id = null;
+const user_Id = "350104566";
+// let user_Id = null;
 
 let tg = null;
 document.addEventListener("DOMContentLoaded", () => {
@@ -947,12 +947,12 @@ overlayErrorPopupButton.addEventListener("click", closeErrorPopup);
 
 async function initializeApp() {
 
-    const userId = getUserIdFromURL();
-    user_Id = userId;
-    if (!user_Id) {
-        showErrorPopup("error", "User ID is missing in the URL.");
-        return;
-    }
+    // const userId = getUserIdFromURL();
+    // user_Id = userId;
+    // if (!userId) {
+    //     showErrorPopup("error", "User ID is missing in the URL.");
+    //     return;
+    // }
 
         await fetchUserData(user_Id);
         await fetchUserNFTs(user_Id);

@@ -821,6 +821,8 @@ h3 {
     overflow: hidden;
     background-color: #454545;
     border-radius: 20px;
+    width: 100%;
+    margin-bottom: 1rem;
 }
 
 .trending-slider-track {
@@ -852,7 +854,6 @@ h3 {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
-    gap: 10px;
     border-radius: 20px;
 }
 
@@ -869,8 +870,6 @@ h3 {
     overflow: hidden;
     box-sizing: border-box;
     border-radius: 20px;
-
-    min-width: 300px;
 }
 
 .slider-card {
@@ -893,6 +892,50 @@ h3 {
 
 .slider-card h3{
     text-transform: capitalize;
+}
+
+@media (max-width: 768px) {
+    .slider-item {
+        flex: 0 0 80%;
+    }
+
+    .trending-nft-image {
+        height: 180px;
+    }
+
+    .trending-nft-title {
+        font-size: 16px;
+    }
+
+    .trending-info-item {
+        font-size: 13px;
+    }
+
+    .slider-card-overlay {
+        padding: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .slider-item {
+        flex: 0 0 100%;
+    }
+
+    .trending-nft-image {
+        height: 150px;
+    }
+
+    .trending-nft-title {
+        font-size: 14px;
+    }
+
+    .trending-info-item {
+        font-size: 12px;
+    }
+
+    .slider-card-overlay {
+        padding: 6px;
+    }
 }
 
 
