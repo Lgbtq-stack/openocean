@@ -1449,6 +1449,10 @@ footer {
     margin: 5px 0;
 }
 
+.warning-withdraw {
+    margin-top: 10px;
+}
+
 .confirm-button {
     background-color: var(--accent-color);
     color: var(--text-color);

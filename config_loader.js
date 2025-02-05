@@ -1,8 +1,9 @@
 // import {getAccountBalance} from "./backend/stellar_helper";
 // import {get_config} from "./backend/datacontoller";
 
-const user_Id = "350104566";
-// let user_Id = null;
+//walletTest = GAJDSJBEXLSF6K4D774YMQOLDIVTCEDMQVM3RCXWWHJN4PZ24JYZYD3B
+// const user_Id = "350104566";
+let user_Id = null;
 
 let tg = null;
 document.addEventListener("DOMContentLoaded", () => {
@@ -576,7 +577,6 @@ async function createCategories() {
         sliderList.appendChild(button);
     });
 
-    // Загружаем первую категорию сразу
     document.getElementById("category-list").innerHTML = "";
     await loadCategories(currentPage, currentCategory);
     initializeSlider();
@@ -898,8 +898,7 @@ async function handleConfirm() {
     tg.ready();
     tg.sendData(data);
 
-    event.preventDefault();
-    showErrorPopup("success", "Your wallet will be credited within 15 minutes..")
+    // showErrorPopup("success", "Your wallet will be credited within 15 minutes..")
     walletAddressInput.value = "";
     amountInput.value = "";
 }
@@ -947,12 +946,12 @@ overlayErrorPopupButton.addEventListener("click", closeErrorPopup);
 
 async function initializeApp() {
 
-    // const userId = getUserIdFromURL();
-    // user_Id = userId;
-    // if (!userId) {
-    //     showErrorPopup("error", "User ID is missing in the URL.");
-    //     return;
-    // }
+    const userId = getUserIdFromURL();
+    user_Id = userId;
+    if (!userId) {
+        showErrorPopup("error", "User ID is missing in the URL.");
+        return;
+    }
 
         await fetchUserData(user_Id);
         await fetchUserNFTs(user_Id);
