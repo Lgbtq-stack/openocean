@@ -80,7 +80,7 @@
         <p id="nft-total-value">Total Value: 00000 XML</p>
     </div>
 
-    <div class="category-slider">
+    <div class="category-slider" id="category-slider" style="display: none;">
         <div class="slider-control-nft prev"> <img src="content/arrow.png" alt="arrow"> </div>
         <div class="nft-slider-wrapper">
             <div class="nft-slider-track" id="my-nft-slider-track">
@@ -90,11 +90,16 @@
         <div class="slider-control-nft next"> <img src="content/arrow.png" alt="arrow"> </div>
     </div>
 
-    <div class="explore-section" id="explore-section">
+    <div class="explore-section" id="explore-section" style="display: none;">
         <h2>Explore NFTs</h2>
         <div class="my-nft-cards" id="my-nft-cards">
             <!-- Карточки будут добавляться сюда -->
         </div>
+    </div>
+
+    <div class="my-nft-no-nfts">
+        <p>You don't have any NFTs in this collection.</p>
+        <button class="my-nft-cta" onclick="showSection('trending')">Explore NFTs</button>
     </div>
 </section>
 

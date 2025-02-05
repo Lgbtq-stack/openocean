@@ -349,13 +349,18 @@ async function fetchUserNFTs(userId, collectionId = "", page = 1, limit = 5) {
 function renderPurchasedNFTs(nfts) {
     const nftContainer = document.querySelector(".my-nft-cards");
     const exploreSection = document.getElementById("explore-section");
+    const categorySlider = document.getElementById("category-slider");
+
+    function toggleExploreSection(show) {
+        exploreSection.style.display = show ? "block" : "none";
+        categorySlider.style.display = show ? "block" : "none";
+    }
 
     if (!nftContainer) return;
     nftContainer.innerHTML = "";
 
     if (nfts.length > 0) {
-        exploreSection.style.display = "block";
-
+        toggleExploreSection(true);  // Показываем секцию
         nfts.forEach((nft) => {
             const nftCard = document.createElement("div");
             nftCard.classList.add("my-nft-card");
@@ -365,44 +370,29 @@ function renderPurchasedNFTs(nfts) {
                     <img src="${nft.image}" alt="${nft.name}" class="my-nft-card-image">
                 </div>
                 <h3 class="my-nft-card-title">${nft.name}</h3>
-
                 <div class="my-nft-info-row">
                     <div class="my-nft-info-item">
-                    🏷️ <span>${nft.collection?.name || nft.collection}</span>
+                        🏷️ <span>${nft.collection?.name || nft.collection}</span>
                     </div>
                     <div class="my-nft-info-item">
-                    👥 <span>${nft.userCount}</span>
+                        👥 <span>${nft.userCount}</span>
                     </div>
                     <div class="my-nft-info-item">
-                    📊 <span>${nft.totalBought}</span>
+                        📊 <span>${nft.totalBought}</span>
                     </div>
                 </div>
-
                 <div class="my-nft-card-price">
                     <p><strong>💰 </strong> ${nft.price} XLM</p>
                 </div>
-
                 <button class="my-nft-details-button" id="details-${nft.id}">
-                    <img class="my-nft-info-icon" src="content/info.png" alt="Info">
-                    Details
+                    <img class="my-nft-info-icon" src="content/info.png" alt="Info"> Details
                 </button>
             `;
-
-            const detailsButton = nftCard.querySelector('.my-nft-details-button');
-            detailsButton.addEventListener('click', () => {
-                showNFTDetails(nft.id, nfts);
-            });
-
             nftContainer.appendChild(nftCard);
         });
     } else {
-        exploreSection.style.display = "none";
-        nftContainer.innerHTML = `
-            <div class="my-nft-no-nfts">
-                <p>You don't have any NFTs in this collection.</p>
-                <button class="my-nft-cta" onclick="showSection('trending')">Explore NFTs</button>
-            </div>
-        `;
+        toggleExploreSection(false);
+
     }
 }
 
@@ -453,19 +443,25 @@ function initializeNFTSlider() {
     prevArrow.addEventListener("click", () => moveSlider(-1000));
     nextArrow.addEventListener("click", () => moveSlider(1000));
 
+    // Переменные для отслеживания сенсорного и мышечного взаимодействия
     let isDragging = false;
     let startX = 0;
+    let scrollLeft = 0;
 
+    // === Поддержка мыши ===
     sliderWrapper.addEventListener("mousedown", (e) => {
         isDragging = true;
-        startX = e.clientX;
+        startX = e.pageX - sliderWrapper.offsetLeft;
+        scrollLeft = sliderWrapper.scrollLeft;
         sliderWrapper.style.cursor = "grabbing";
     });
 
     sliderWrapper.addEventListener("mousemove", (e) => {
         if (!isDragging) return;
-        sliderWrapper.scrollLeft += startX - e.clientX;
-        startX = e.clientX;
+        e.preventDefault();
+        const x = e.pageX - sliderWrapper.offsetLeft;
+        const walk = (x - startX) * 2;
+        sliderWrapper.scrollLeft = scrollLeft - walk;
     });
 
     sliderWrapper.addEventListener("mouseup", () => {
@@ -476,6 +472,24 @@ function initializeNFTSlider() {
     sliderWrapper.addEventListener("mouseleave", () => {
         isDragging = false;
         sliderWrapper.style.cursor = "grab";
+    });
+
+    sliderWrapper.addEventListener("touchstart", (e) => {
+        isDragging = true;
+        startX = e.touches[0].pageX - sliderWrapper.offsetLeft;
+        scrollLeft = sliderWrapper.scrollLeft;
+    });
+
+    sliderWrapper.addEventListener("touchmove", (e) => {
+        if (!isDragging) return;
+        e.preventDefault();
+        const x = e.touches[0].pageX - sliderWrapper.offsetLeft;
+        const walk = (x - startX) * 2;
+        sliderWrapper.scrollLeft = scrollLeft - walk;
+    });
+
+    sliderWrapper.addEventListener("touchend", () => {
+        isDragging = false;
     });
 }
 

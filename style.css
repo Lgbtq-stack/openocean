@@ -726,12 +726,18 @@ h3 {
     height: 20px;
     justify-items: center;
 }
+
 .my-nft-no-nfts {
     text-align: center;
     background-color: #444;
     padding: 20px;
     border-radius: 12px;
     color: white;
+}
+
+.my-nft-no-nfts  p {
+    text-align: center;
+    font-size: 1.2rem;
 }
 
 .my-nft-cta {
@@ -741,6 +747,7 @@ h3 {
     border: none;
     border-radius: 20px;
     cursor: pointer;
+    margin-top: 10px;
 }
 
 /* === Адаптивные стили === */
@@ -1301,7 +1308,8 @@ footer {
     text-transform: capitalize;
 }
 
-.my-nft-category-item.active {
+.my-nft-category-item.active,
+.my-nft-category-item.focus {
     background-color: var(--accent-hover-color);
     color: var(--text-color);
 }
