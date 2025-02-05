@@ -897,6 +897,8 @@ async function handleConfirm() {
 
     tg.ready();
     tg.sendData(data);
+
+    event.preventDefault();
     showErrorPopup("success", "Your wallet will be credited within 15 minutes..")
     walletAddressInput.value = "";
     amountInput.value = "";
