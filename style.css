@@ -852,7 +852,7 @@ h3 {
 
 .trending-info-row {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     flex-wrap: wrap;
     border-radius: 20px;
 }
