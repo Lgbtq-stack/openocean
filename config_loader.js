@@ -2,7 +2,7 @@
 // import {get_config} from "./backend/datacontoller";
 
 // const userId = "350104566";
-let userId = null;
+let user_Id = null;
 
 let tg = null;
 document.addEventListener("DOMContentLoaded", () => {
@@ -31,7 +31,7 @@ function showSection(sectionId) {
     }
 
     if (sectionId === "my-nfts") {
-        fetchUserNFTs(userId);
+        fetchUserNFTs(user_Id);
     }
 }
 
@@ -55,11 +55,11 @@ function showSection(sectionId) {
 
 function getUserIdFromURL() {
     const urlParams = new URLSearchParams(window.location.search);
-    userId = urlParams.get("user_id");
+    user_Id = urlParams.get("user_id");
 
-    if (userId) {
-        console.log(`User ID from URL: ${userId}`);
-        return userId;
+    if (user_Id) {
+        console.log(`User ID from URL: ${user_Id}`);
+        return user_Id;
     } else {
         console.warn("User ID not found in the URL.");
         return null;
@@ -173,7 +173,6 @@ async function loadTrendingNFTs() {
 
         const items = trendingData.trending;
 
-        // Рендерим первые 4 элемента в слайдер
         const sliderTrack = document.getElementById("sliderTrack");
         sliderTrack.innerHTML = "";
 
@@ -202,7 +201,6 @@ async function loadTrendingNFTs() {
             sliderTrack.appendChild(slide);
         });
 
-        // Рендерим остальные элементы в cardsContainer
         const cardsContainer = document.querySelector('.cards');
         if (!cardsContainer) {
             throw new Error("Element with class 'cards' not found in DOM.");
@@ -309,7 +307,7 @@ async function showNFTDetails(id, dataSource, collection, description) {
             }
             else {
 
-                sendDataToTelegramTest(userId, nft.id, nftCount);
+                sendDataToTelegramTest(user_Id, nft.id, nftCount);
                 showErrorPopup("success", `You have bought ${nftCount} "${nft.name}" !`);
             }
         };
@@ -487,7 +485,7 @@ async function createMyNFTCategories() {
             const collectionId = category.id === "" ? "" : category.id;
             console.log(`Selected category ID: ${collectionId}`);
 
-            fetchUserNFTs(userId, collectionId);
+            fetchUserNFTs(user_Id, collectionId);
         });
 
         sliderTrack.appendChild(button);
@@ -811,11 +809,7 @@ const popupOverlay = document.getElementById("popup-overlay");
 const popupTitle = document.getElementById("popup-title");
 const confirmButton = document.getElementById("confirm-button");
 const closeButton = document.getElementById("close-popup-button");
-const popupDescription = document.getElementById("popup-description");
-const countdownPopup = document.getElementById("countdown-popup");
-const countdownTimer = document.getElementById("countdown-timer");
 
-const userBalance = 500;
 let currentAction = "";
 
 const rechargeContent = document.getElementById("recharge-content");
@@ -875,6 +869,7 @@ async function handleConfirm() {
         showErrorPopup("error", "Entered amount exceeds your balance.");
         return;
     }
+
     try {
         const response = await fetch(`https://horizon.stellar.org/accounts/${walletAddress}`);
 
@@ -905,19 +900,6 @@ async function handleConfirm() {
     showErrorPopup("success", "Your wallet will be credited within 15 minutes..")
     walletAddressInput.value = "";
     amountInput.value = "";
-}
-
-function showCountdownPopup() {
-    let secondsLeft = 5;
-    showErrorPopup("warning", `Withdraw successful. MiniApp will close in ${secondsLeft} seconds...`);
-
-    const timer = setInterval(() => {
-        secondsLeft--;
-        if (secondsLeft <= 0) {
-            clearInterval(timer);
-            tg.close();
-        }
-    }, 1000);
 }
 
 function copyToClipboard(elementId) {
@@ -964,16 +946,15 @@ overlayErrorPopupButton.addEventListener("click", closeErrorPopup);
 async function initializeApp() {
 
     const userId = getUserIdFromURL();
-    console.log(userId);
-    if (!userId) {
+    user_Id = userId;
+    if (!user_Id) {
         showErrorPopup("error", "User ID is missing in the URL.");
         return;
     }
 
-        await fetchUserData(userId);
-        await fetchUserNFTs(userId);
+        await fetchUserData(user_Id);
+        await fetchUserNFTs(user_Id);
 
-        // await loadNFTs();
         await loadTrendingNFTs();
         await createCategories();
         await createMyNFTCategories();

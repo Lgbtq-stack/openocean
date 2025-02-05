@@ -813,13 +813,13 @@ h3 {
 
 .trending-slider {
     display: flex;
-    overflow-x: auto;
+    overflow-x: clip;
 }
 
 .trending-slider-container {
     padding: 10px;
     overflow: hidden;
-    background-color: #333333;
+    background-color: #454545;
     border-radius: 20px;
 }
 
@@ -837,17 +837,23 @@ h3 {
     border-bottom: 2px solid #f97316;
 }
 
+.trending-nft-image img{
+    border-radius: 20px;
+}
+
 .trending-nft-title {
     font-size: 18px;
     font-weight: bold;
     text-align: center;
     margin-bottom: 8px;
 }
+
 .trending-info-row {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
     gap: 10px;
+    border-radius: 20px;
 }
 
 .trending-info-item {
@@ -879,10 +885,9 @@ h3 {
 
 .slider-card-overlay {
     padding: 10px;
-    background-color: #333333;
+    background-color: #454545;
     color: white;
     position: relative;
-    border-radius: 20px;
 
 }
 
