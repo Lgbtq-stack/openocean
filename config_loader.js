@@ -169,82 +169,6 @@ async function loadCategoriesOnce(includeAll = false) {
     }
 }
 
-
-async function loadNFTs() {
-    try {
-        const response = await fetch("https://miniappservcc.com/api/trends");
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const trendingData = await response.json();
-        console.log("Trending data received from server:", trendingData);
-
-        if (!Array.isArray(trendingData.trending)) {
-            throw new TypeError("Invalid data format: expected 'trending' to be an array.");
-        }
-
-        const items = trendingData.trending;
-
-        const cardsContainer = document.querySelector('.cards');
-        if (!cardsContainer) {
-            throw new Error("Element with class 'cards' not found in DOM.");
-        }
-
-        cardsContainer.innerHTML = "";
-
-        items.forEach((nft) => {
-            console.log(nft);
-            const card = document.createElement("div");
-            card.classList.add("card");
-
-            card.innerHTML = `
-                <div class="nft-image-container">
-                    <img src="${nft.image}" alt="${nft.name}" class="nft-image">
-                </div>
-                <div class="nft-details">
-                    <h3 class="nft-title">${nft.name}</h3>
-                    
-                    <div class="nft-info-row">
-                        <div class="nft-info-item">
-                            🏷️  <span>${nft.collection || "Unknown"}</span>
-                        </div>
-                        <div class="nft-info-item">
-                            👥 <span>${nft.userCount}</span>
-                        </div>
-                        <div class="nft-info-item">
-                            📊 <span>${nft.totalBought}</span>
-                        </div>
-                    </div>
-                    
-                    <p class="nft-price">
-                        💰 Price: ${nft.price} XLM
-                    </p>
-                </div>
-
-                <div class="nft-button-container">
-                    <button class="details-button" id="details-${nft.id}">
-                        <img class="info-icon" src="content/info.png" alt="Info">
-                        Details
-                    </button>
-                </div>
-            `;
-
-            cardsContainer.appendChild(card);
-
-            const detailsButton = card.querySelector('.details-button');
-            detailsButton.addEventListener('click', () => {
-                console.log(`Button clicked for NFT ID: ${nft.id}`);
-                showNFTDetails(nft.id, items);
-            });
-        });
-
-        console.log("NFTs successfully loaded and rendered.");
-    } catch (error) {
-        console.error("Error loading NFTs:", error);
-    }
-}
-
 let currentIndex = 0;
 let totalSlides = 0;
 
@@ -331,7 +255,7 @@ async function loadTrendingNFTs() {
                         <div class="nft-info-item">📊 <span>${nft.totalBought}</span></div>
                     </div>
                     
-                    <p class="nft-price">💰 Price: ${nft.price} XLM</p>
+                    <p class="nft-price">💰${nft.price} XLM</p>
                 </div>
 
                 <div class="nft-button-container">
