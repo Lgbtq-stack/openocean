@@ -2,7 +2,7 @@
 // import {get_config} from "./backend/datacontoller";
 
 // const userId = "350104566";
-const userId = getUserIdFromURL();
+let userId = getUserIdFromURL();
 
 let tg = null;
 document.addEventListener("DOMContentLoaded", () => {
@@ -55,7 +55,7 @@ function showSection(sectionId) {
 
 function getUserIdFromURL() {
     const urlParams = new URLSearchParams(window.location.search);
-    const userId = urlParams.get("user_id");
+    userId = urlParams.get("user_id");
 
     if (userId) {
         console.log(`User ID from URL: ${userId}`);
@@ -964,7 +964,7 @@ overlayErrorPopupButton.addEventListener("click", closeErrorPopup);
 async function initializeApp() {
 
     const userId = getUserIdFromURL();
-
+    console.log(userId);
     if (!userId) {
         showErrorPopup("error", "User ID is missing in the URL.");
         return;
