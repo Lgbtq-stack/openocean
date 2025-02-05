@@ -865,12 +865,12 @@ h3 {
 
 .slider-item {
     flex: 0 0 100%;
-    width: 100%;
     position: relative;
     overflow: hidden;
     box-sizing: border-box;
     border-radius: 20px;
 
+    min-width: 300px;
 }
 
 .slider-card {
