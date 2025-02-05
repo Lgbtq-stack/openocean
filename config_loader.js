@@ -271,32 +271,29 @@ async function loadTrendingNFTs() {
         }
 
         const trendingData = await response.json();
-        console.log("Trending data received from server:", trendingData);
-
         if (!Array.isArray(trendingData.trending)) {
             throw new TypeError("Invalid data format: expected 'trending' to be an array.");
         }
 
-        const items = trendingData.trending.slice(0, 4);
+        const items = trendingData.trending;
 
+        // Рендерим первые 4 элемента в слайдер
         const sliderTrack = document.getElementById("sliderTrack");
-        if (!sliderTrack) {
-            throw new Error("Element with ID 'sliderTrack' not found in DOM.");
-        }
-
         sliderTrack.innerHTML = "";
 
-        items.forEach((nft) => {
+        items.slice(0, 4).forEach((nft) => {
             const slide = document.createElement("div");
             slide.classList.add("slider-item");
 
             slide.innerHTML = `
                 <div class="slider-card">
-                    <img class="nft-image" src="${nft.image}" alt="${nft.name}">
+                    <img class="trending-nft-image" src="${nft.image}" alt="${nft.name}">
                     <div class="slider-card-overlay">
-                        <h3 class="nft-title">${nft.name}</h3>
-                        <p class="nft-collection">🏷️ Collection: ${nft.collection}</p>
-                        <p class="nft-price">💰 Price: ${nft.price}</p>
+                        <h3 class="trending-nft-title">${nft.name}</h3>
+                        <div class="trending-info-row">
+                            <div class="trending-info-item">🏷️ ${nft.collection || "Unknown"}</div>
+                            <div class="trending-info-item">💰 ${nft.price} XLM</div>
+                        </div>
                     </div>
                 </div>
             `;
@@ -309,9 +306,53 @@ async function loadTrendingNFTs() {
             sliderTrack.appendChild(slide);
         });
 
-        console.log("Trending NFTs successfully loaded and rendered.");
+        // Рендерим остальные элементы в cardsContainer
+        const cardsContainer = document.querySelector('.cards');
+        if (!cardsContainer) {
+            throw new Error("Element with class 'cards' not found in DOM.");
+        }
+
+        cardsContainer.innerHTML = "";
+
+        items.slice(4).forEach((nft) => {
+            const card = document.createElement("div");
+            card.classList.add("card");
+
+            card.innerHTML = `
+                <div class="nft-image-container">
+                    <img src="${nft.image}" alt="${nft.name}" class="nft-image">
+                </div>
+                <div class="nft-details">
+                    <h3 class="nft-title">${nft.name}</h3>
+                    
+                    <div class="nft-info-row">
+                        <div class="nft-info-item">🏷️ <span>${nft.collection || "Unknown"}</span></div>
+                        <div class="nft-info-item">👥 <span>${nft.userCount}</span></div>
+                        <div class="nft-info-item">📊 <span>${nft.totalBought}</span></div>
+                    </div>
+                    
+                    <p class="nft-price">💰 Price: ${nft.price} XLM</p>
+                </div>
+
+                <div class="nft-button-container">
+                    <button class="details-button" id="details-${nft.id}">
+                        <img class="info-icon" src="content/info.png" alt="Info"> Details
+                    </button>
+                </div>
+            `;
+
+            cardsContainer.appendChild(card);
+
+            const detailsButton = card.querySelector('.details-button');
+            detailsButton.addEventListener('click', () => {
+                console.log(`Button clicked for NFT ID: ${nft.id}`);
+                showNFTDetails(nft.id, items);
+            });
+        });
+
+        console.log("Trending NFTs and cards successfully loaded and rendered.");
     } catch (error) {
-        console.error("Error loading trending NFTs from the server:", error);
+        console.error("Error loading trending NFTs:", error);
     }
 }
 
@@ -336,6 +377,7 @@ async function showNFTDetails(id, dataSource) {
         document.getElementById('nft-price').textContent = `${nft.price} XLM`;
 
         let nftCount = 1;
+        document.getElementById('nft-count-display').textContent = `${nftCount}`;
 
         function updateBuyButton(price, count) {
             buyButton.textContent = `Buy NFT: ${(price * count).toFixed(2)} XLM`;
@@ -496,10 +538,6 @@ function renderPurchasedNFTs(nfts) {
                     </div>
                 </div>
 
-                <div class="my-nft-card-description">
-                    <p><strong>📝 </strong> ${nft.description || "No Description Available."}</p>
-                </div>
-
                 <div class="my-nft-card-price">
                     <p><strong>💰 </strong> ${nft.price} XLM</p>
                 </div>
@@ -611,13 +649,28 @@ async function createCategories() {
     sliderList.innerHTML = "";
 
     const categories = await loadCategoriesOnce(false);
+    if (categories.length === 0) {
+        console.error("No categories available.");
+        return;
+    }
+
+    let firstCategory = categories[0].id;
+    currentCategory = firstCategory;
+    currentPage = 1;
 
     categories.forEach(category => {
         const button = document.createElement("button");
         button.classList.add("slider-category-item");
         button.textContent = category.name;
 
+        if (category.id === firstCategory) {
+            button.classList.add("active-category");
+        }
+
         button.addEventListener("click", () => {
+            document.querySelectorAll(".slider-category-item").forEach(btn => btn.classList.remove("active-category"));
+            button.classList.add("active-category");
+
             currentCategory = category.id;
             currentPage = 1;
             document.getElementById("category-list").innerHTML = "";
@@ -627,10 +680,12 @@ async function createCategories() {
         sliderList.appendChild(button);
     });
 
-    currentPage = 1;
+    // Загружаем первую категорию сразу
+    document.getElementById("category-list").innerHTML = "";
     await loadCategories(currentPage, currentCategory);
     initializeSlider();
 }
+
 
 let currentPage = 1;
 let currentCategory = 1;
@@ -1015,7 +1070,7 @@ async function initializeApp() {
         await fetchUserData(userId);
         await fetchUserNFTs(userId);
 
-        await loadNFTs();
+        // await loadNFTs();
         await loadTrendingNFTs();
         await createCategories();
         await createMyNFTCategories();
