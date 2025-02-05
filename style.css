@@ -256,7 +256,7 @@ h3 {
 }
 
 .nft-showcase img {
-    width: 95px;
+    width: 115px;
     height: auto;
     border-radius: 20px;
     position: absolute;
@@ -1306,6 +1306,7 @@ footer {
     white-space: nowrap;
     margin: 0 5px;
     text-transform: capitalize;
+    font-size: 14px;
 }
 
 .my-nft-category-item.active,

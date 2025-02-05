@@ -5,6 +5,9 @@
 // const user_Id = "350104566";
 let user_Id = null;
 
+let currentSection = null;
+let currentCategoryId = null;
+
 let tg = null;
 document.addEventListener("DOMContentLoaded", () => {
     Telegram.WebApp.expand();
@@ -20,19 +23,27 @@ let userDataCache = {
 let categoriesCache = [];
 
 function showSection(sectionId) {
+    if (currentSection === sectionId) {
+        console.log(`Section "${sectionId}" is already active. Skipping request.`);
+        return;
+    }
+    currentSection = sectionId;
+
     document.querySelectorAll("section").forEach(section => {
         section.style.display = "none";
     });
+    document.getElementById(sectionId).style.display = "block";
 
-    const section = document.getElementById(sectionId);
-    section.style.display = "block";
 
-    if (sectionId === "hero") {
-        startNFTShowcaseAnimation();
-    }
-
-    if (sectionId === "my-nfts") {
+    if (sectionId === "trendings") {
+        loadTrendingNFTs();
+    } else if (sectionId === "my-nfts") {
         fetchUserNFTs(user_Id);
+    } else if (sectionId === "categories") {
+        loadCategoriesOnce().then(categories => {
+            console.log("Loaded categories:", categories);
+            renderCategories(categories);
+        });
     }
 }
 
@@ -83,6 +94,31 @@ async function loadCategoriesOnce(includeAll = false) {
         showErrorPopup("error", `Error loading categories: ${error.message}`);
         return [];
     }
+}
+
+function renderCategories(categories) {
+    const categoryContainer = document.getElementById("category-list");
+    categoryContainer.innerHTML = "";  // Очищаем старые категории
+
+    categories.forEach(category => {
+        const categoryCard = document.createElement("div");
+        categoryCard.classList.add("category-card");
+        categoryCard.textContent = category.name;
+
+        categoryCard.addEventListener("click", () => fetchCategoryNFTs(category.id));
+        categoryContainer.appendChild(categoryCard);
+    });
+}
+
+function fetchCategoryNFTs(categoryId) {
+    if (currentCategoryId === categoryId) {
+        console.log(`Category "${categoryId}" is already selected. Skipping request.`);
+        return;
+    }
+    currentCategoryId = categoryId;
+
+    console.log(`Fetching NFTs for category: ${categoryId || "All"}`);
+    fetchUserNFTs(user_Id, categoryId);
 }
 
 let currentIndex = 0;
@@ -194,7 +230,7 @@ async function loadTrendingNFTs() {
     }
 }
 
-async function showNFTDetails(id, dataSource, collection, description) {
+async function showNFTDetails(id, dataSource) {
     try {
         if (!dataSource || !Array.isArray(dataSource)) {
             throw new TypeError("Invalid dataSource: expected an array of objects.");
@@ -208,11 +244,21 @@ async function showNFTDetails(id, dataSource, collection, description) {
 
         document.getElementById('nft-title').textContent = nft.name;
         document.getElementById('nft-image').src = nft.image;
-        document.getElementById('nft-collection').textContent = nft.collection;
+        document.getElementById('nft-collection').textContent = nft.collection.name || nft.collection;
         document.getElementById('nft-holders').textContent = `${nft.userCount}`;
         document.getElementById('nft-total-bought').textContent = `${nft.totalBought}`;
         document.getElementById('nft-description').textContent = nft.description || "No Description Available.";
         document.getElementById('nft-price').textContent = `${nft.price} XLM`;
+
+        const countNFT = document.getElementById("nft-owned-count");
+        const nftInfoItem = countNFT.closest(".nft-info-item");
+
+        if (nft.count > 0) {
+            nftInfoItem.style.display = "flex";
+            countNFT.textContent = nft.count;
+        } else {
+            nftInfoItem.style.display = "none";
+        }
 
         let nftCount = 1;
         document.getElementById('nft-count-display').textContent = `${nftCount}`;
@@ -257,7 +303,6 @@ async function showNFTDetails(id, dataSource, collection, description) {
         };
 
         document.querySelector('.close-panel').onclick = closeNFTDetails;
-        // document.querySelector('.nft-details-panel').onclick = closeNFTDetails;
         document.getElementById('nftDetailsPanel').classList.add('show');
     } catch (error) {
         console.error('Error loading NFT details:', error);
@@ -349,18 +394,18 @@ async function fetchUserNFTs(userId, collectionId = "", page = 1, limit = 5) {
 function renderPurchasedNFTs(nfts) {
     const nftContainer = document.querySelector(".my-nft-cards");
     const exploreSection = document.getElementById("explore-section");
-    const categorySlider = document.getElementById("category-slider");
+    const noNFTs = document.getElementById("my-nft-no-nfts");
 
     function toggleExploreSection(show) {
         exploreSection.style.display = show ? "block" : "none";
-        categorySlider.style.display = show ? "block" : "none";
+        noNFTs.style.display = show ? "none" : "block";
     }
 
     if (!nftContainer) return;
     nftContainer.innerHTML = "";
 
     if (nfts.length > 0) {
-        toggleExploreSection(true);  // Показываем секцию
+        toggleExploreSection(true);
         nfts.forEach((nft) => {
             const nftCard = document.createElement("div");
             nftCard.classList.add("my-nft-card");
@@ -380,6 +425,9 @@ function renderPurchasedNFTs(nfts) {
                     <div class="my-nft-info-item">
                         📊 <span>${nft.totalBought}</span>
                     </div>
+                    <div class="my-nft-info-item">
+                        📥 <span>${nft.count}</span>
+                    </div>
                 </div>
                 <div class="my-nft-card-price">
                     <p><strong>💰 </strong> ${nft.price} XLM</p>
@@ -388,6 +436,12 @@ function renderPurchasedNFTs(nfts) {
                     <img class="my-nft-info-icon" src="content/info.png" alt="Info"> Details
                 </button>
             `;
+
+            const detailsButton = nftCard.querySelector('.my-nft-details-button');
+            detailsButton.addEventListener('click', () => {
+                showNFTDetails(nft.id, nfts);
+            });
+
             nftContainer.appendChild(nftCard);
         });
     } else {
