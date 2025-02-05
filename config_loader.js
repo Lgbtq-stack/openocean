@@ -1,7 +1,9 @@
 // import {getAccountBalance} from "./backend/stellar_helper";
 // import {get_config} from "./backend/datacontoller";
 
-const userId = "350104566";
+// const userId = "350104566";
+const userId = getUserIdFromURL();
+
 let tg = null;
 document.addEventListener("DOMContentLoaded", () => {
     Telegram.WebApp.expand();
@@ -16,41 +18,6 @@ let userDataCache = {
 };
 
 let categoriesCache = [];
-
-const localConfig = {
-    wallet: {
-        address: "0x123456789abcdef123456789abcdef123456789a",
-        balance: "1000"
-    },
-    trendingNFTs: [1,2,3],
-    purchasedNFTs: [
-        {
-            id: "1",
-            title: "Abstract Waves",
-            category: "Art",
-            price: "0.02",
-            currency: "ETH",
-            image: "content/nft_1.png"
-        },
-        {
-            id: "2",
-            title: "Urban House",
-            category: "Gaming",
-            price: "0.25",
-            currency: "ETH",
-            image: "content/nft_5.png"
-        },
-        {
-            id: "3",
-            title: "Winter Serenity",
-            category: "Photography",
-            price: "0.4",
-            currency: "ETH",
-            image: "content/nft_3.png"
-        }
-    ]
-};
-
 
 function showSection(sectionId) {
     document.querySelectorAll("section").forEach(section => {
@@ -69,61 +36,66 @@ function showSection(sectionId) {
     }
 }
 
-function getConfigFromURL() {
+// function getConfigFromURL() {
+//     const urlParams = new URLSearchParams(window.location.search);
+//     const encodedConfig = urlParams.get("config");
+//
+//     if (encodedConfig) {
+//         try {
+//             const decodedConfig = decodeURIComponent(encodedConfig);
+//             return JSON.parse(decodedConfig);
+//         } catch (error) {
+//             console.error("Error decoding config:", error);
+//             return null;
+//         }
+//     }
+//
+//     console.warn("No config parameter found in URL. Using local config.");
+//     return localConfig;
+// }
+
+function getUserIdFromURL() {
     const urlParams = new URLSearchParams(window.location.search);
-    const encodedConfig = urlParams.get("config");
+    const userId = urlParams.get("uid");
 
-    if (encodedConfig) {
-        try {
-            const decodedConfig = decodeURIComponent(encodedConfig);
-            return JSON.parse(decodedConfig);
-        } catch (error) {
-            console.error("Error decoding config:", error);
-            return null;
-        }
+    if (userId) {
+        console.log(`User ID from URL: ${userId}`);
+        return userId;
+    } else {
+        console.warn("User ID not found in the URL.");
+        return null;
     }
-
-    console.warn("No config parameter found in URL. Using local config.");
-    return localConfig;
 }
-
 async function getConfig(useLocalConfig = true) {
     let remoteConfig = null;
 
     try {
         if (useLocalConfig) {
             console.warn("Using local configuration.");
-            remoteConfig = {...localConfig};
         } else {
-            const configFromURL = getConfigFromURL();
+            const configFromURL = getUserIdFromURL();
             console.log("Config from URL:", configFromURL);
 
             if (configFromURL) {
                 remoteConfig = await get_config(configFromURL);
             } else {
                 console.warn("No config found in URL, falling back to localConfig.");
-                remoteConfig = {...localConfig};
             }
         }
 
-        if (!remoteConfig.wallet || !remoteConfig.wallet.address) {
-            showErrorPopup("warning", "You don't have an active wallet. ⚠️");
-            return null;
-        }
-
-        if (useLocalConfig) {
-            console.log("Using local balance:", remoteConfig.wallet.balance);
-        } else {
-            console.log("Fetching balances for wallet:", remoteConfig.wallet.address);
-            const all_balances = await getAccountBalance(remoteConfig.wallet.address);
-            const balance = all_balances[check_token];
-
-            if (balance === undefined) {
-                console.error("No balance found for check_token");
-                showErrorPopup("error", "Please add trustline to your wallet for the CZI token. 🛠");
-                return null;
-            }
-        }
+        // if (useLocalConfig) {
+        //     console.log("Using local balance:", remoteConfig.wallet.balance);
+        // } else {
+        //     console.log("Fetching balances for wallet:", remoteConfig.wallet.address);
+        //     const all_balances = await getAccountBalance(remoteConfig.wallet.address);
+        //     const balance = all_balances[check_token];
+        //
+        //     if (balance === undefined) {
+        //         console.error("No balance found for check_token");
+        //         showErrorPopup("error", "Please add trustline to your wallet for the CZI token. 🛠");
+        //         return null;
+        //     }
+        // }
 
         return remoteConfig;
     } catch (error) {
@@ -381,6 +353,7 @@ async function fetchUserData(userId) {
         if (userDataCache.data && (currentTime - userDataCache.timestamp) < userDataCache.ttl) {
             console.log("Using cached data");
             displayUserInfo(userDataCache.data);
+            console.log(userDataCache.data);
             return userDataCache.data;
         }
 
@@ -990,9 +963,9 @@ overlayErrorPopupButton.addEventListener("click", closeErrorPopup);
 
 async function initializeApp() {
 
-    // const config = await getConfig(true);
-    //
-    // if (config) {
+    const config = await getConfig(false);
+
+    if (config) {
         await fetchUserData(userId);
         await fetchUserNFTs(userId);
 
@@ -1000,7 +973,7 @@ async function initializeApp() {
         await loadTrendingNFTs();
         await createCategories();
         await createMyNFTCategories();
-    // }
+    }
 }
 
 
