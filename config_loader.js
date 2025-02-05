@@ -2,7 +2,7 @@
 // import {get_config} from "./backend/datacontoller";
 
 // const userId = "350104566";
-let userId = getUserIdFromURL();
+let userId = null;
 
 let tg = null;
 document.addEventListener("DOMContentLoaded", () => {
