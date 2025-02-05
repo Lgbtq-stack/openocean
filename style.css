@@ -893,6 +893,23 @@ h3 {
 .slider-card h3{
     text-transform: capitalize;
 }
+@media (max-width: 1024px) {
+    .slider-item {
+        flex: 0 0 100%;
+    }
+
+    .trending-nft-image {
+        height: 220px;
+    }
+
+    .trending-nft-title {
+        font-size: 18px;
+    }
+
+    .slider-card-overlay {
+        padding: 10px;
+    }
+}
 
 @media (max-width: 768px) {
     .slider-item {
