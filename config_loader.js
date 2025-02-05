@@ -10,7 +10,6 @@ document.addEventListener("DOMContentLoaded", () => {
     tg = Telegram.WebApp;
 });
 
-
 let userDataCache = {
     data: null,
     timestamp: 0,
@@ -56,7 +55,7 @@ function showSection(sectionId) {
 
 function getUserIdFromURL() {
     const urlParams = new URLSearchParams(window.location.search);
-    const userId = urlParams.get("uid");
+    const userId = urlParams.get("user_id");
 
     if (userId) {
         console.log(`User ID from URL: ${userId}`);
@@ -66,6 +65,7 @@ function getUserIdFromURL() {
         return null;
     }
 }
+
 async function getConfig(useLocalConfig = true) {
     let remoteConfig = null;
 
@@ -963,9 +963,13 @@ overlayErrorPopupButton.addEventListener("click", closeErrorPopup);
 
 async function initializeApp() {
 
-    const config = await getConfig(false);
+    const userId = getUserIdFromURL();
 
-    if (config) {
+    if (!userId) {
+        showErrorPopup("error", "User ID is missing in the URL.");
+        return;
+    }
+
         await fetchUserData(userId);
         await fetchUserNFTs(userId);
 
@@ -973,7 +977,6 @@ async function initializeApp() {
         await loadTrendingNFTs();
         await createCategories();
         await createMyNFTCategories();
-    }
 }
 
 
