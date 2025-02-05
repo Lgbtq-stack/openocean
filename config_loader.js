@@ -945,7 +945,7 @@ closeErrorPopupButton.addEventListener("click", closeErrorPopup);
 overlayErrorPopupButton.addEventListener("click", closeErrorPopup);
 
 async function initializeApp() {
-
+    window.tg.disableVerticalSwipes()
     const userId = getUserIdFromURL();
     user_Id = userId;
     if (!userId) {
