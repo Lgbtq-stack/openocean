@@ -453,7 +453,7 @@ function renderPurchasedNFTs(nfts) {
 
                 <div class="my-nft-info-row">
                     <div class="my-nft-info-item">
-                    🏷️ <span>${nft.collection?.name || "Unknown"}</span>
+                    🏷️ <span>${nft.collection?.name || nft.collection}</span>
                     </div>
                     <div class="my-nft-info-item">
                     👥 <span>${nft.userCount}</span>
@@ -720,6 +720,7 @@ function lazyLoadImages() {
 
 async function loadCategories(page, category) {
     try {
+        console.log(`Loading Categories ${category.name}`);
         if (!category) {
             console.error("Invalid category ID:", category);
             return;
