@@ -36,24 +36,6 @@ function showSection(sectionId) {
     }
 }
 
-// function getConfigFromURL() {
-//     const urlParams = new URLSearchParams(window.location.search);
-//     const encodedConfig = urlParams.get("config");
-//
-//     if (encodedConfig) {
-//         try {
-//             const decodedConfig = decodeURIComponent(encodedConfig);
-//             return JSON.parse(decodedConfig);
-//         } catch (error) {
-//             console.error("Error decoding config:", error);
-//             return null;
-//         }
-//     }
-//
-//     console.warn("No config parameter found in URL. Using local config.");
-//     return localConfig;
-// }
-
 function getUserIdFromURL() {
     const urlParams = new URLSearchParams(window.location.search);
     user_Id = urlParams.get("user_id");
@@ -64,45 +46,6 @@ function getUserIdFromURL() {
     } else {
         console.warn("User ID not found in the URL.");
         return null;
-    }
-}
-
-async function getConfig(useLocalConfig = true) {
-    let remoteConfig = null;
-
-    try {
-        if (useLocalConfig) {
-            console.warn("Using local configuration.");
-        } else {
-            const configFromURL = getUserIdFromURL();
-            console.log("Config from URL:", configFromURL);
-
-            if (configFromURL) {
-                remoteConfig = await get_config(configFromURL);
-            } else {
-                console.warn("No config found in URL, falling back to localConfig.");
-            }
-        }
-
-        // if (useLocalConfig) {
-        //     console.log("Using local balance:", remoteConfig.wallet.balance);
-        // } else {
-        //     console.log("Fetching balances for wallet:", remoteConfig.wallet.address);
-        //     const all_balances = await getAccountBalance(remoteConfig.wallet.address);
-        //     const balance = all_balances[check_token];
-        //
-        //     if (balance === undefined) {
-        //         console.error("No balance found for check_token");
-        //         showErrorPopup("error", "Please add trustline to your wallet for the CZI token. 🛠");
-        //         return null;
-        //     }
-        // }
-
-        return remoteConfig;
-    } catch (error) {
-        console.error("Error loading config:", error);
-        showErrorPopup("error", "Failed to load configuration. Using local config as fallback. ⚠️");
-        return {...localConfig};
     }
 }
 
@@ -835,6 +778,18 @@ function openPopup(action) {
 function closePopup() {
     popupOverlay.style.display = "none";
 }
+
+walletAddressInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+        walletAddressInput.blur(); // Скрыть клавиатуру
+    }
+});
+
+amountInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+        amountInput.blur(); // Скрыть клавиатуру
+    }
+});
 
 async function handleConfirm() {
     let walletAddress = walletAddressInput.value.trim();
