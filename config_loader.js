@@ -47,6 +47,25 @@ function showSection(sectionId) {
     }
 }
 
+const navLinks = document.querySelectorAll('.nav-links li');
+
+function setActiveTab(selectedTab) {
+    navLinks.forEach(tab => tab.classList.remove('active'));
+    selectedTab.classList.add('active');
+}
+
+navLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+        e.preventDefault();  // Предотвращаем стандартное поведение ссылки
+        setActiveTab(link);
+    });
+
+    link.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        setActiveTab(link);
+    });
+});
+
 function getUserIdFromURL() {
     const urlParams = new URLSearchParams(window.location.search);
     user_Id = urlParams.get("user_id");
