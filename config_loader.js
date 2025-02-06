@@ -47,22 +47,17 @@ function showSection(sectionId) {
     }
 }
 
-const navLinks = document.querySelectorAll('.nav-links li');
-
-function setActiveTab(selectedTab) {
-    navLinks.forEach(tab => tab.classList.remove('active'));
-    selectedTab.classList.add('active');
-}
+const navLinks = document.querySelectorAll('.nav-links li a');
 
 navLinks.forEach(link => {
     link.addEventListener('click', (e) => {
-        e.preventDefault();  // Предотвращаем стандартное поведение ссылки
-        setActiveTab(link);
+        e.preventDefault();
+        link.focus();
     });
 
     link.addEventListener('touchstart', (e) => {
         e.preventDefault();
-        setActiveTab(link);
+        link.focus();
     });
 });
 
