@@ -1018,7 +1018,6 @@ amountInput.addEventListener("keydown", (e) => {
 });
 
 import StellarSdk from 'https://cdn.jsdelivr.net/npm/@stellar/stellar-sdk/+esm';
-
 const server = new StellarSdk.Horizon.Server("https://horizon.stellar.org");
 
 async function checkTrustline(accountId) {
