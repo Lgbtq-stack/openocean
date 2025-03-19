@@ -77,12 +77,12 @@ function getUserIdFromURL() {
 
 function updateWalletInfo(nickname, balance, balance_bonus, level, extra_balance) {
 
-    console.log(`${nickname}, balance: ${balance_bonus}, level: ${level}`);
     document.getElementById("wallet-address").textContent = `User: ${nickname}`;
     document.getElementById("wallet-balance").innerHTML = `Balance: ${balance + balance_bonus}
     <img src="content/money-icon.png" alt="NFT Icon" style="width: 25px; height: 20px; vertical-align: sub;">`;
     document.getElementById("user-level").innerHTML = `Level: ${level}`;
-    document.getElementById("balance_extra").innerHTML = `Extra Balance: ${extra_balance}`;
+    document.getElementById("balance_extra").innerHTML = `Extra Balance: ${extra_balance}
+    <img src="content/nft_extra.png" alt="NFT Icon" style="width: 25px; height: 20px; vertical-align: sub;">`;
 }
 
 async function loadCategoriesOnce(includeAll = false) {
@@ -1272,6 +1272,7 @@ document.getElementById('refresh-balance-button').addEventListener('click', () =
 
 async function initializeApp() {
     user_Id = getUserIdFromURL();
+    // user_Id = 488916773;
 
     if (!user_Id) {
         showErrorPopup("error", "User ID is missing in the URL.");
