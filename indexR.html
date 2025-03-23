@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>World NFT Market</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.10.2/lottie.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stellar-sdk@10.5.1/lib/stellar-sdk.min.js"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+    <link rel="stylesheet" href="styles/HomePageStyle.css">
+    <link rel="stylesheet" href="styles/TrendingsPageStyle.css">
+    <link rel="stylesheet" href="styles/UtilitiesStyle.css">
+    <link rel="stylesheet" href="styles/ErrorPopupStyle.css">
+</head>
+<body>
+
+<div class="container">
+    <!-- Main Menu (Progress) -->
+    <section id="main-menu" class="section">
+        <div class="gradient-circle"></div>
+
+        <div class="logo-container">
+            <img src="logo.png" alt="Logo" class="logo-image">
+        </div>
+        <h2>🔥 Welcome</h2>
+        <p class="desc">Track your journey in the NFTropolis world. Keep an eye on your progress and discover the rewards
+            awaiting you as you level up.</p>
+
+        <div class="card">
+            <h3>Level Progress</h3>
+            <div class="progress-bar">
+                <div class="progress" style="width: 70%;"></div>
+            </div>
+            <div class="bonuses">
+                <strong>Bonuses</strong>
+                <p>
+                    Level 5 Bonuses:<br>
+                    Early access to new releases<br>
+                    Exclusive discounts<br>
+                    VIP support
+                </p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Points to Next Level</h3>
+            <div class="progress-bar">
+                <div class="progress" style="width: 30%;"></div>
+            </div>
+            <p class="points">1,000,000 to 0</p>
+        </div>
+    </section>
+
+    <!-- Trending NFTs -->
+    <section id="trending-nfts" class="section" style="display:none;">
+        <h2>🔥 Trending NFTs</h2>
+        <div class="cards" id="trending-cards-container">
+            <!-- Карточки будут добавляться сюда -->
+        </div>
+    </section>
+
+    <!-- Categories/Search -->
+    <section id="categories" class="section" style="display:none;">
+        <div class="search-container">
+            <input type="text" placeholder="Search NFTs...">
+            <button class="filter-btn">Filter</button>
+        </div>
+
+        <div class="cards">
+            <div class="card">
+                <img src="cityscape.png" alt="Futuristic Cityscape">
+                <h3>Futuristic Cityscape</h3>
+                <p class="price">$1200</p>
+            </div>
+            <div class="card">
+                <img src="lion.png" alt="Majestic Lion">
+                <h3>Majestic Lion</h3>
+                <p class="price">$1500</p>
+            </div>
+            <div class="card">
+                <img src="swirls.png" alt="Abstract Swirls">
+                <h3>Abstract Swirls</h3>
+                <p class="price">$900</p>
+            </div>
+            <div class="card">
+                <img src="landscape.png" alt="Serene Landscape">
+                <h3>Serene Landscape</h3>
+                <p class="price">$1100</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- User Profile -->
+    <section id="user-profile" class="section" style="display:none;">
+        <h2>👤 My Profile</h2>
+        <div class="profile-card">
+            <img src="user-photo.png" alt="User Photo" class="user-photo">
+            <h3>Alex Johnson</h3>
+            <p class="bio">NFT Enthusiast & Collector</p>
+
+            <div class="account-balance">
+                <span>Account Balance</span>
+                <h2>$12,345.67</h2>
+                <button class="add-funds-btn">Add Funds</button>
+            </div>
+
+            <div class="progress-level">
+                <span>Level 5</span>
+                <div class="progress-bar"><div class="progress" style="width:70%;"></div></div>
+                <span>70%</span>
+            </div>
+
+            <div class="level-benefits">
+                <strong>Level Benefits</strong>
+                <p>As a Level 5 member, you enjoy exclusive benefits.</p>
+            </div>
+
+            <button class="history-btn">Purchase History</button>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="nav-item trending" onclick="setActiveTab(this)">
+            <img src="content/trending.png" alt="Trendings" class="nav-icon">
+        </div>
+        <div class="nav-item categories" onclick="setActiveTab(this)">
+            <img src="content/apps.png" alt="Categories" class="nav-icon">
+        </div>
+        <div class="nav-item home active" onclick="setActiveTab(this)">
+            <img src="content/home.png" alt="Home" class="nav-icon">
+        </div>
+        <div class="nav-item cart" onclick="setActiveTab(this)">
+            <img src="content/trolley.png" alt="Cart" class="nav-icon">
+            <span class="cart-count">3</span>
+        </div>
+        <div class="nav-item myProfile" onclick="setActiveTab(this)">
+            <img src="content/userNew.png" alt="MyProfile" class="nav-icon">
+        </div>
+    </footer>
+
+</div>
+
+<!-- Utilities -->
+
+<button id="scrollToTop" class="scroll-to-top">↑</button>
+
+<!--<div id="loading-panel" class="loading hidden">-->
+<!--    <p>⏳ Loading...</p>-->
+<!--</div>-->
+
+<div id="error-popup" class="error-popup-overlay">
+    <div class="error-popup-content">
+        <h2 id="error-title">Warning</h2>
+        <p id="error-message">Something went wrong. Please try again.</p>
+        <button id="close-error-popup-button">Close</button>
+    </div>
+</div>
+
+<!-- JS -->
+
+<script type="module" src="js/index.js"></script>
+
+</body>
+</html>

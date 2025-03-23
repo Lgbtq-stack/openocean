@@ -79,10 +79,10 @@ function updateWalletInfo(nickname, balance, balance_bonus, level, extra_balance
 
     document.getElementById("wallet-address").textContent = `${nickname}`;
     document.getElementById("wallet-balance").innerHTML = `${balance + balance_bonus}
-    <img src="content/money-icon.png" alt="NFT Icon" style="width: 25px; height: 20px; vertical-align: sub;">`;
+    <img src="../content/money-icon.png" alt="NFT Icon" style="width: 25px; height: 20px; vertical-align: sub;">`;
     document.getElementById("user-level").innerHTML = `Level: ${level}`;
     document.getElementById("balance_extra").innerHTML = `${extra_balance}
-    <img src="content/nft_extra.png" alt="NFT Icon" style="width: 25px; height: 20px; vertical-align: sub;">`;
+    <img src="../content/nft_extra.png" alt="NFT Icon" style="width: 25px; height: 20px; vertical-align: sub;">`;
 }
 
 async function loadCategoriesOnce(includeAll = false) {
@@ -187,7 +187,7 @@ async function loadTrendingNFTs() {
                         <h3 class="trending-nft-title">${nft.name}</h3>
                         <div class="trending-info-row">
                             <div class="trending-info-item">🏷️ ${nft.collection || "Unknown"}</div>
-                            <div class="trending-info-item"><img src="content/money-icon.png" alt="NFT Icon" style="width: 25px; height: 20px; margin-left: 15px; vertical-align: middle;"> ${nft.price}</div>
+                            <div class="trending-info-item"><img src="../content/money-icon.png" alt="NFT Icon" style="width: 25px; height: 20px; margin-left: 15px; vertical-align: middle;"> ${nft.price}</div>
                         </div>
                     </div>
                 </div>
@@ -225,12 +225,12 @@ async function loadTrendingNFTs() {
                         <div class="nft-info-item">📊 <span>${nft.totalBought}</span></div>
                     </div>
                     
-                    <p class="nft-price"><img src="content/money-icon.png" alt="NFT Icon" style="width: 25px; height: 20px; vertical-align: sub;"> ${nft.price}</p>
+                    <p class="nft-price"><img src="../content/money-icon.png" alt="NFT Icon" style="width: 25px; height: 20px; vertical-align: sub;"> ${nft.price}</p>
                 </div>
 
                 <div class="nft-button-container">
                     <button class="details-button" id="details-${nft.id}">
-                        <img class="info-icon" src="content/info.png" alt="Info"> Details
+                        <img class="info-icon" src="../content/info.png" alt="Info"> Details
                     </button>
                 </div>
             `;
@@ -271,7 +271,7 @@ async function showNFTDetails(id, dataSource) {
         document.getElementById('nft-holders').textContent = `${nft.userCount}`;
         document.getElementById('nft-total-bought').textContent = `${nft.totalBought}`;
         document.getElementById('nft-description').textContent = `${nft.description}`;
-        document.getElementById('nft-price').innerHTML = `<img src="content/money-icon.png" alt="NFT Icon" style="width: 35px; height: 25px; vertical-align: top">  ${nft.price}`;
+        document.getElementById('nft-price').innerHTML = `<img src="../content/money-icon.png" alt="NFT Icon" style="width: 35px; height: 25px; vertical-align: top">  ${nft.price}`;
 
         let nftCount = 1;
         document.getElementById('nft-count-display').textContent = `${nftCount}`;
@@ -311,7 +311,7 @@ async function showNFTDetails(id, dataSource) {
             const totalCost = nftCount * nft.price;
 
             if (totalCost > currentBalance) {
-                showErrorPopup("error", "You don't have enough <img src=\"content/money-icon.png\" alt=\"NFT Icon\" style=\"width: 25px; height: 20px; vertical-align: sub;\">!");
+                showErrorPopup("error", "You don't have enough <img src=\"../content/money-icon.png\" alt=\"NFT Icon\" style=\"width: 25px; height: 20px; vertical-align: sub;\">!");
             } else {
                 await sendDataToTelegramTest(user_Id, nft.id, nftCount);
                 showErrorPopup("success", `You have bought ${nftCount} "${nft.name}" !`);
@@ -335,7 +335,7 @@ async function showNFTDetails(id, dataSource) {
             const currentBalance = userData.balance_extra;
 
             if (nftCount > currentBalance) {
-                showErrorPopup("error", "You don't have enough <img src=\"content/nft_extra.png\" alt=\"NFT Extra Icon\" style=\"width: 25px; height: 20px; vertical-align: sub;\">!");
+                showErrorPopup("error", "You don't have enough <img src=\"../content/nft_extra.png\" alt=\"NFT Extra Icon\" style=\"width: 25px; height: 20px; vertical-align: sub;\">!");
             } else {
                 await sendDataToTelegramExtra(user_Id, nft.id, nftCount);
                 showErrorPopup("success", `You have bought ${nftCount} "${nft.name}" !`);
@@ -434,7 +434,7 @@ function displayUserInfo(userData) {
     const nftValueElement = document.getElementById("nft-total-value");
     if (nftValueElement) {
         nftValueElement.innerHTML = `NFT Total Value: ${userData.nft_total_value.toFixed(2)} 
-    <img src="content/money-icon.png" alt="NFT Icon" style="width: 25px; height: 20px; vertical-align: middle;">`;
+    <img src="../content/money-icon.png" alt="NFT Icon" style="width: 25px; height: 20px; vertical-align: middle;">`;
     }
     updateWalletInfo(userData.nickname, userData.balance, userData.balance_bonus, userData.level, userData.balance_extra);
 }
@@ -495,10 +495,10 @@ function renderPurchasedNFTs(nfts) {
                     </div>
                 </div>
                 <div class="my-nft-card-price">
-                    <p><strong><img src="content/money-icon.png" alt="NFT Icon" style="width: 25px; height: 20px; vertical-align: middle;"></strong> ${nft.price} </p>
+                    <p><strong><img src="../content/money-icon.png" alt="NFT Icon" style="width: 25px; height: 20px; vertical-align: middle;"></strong> ${nft.price} </p>
                 </div>
                 <button class="my-nft-details-button" id="details-${nft.id}">
-                    <img class="my-nft-info-icon" src="content/info.png" alt="Info"> Details
+                    <img class="my-nft-info-icon" src="../content/info.png" alt="Info"> Details
                 </button>
             `;
 
@@ -840,12 +840,12 @@ async function loadCategories(page, category) {
                     </div>
 
                     <div class="nft-price-row">
-                        <p><img src="content/money-icon.png" alt="NFT Icon" style="width: 25px; height: 20px; vertical-align: sub;"> ${item.price}</p>
+                        <p><img src="../content/money-icon.png" alt="NFT Icon" style="width: 25px; height: 20px; vertical-align: sub;"> ${item.price}</p>
                     </div>
                 </div>
 
                 <button class="details-button" id="details-${item.id}">
-                    <img class="info-icon" src="content/info.png" alt="click"> Details
+                    <img class="info-icon" src="../content/info.png" alt="click"> Details
                 </button>
             `;
 
@@ -1201,7 +1201,7 @@ async function refreshUserBalance(showPopup = true) {
 
         if (data && data.balance !== undefined) {
             document.getElementById('wallet-balance').innerHTML = ` ${totalBalance.toFixed(2)} 
-            <img src="content/money-icon.png" alt="NFT Icon" style="width: 25px; height: 20px; vertical-align: middle">`;
+            <img src="../content/money-icon.png" alt="NFT Icon" style="width: 25px; height: 20px; vertical-align: middle">`;
 
 
             userDataCache = {

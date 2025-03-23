@@ -1,0 +1,193 @@
+:root {
+    --primary: #3d9aff;
+    --secondary: #3d9aff;
+    --white: #f6f5f5;
+    --black: #1b1b1b;
+    --text-color: #424242;
+    --border-color: #515151;
+    --bg-color-light: #dadada;
+    --slider-bg-color: #e1e0e0;
+    --container-bg: #1f1f1f;
+    --top-radial-gradient: radial-gradient(ellipse, rgba(75, 104, 243, 0.75) 0%, rgba(0, 128, 0, 0) 60%, rgba(0, 0, 0, 0) 100%);
+    --box-shadow-soft: rgba(0, 0, 0, 0.15);
+    --box-shadow-medium: rgba(0, 0, 0, 0.4);
+    --indicator: #ff0000;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--white);
+    margin: 0;
+    padding: 0;
+    position: relative;
+}
+
+.gradient-circle {
+    position: absolute;
+    top: -250px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 500px;
+    background: var(--top-radial-gradient);
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.logo-container {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 120px;
+}
+
+.logo-image {
+    width: 180px;
+    padding: 15px 25px;
+    border: 2px solid var(--primary);
+    border-radius: 12px;
+    background-color: transparent;
+    margin-bottom: 75px;
+}
+
+.container {
+    max-width: 100%;
+    margin: 0 auto;
+    background-color: var(--white);
+    border-radius: 15px;
+    box-shadow: 0 2px 10px var(--box-shadow-soft);
+    position: relative;
+    min-height: 100vh;
+    padding: 15px 15px 100px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+h2 {
+    font-size: 22px;
+    margin-bottom: 5px;
+}
+
+.desc {
+    font-size: 14px;
+    color: var(--text-color);
+}
+
+.card {
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 4px 6px var(--box-shadow-soft);
+    padding: 12px;
+    margin: 15px 0;
+}
+
+.card h3 {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.progress-bar {
+    background-color: var(--slider-bg-color);
+    width: 100%;
+    height: 10px;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.progress-bar .progress {
+    background-color: var(--primary);
+    height: 100%;
+
+    border-radius: 15px;
+}
+
+.bonuses {
+    font-size: 20px;
+    color: var(--text-color);
+
+    line-height: 1.4;
+    margin-top: 10px;
+    background: var(--bg-color-light);
+    padding: 10px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.bonuses p {
+    margin: 0;
+    padding: 0;
+    font-size: 13px;
+    color: var(--text-color);
+}
+
+.footer {
+    position: fixed;
+    bottom: -100px;
+    left: 0;
+    width: 100%;
+    height: 65px;
+    background-color: var(--white);
+    box-shadow: 0 -2px 8px var(--box-shadow-soft);
+    border-radius: 20px 20px 0 0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 5px 0;
+    z-index: 100;
+    transition: bottom .5s ease-out;
+}
+
+.footer.visible {
+    bottom: 0;
+}
+
+.nav-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+}
+
+.nav-item.active {
+    opacity: 1;
+    color: var(--primary);
+}
+
+.nav-icon {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+}
+
+.cart {
+    position: relative;
+}
+
+.cart-count {
+    position: absolute;
+    top: -7px;
+    left: 50%;
+    transform: translateX(50%);
+    background-color: var(--indicator);
+    color: white;
+    font-size: 12px;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    pointer-events: none;
+}
+
