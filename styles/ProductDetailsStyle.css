@@ -26,7 +26,7 @@
 }
 
 .panel-content h4 {
-    margin: 10px 0 2px;
+    margin: 10px 0 5px;
 }
 
 .close-panel {
@@ -35,6 +35,7 @@
     font-size: 16px;
     font-weight: bold;
     cursor: pointer;
+    margin-bottom: 10px;
 }
 
 .nft-image {
@@ -44,6 +45,7 @@
 
 .nft-title {
     font-size: 22px;
+    margin: 5px 0;
 }
 
 #nft-description, #nft-collection {
@@ -51,15 +53,15 @@
     color: var(--text-color-light);
 }
 
+
 .nft-price-container {
     display: flex;
     align-items: center;
     gap: 5px;
     flex-wrap: wrap;
-    font-weight: bold;
     color: var(--black);
     font-size: 18px;
-    margin-top: -15px;
+    margin-top: -20px;
 }
 
 .price-block {
@@ -76,10 +78,6 @@
     vertical-align: middle;
 }
 
-.price-separator {
-    font-weight: normal;
-}
-
 .add-to-cart-button {
     background: var(--primary);
     color: var(--white);
@@ -88,6 +86,5 @@
     padding: 12px;
     width: 100%;
     font-size: 16px;
-    margin-top: 20px;
     cursor: pointer;
 }

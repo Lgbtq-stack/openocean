@@ -1,12 +1,13 @@
-import {Cart, renderCart} from "./CartLogic.js";
+import {Cart} from "./CartLogic.js";
 import {showSuccessPopup} from "./Utilities.js";
 
 export function showNFTDetails(id, dataSource) {
     const nft = dataSource.find(item => item.id === id || item.id === Number(id));
     if (!nft) return;
 
-    document.getElementById('nft-title').textContent = nft.name;
     document.getElementById('nft-image').src = nft.image;
+    document.getElementById('nft-title').textContent = nft.name;
+
     document.getElementById('nft-description').textContent = nft.description || 'No description available';
     document.getElementById('nft-collection').textContent = nft.collection?.name || nft.collection || 'Unknown';
 
@@ -40,6 +41,8 @@ export function showNFTDetails(id, dataSource) {
                 Cart.addItem({
                     id: nft.id,
                     name: nft.name,
+                    image: nft.image,
+                    collection: nft.collection?.name || nft.collection || 'Unknown',
                     price: nft.price,
                     count: 1
                 });

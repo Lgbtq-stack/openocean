@@ -36,7 +36,6 @@ window.setActiveTab = async function (selectedTab) {
         }
 
         currentTab = newTab;
-
         document.querySelectorAll('#main-menu, #trending-nfts, #cart-section, #categories, #user-profile')
             .forEach(section => {
                 section.style.display = "none";
@@ -46,6 +45,8 @@ window.setActiveTab = async function (selectedTab) {
         if (activeSection) {
             activeSection.style.display = "block";
         }
+
+        await hideCartUserHeader();
 
         if (currentTab === 'main-menu') {
             // здесь можно выполнить функции, специфичные для главного меню
@@ -63,7 +64,6 @@ window.setActiveTab = async function (selectedTab) {
         console.error("Error when changing tabs:", error);
     } finally {
         // await hideLoader();
-        await hideCartUserHeader();
         closeNFTDetails();
     }
 };

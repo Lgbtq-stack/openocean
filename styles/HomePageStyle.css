@@ -178,6 +178,11 @@ h2 {
     width: 28px;
     height: 28px;
     object-fit: contain;
+    transition: transform 0.3s ease;
+}
+.nav-item.active .nav-icon {
+    transform: scale(1.3);
+    transition: transform 0.3s ease;
 }
 
 .cart {

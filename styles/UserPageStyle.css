@@ -1,0 +1,242 @@
+/* User Profile Section Styles */
+
+#user-profile {
+    background-color: #f9f9f9;
+    padding: 20px 10px;
+    min-height: 100vh;
+}
+
+.profile-card {
+    background-color: var(--white);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 4px 12px var(--bg-color-light);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.user-photo {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-top: 10px;
+}
+
+.profile-card h3 {
+    font-size: 20px;
+    margin: 5px 0 0;
+}
+
+.profile-card .bio {
+    font-size: 14px;
+    color: gray;
+    margin: 0;
+}
+
+/* Account Balance Card */
+#account-balance {
+    width: 100%;
+    background-color: var(--white);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 2px 6px var(--bg-color-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 0 20px;
+}
+
+#balance-label {
+    font-size: 16px;
+    font-weight: 600;
+    display: block;
+}
+
+#balance-amount {
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+#add-funds-btn {
+    background-color: var(--primary);
+    border: none;
+    color: var(--white);
+    padding: 10px 20px;
+    border-radius: 24px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Progress & Level */
+.progress-level {
+    width: 100%;
+    background-color: var(--white);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.progress-level span:first-child {
+    font-weight: 600;
+}
+
+.progress-bar {
+    height: 10px;
+    background-color: #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress {
+    height: 100%;
+    background-color: var(--primary);
+    border-radius: 10px;
+}
+
+/* Level Benefits */
+.level-benefits {
+    background-color: var(--bg-color-light);
+    padding: 15px;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.level-benefits strong {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.level-benefits p {
+    margin: 0;
+    font-size: 14px;
+}
+
+.collapsible {
+    transition: max-height 0.3s ease, padding 0.3s ease;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.collapsible.closed p {
+    display: none;
+}
+
+#benefits-toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    font-size: 15px;
+    user-select: none;
+}
+
+#benefits-toggle::after {
+    content: '⌄';
+    font-size: 16px;
+    margin-left: 6px;
+    transition: transform 0.3s ease;
+}
+
+.collapsible.open #benefits-toggle::after {
+    transform: rotate(180deg);
+}
+
+/* Purchase Button */
+.history-btn {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    padding: 14px;
+    width: 100%;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 28px;
+    cursor: pointer;
+}
+
+.see-all-levels {
+    text-align: center;
+    margin-top: 12px;
+    font-size: 14px;
+    color: var(--primary);
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.level-list {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: max-height 0.3s ease;
+    overflow: hidden;
+    max-height: 0;
+}
+
+.level-list.open {
+    max-height: 1000px;
+}
+
+.level-btn {
+    background-color: #9aa5b1;
+    color: white;
+    padding: 14px 18px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-bottom: 10px;
+    transition: background 0.3s ease;
+}
+
+.level-btn.completed {
+    background-color: var(--primary);
+}
+
+.level-btn.current {
+    background-color: var(--primary);
+    position: relative;
+}
+
+.level-title {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.level-content {
+    font-size: 14px;
+    margin-top: 10px;
+    display: none;
+    color: white;
+}
+
+.level-btn.open .level-content {
+    display: block;
+}
+
+.level-progress {
+    margin-top: 10px;
+}
+
+.progress-bar-bg {
+    width: 100%;
+    height: 6px;
+    background-color: #e0e0e0;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background-color: #ffe66d;
+}

@@ -19,7 +19,6 @@ export async function loadTrendingNFTs() {
                 <img src="${nft.image}" alt="${nft.name}">
                 <h3>${nft.name}</h3>
                 <p class="collection">Collection: ${nft.collection || 'Unknown'}</p>
-                <p class="price">$${parseFloat(nft.price).toFixed(2)}</p>
                 <button class="card-btn">Details</button>
             `;
 
