@@ -1,4 +1,5 @@
 import {loadTrendingNFTs} from "./TrendingSectionLogic.js"
+import {renderCart} from "./CartLogic.js";
 
 export let tg = null;
 let currentTab = 'main-menu';
@@ -43,6 +44,8 @@ window.setActiveTab = async function (selectedTab) {
             // здесь можно выполнить функции, специфичные для главного меню
         } else if (currentTab === 'trending-nfts') {
             await loadTrendingNFTs();
+        } else if (currentTab === 'cart-section') {
+            renderCart();
         } else if (currentTab === 'categories') {
             // загрузка данных для категорий
         } else if (currentTab === 'user-profile') {
@@ -73,18 +76,22 @@ scrollToTopButton.addEventListener('click', () => {
     });
 });
 
+const container = document.getElementById("container");
+
 export function disableScroll() {
-    document.body.classList.add('no-scroll');
+    document.container.classList.add('no-scroll');
 }
 
 export function enableScroll() {
-    document.body.classList.remove('no-scroll');
+    document.container.classList.remove('no-scroll');
 }
 
 async function showLoader() {
     document.getElementById("loading-panel").classList.remove("hidden");
+    disableScroll();
 }
 
 async function hideLoader() {
     document.getElementById("loading-panel").classList.add("hidden");
+    enableScroll();
 }

@@ -92,6 +92,13 @@
         </div>
     </section>
 
+    <!-- Cart -->
+    <section id="cart-section" class="section" style="display:none;">
+        <h2>🛒 Your Cart</h2>
+        <div id="cart-items"></div>
+        <button onclick="Cart.clearCart(); renderCart();">Clear Cart</button>
+    </section>
+
     <!-- User Profile -->
     <section id="user-profile" class="section" style="display:none;">
         <h2>👤 My Profile</h2>
@@ -155,6 +162,24 @@
         <h2 id="error-title">Warning</h2>
         <p id="error-message">Something went wrong. Please try again.</p>
         <button id="close-error-popup-button">Close</button>
+    </div>
+</div>
+
+<div class="nft-details-panel" id="nftDetailsPanel" style="display:none;">
+    <div class="panel-content">
+        <button class="close-panel">Back</button>
+        <h2 id="nft-title" class="nft-title">NFT Title</h2>
+        <img id="nft-image" class="nft-image" src="" alt="NFT Image">
+
+        <p id="nft-description">Description here</p>
+
+        <h4>Artist</h4>
+        <p id="nft-collection">Artisan Name</p>
+
+        <h4>Prices</h4>
+        <p id="nft-price">Price info</p>
+
+        <button class="add-to-cart-button">Add to Cart</button>
     </div>
 </div>
 

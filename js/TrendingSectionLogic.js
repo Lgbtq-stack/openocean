@@ -1,3 +1,5 @@
+import {showNFTDetails} from "./ProductDetailsLogic.js";
+
 export async function loadTrendingNFTs() {
     const container = document.getElementById('trending-cards-container');
     container.innerHTML = "";
