@@ -1,31 +1,59 @@
-export async function showNFTDetails(id, dataSource) {
-    try {
-        const nft = dataSource.find(item => item.id === Number(id));
-        if (!nft) return;
+import {Cart, renderCart} from "./CartLogic.js";
+import {showSuccessPopup} from "./Utilities.js";
 
-        document.getElementById('nft-title').textContent = nft.name;
-        document.getElementById('nft-image').src = nft.image;
-        document.getElementById('nft-description').textContent = nft.description || "No description available.";
-        document.getElementById('nft-collection').textContent = nft.collection.name || nft.collection || "Unknown Artist";
-        document.getElementById('nft-price').textContent = `${nft.price} ETH или $${nft.price_usd || "N/A"}`;
+export function showNFTDetails(id, dataSource) {
+    const nft = dataSource.find(item => item.id === id || item.id === Number(id));
+    if (!nft) return;
 
-        document.querySelector('.add-to-cart-button').onclick = () => {
-            Cart.addItem({ id: nft.id, name: nft.name, price: nft.price, count: 1 });
-            alert(`${nft.name} добавлен в корзину!`);
-        };
+    document.getElementById('nft-title').textContent = nft.name;
+    document.getElementById('nft-image').src = nft.image;
+    document.getElementById('nft-description').textContent = nft.description || 'No description available';
+    document.getElementById('nft-collection').textContent = nft.collection?.name || nft.collection || 'Unknown';
 
-        document.querySelector('.close-panel').onclick = closeNFTDetails;
+    // 💰 Цены с иконками
+    const priceHTML = `
+        <p class="nft-price">
+            ${nft.price}
+            <img src="content/money-icon.png" alt="Money Icon" class="price-icon" /> or 
+        </p>
+        <p class="nft-price">
+            1
+            <img src="content/nft_extra.png" alt="NFT Extra Icon" class="price-icon" />
+        </p>
+    `;
+    document.getElementById('nft-price').innerHTML = priceHTML;
 
-        const detailsPanel = document.getElementById('nftDetailsPanel');
-        detailsPanel.style.display = 'block';
-        document.body.style.overflow = 'hidden';
-
-    } catch (error) {
-        console.error('Ошибка:', error);
+    const closeBtn = document.querySelector('.close-panel');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closeNFTDetails, { once: true });
     }
+
+    const detailsPanel = document.getElementById('nftDetailsPanel');
+    detailsPanel.classList.add('show');
+
+    document.body.style.overflow = 'hidden';
+
+    setTimeout(() => {
+        const addToCartBtn = document.querySelector('.add-to-cart-button');
+        if (addToCartBtn) {
+            addToCartBtn.onclick = () => {
+                Cart.addItem({
+                    id: nft.id,
+                    name: nft.name,
+                    price: nft.price,
+                    count: 1
+                });
+                showSuccessPopup("✔ Added to cart");
+                closeNFTDetails();
+            };
+        }
+    }, 0);
 }
 
-function closeNFTDetails() {
-    document.getElementById('nftDetailsPanel').style.display = 'none';
+
+export function closeNFTDetails() {
+    const detailsPanel = document.getElementById('nftDetailsPanel');
+    detailsPanel.classList.remove('show');
+
     document.body.style.overflow = '';
 }

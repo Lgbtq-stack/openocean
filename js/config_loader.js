@@ -1139,33 +1139,6 @@ document.querySelector(".withdraw-button").addEventListener("click", () => openP
 closeButton.addEventListener("click", closePopup);
 confirmButton.addEventListener("click", handleConfirm);
 
-const errorPopup = document.getElementById("error-popup");
-const errorTitle = document.getElementById("error-title");
-const errorMessage = document.getElementById("error-message");
-const closeErrorPopupButton = document.getElementById("close-error-popup-button");
-const overlayErrorPopupButton = document.getElementById("error-popup");
-
-function showErrorPopup(type, message) {
-    if (type === "error") {
-        errorTitle.textContent = "⛔️ Error";
-    } else if (type === "warning") {
-        errorTitle.textContent = "⚠️ Warning";
-    } else if (type === "success") {
-        errorTitle.textContent = "✅ Success";
-    }
-
-    errorMessage.innerHTML = message;
-    errorPopup.style.display = "flex";
-}
-
-function closeErrorPopup() {
-    errorPopup.style.display = "none";
-    enableScroll();
-}
-
-closeErrorPopupButton.addEventListener("click", closeErrorPopup);
-overlayErrorPopupButton.addEventListener("click", closeErrorPopup);
-
 function disableScroll() {
     document.body.classList.add('no-scroll');
 }
@@ -1235,23 +1208,4 @@ async function refreshUserBalance(showPopup = true) {
 
 document.getElementById('refresh-balance-button').addEventListener('click', () => refreshUserBalance(true));
 
-async function initializeApp() {
-    user_Id = getUserIdFromURL();
-    // user_Id = 488916773;
 
-    if (!user_Id) {
-        showErrorPopup("error", "User ID is missing in the URL.");
-        return;
-    }
-
-        await fetchUserData(user_Id);
-        await fetchUserNFTs(user_Id);
-
-        await loadTrendingNFTs();
-        await createCategories();
-        await createMyNFTCategories();
-}
-
-
-
-document.addEventListener("DOMContentLoaded", initializeApp);

@@ -1,4 +1,4 @@
-import {enableScroll} from "./index.js";
+import {enableScroll} from "./Utilities.js";
 
 const errorPopup = document.getElementById("error-popup");
 const errorTitle = document.getElementById("error-title");
@@ -9,7 +9,7 @@ const overlayErrorPopupButton = document.getElementById("error-popup");
 closeErrorPopupButton.addEventListener("click", closeErrorPopup);
 overlayErrorPopupButton.addEventListener("click", closeErrorPopup);
 
-function showErrorPopup(type, message) {
+export function showErrorPopup(type, message) {
     if (type === "error") {
         errorTitle.textContent = "⛔️ Error";
     } else if (type === "warning") {
@@ -22,7 +22,7 @@ function showErrorPopup(type, message) {
     errorPopup.style.display = "flex";
 }
 
-function closeErrorPopup() {
+export function closeErrorPopup() {
     errorPopup.style.display = "none";
     enableScroll();
 }

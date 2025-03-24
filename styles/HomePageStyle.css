@@ -4,6 +4,7 @@
     --white: #f6f5f5;
     --black: #1b1b1b;
     --text-color: #424242;
+    --text-color-light: #7c7c7c;
     --border-color: #515151;
     --bg-color-light: #dadada;
     --slider-bg-color: #e1e0e0;
@@ -150,7 +151,7 @@ h2 {
     justify-content: space-around;
     align-items: center;
     padding: 5px 0;
-    z-index: 100;
+    z-index: 9999;
     transition: bottom .5s ease-out;
 }
 

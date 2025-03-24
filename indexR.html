@@ -11,8 +11,10 @@
 
     <link rel="stylesheet" href="styles/HomePageStyle.css">
     <link rel="stylesheet" href="styles/TrendingsPageStyle.css">
+    <link rel="stylesheet" href="styles/CartPageStyle.css">
     <link rel="stylesheet" href="styles/UtilitiesStyle.css">
     <link rel="stylesheet" href="styles/ErrorPopupStyle.css">
+    <link rel="stylesheet" href="styles/ProductDetailsStyle.css">
 </head>
 <body>
 
@@ -25,7 +27,8 @@
             <img src="logo.png" alt="Logo" class="logo-image">
         </div>
         <h2>🔥 Welcome</h2>
-        <p class="desc">Track your journey in the NFTropolis world. Keep an eye on your progress and discover the rewards
+        <p class="desc">Track your journey in the NFTropolis world. Keep an eye on your progress and discover the
+            rewards
             awaiting you as you level up.</p>
 
         <div class="card">
@@ -94,9 +97,24 @@
 
     <!-- Cart -->
     <section id="cart-section" class="section" style="display:none;">
+        <div class="cart-user-header" id="cartUserHeader">
+            <div class="user-detail">
+                <strong>Nickname:</strong> <span id="user-nickname">Alex Johnson</span>
+            </div>
+            <div class="user-detail">
+                <strong>Balance:</strong> <span id="user-balance">$12,345.67</span>
+            </div>
+            <div class="user-detail">
+                <strong>Bonus:</strong> <span id="user-bonus">$2,500.00</span>
+            </div>
+            <div class="user-detail">
+                <strong>Level:</strong> <span id="user-level">Level 5</span>
+            </div>
+        </div>
+
         <h2>🛒 Your Cart</h2>
         <div id="cart-items"></div>
-        <button onclick="Cart.clearCart(); renderCart();">Clear Cart</button>
+        <button onclick="renderCart();">Clear Cart</button>
     </section>
 
     <!-- User Profile -->
@@ -115,7 +133,9 @@
 
             <div class="progress-level">
                 <span>Level 5</span>
-                <div class="progress-bar"><div class="progress" style="width:70%;"></div></div>
+                <div class="progress-bar">
+                    <div class="progress" style="width:70%;"></div>
+                </div>
                 <span>70%</span>
             </div>
 
@@ -146,10 +166,35 @@
             <img src="content/userNew.png" alt="MyProfile" class="nav-icon">
         </div>
     </footer>
-
 </div>
 
 <!-- Utilities -->
+
+<div class="nft-details-panel" id="nftDetailsPanel">
+    <div class="panel-content">
+        <button class="close-panel" onclick="closeNFTDetails()">< Back</button>
+        <h2 id="nft-title" class="nft-title">NFT Title</h2>
+        <img id="nft-image" class="nft-image" src="" alt="NFT Image">
+        <h4>Description</h4>
+        <p id="nft-description">Description here</p>
+        <h4>Collection</h4>
+        <p id="nft-collection">Artisan Name</p>
+        <h4>Prices</h4>
+        <div id="nft-price" class="nft-price-container">
+            <span class="price-block">
+                175.00 <img src="content/money-icon.png" class="price-icon" alt="NFT"/>
+            </span>
+            <span class="price-separator">or</span>
+            <span class="price-block">
+                1 <img src="content/nft_extra.png" class="price-icon" alt="Bonus"/>
+            </span>
+        </div>
+
+        <button class="add-to-cart-button">Add to Cart</button>
+    </div>
+</div>
+
+<div id="toast-notification" class="toast">✔ Added to cart</div>
 
 <button id="scrollToTop" class="scroll-to-top">↑</button>
 
@@ -162,24 +207,6 @@
         <h2 id="error-title">Warning</h2>
         <p id="error-message">Something went wrong. Please try again.</p>
         <button id="close-error-popup-button">Close</button>
-    </div>
-</div>
-
-<div class="nft-details-panel" id="nftDetailsPanel" style="display:none;">
-    <div class="panel-content">
-        <button class="close-panel">Back</button>
-        <h2 id="nft-title" class="nft-title">NFT Title</h2>
-        <img id="nft-image" class="nft-image" src="" alt="NFT Image">
-
-        <p id="nft-description">Description here</p>
-
-        <h4>Artist</h4>
-        <p id="nft-collection">Artisan Name</p>
-
-        <h4>Prices</h4>
-        <p id="nft-price">Price info</p>
-
-        <button class="add-to-cart-button">Add to Cart</button>
     </div>
 </div>
 

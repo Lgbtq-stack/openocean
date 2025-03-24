@@ -1,5 +1,9 @@
 import {loadTrendingNFTs} from "./TrendingSectionLogic.js"
-import {renderCart} from "./CartLogic.js";
+import {hideCartUserHeader, renderCart, showCartUserHeader} from "./CartLogic.js";
+import {closeNFTDetails} from "./ProductDetailsLogic.js";
+import {showErrorPopup} from "./PopupLogic.js";
+
+export let user_Id = null;
 
 export let tg = null;
 let currentTab = 'main-menu';
@@ -8,6 +12,8 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
         document.querySelector('.footer').classList.add('visible');
     }, 100);
+    Telegram.WebApp.expand();
+    tg = Telegram.WebApp;
 });
 
 window.setActiveTab = async function (selectedTab) {
@@ -21,7 +27,8 @@ window.setActiveTab = async function (selectedTab) {
         let newTab = selectedTab.classList.contains('home') ? 'main-menu' :
             selectedTab.classList.contains('trending') ? 'trending-nfts' :
                 selectedTab.classList.contains('categories') ? 'categories' :
-                    selectedTab.classList.contains('myProfile') ? 'user-profile' : null;
+                    selectedTab.classList.contains('cart') ? 'cart-section' :
+                        selectedTab.classList.contains('myProfile') ? 'user-profile' : null;
 
         if (newTab === currentTab || newTab === null) {
             // await hideLoader();
@@ -30,7 +37,7 @@ window.setActiveTab = async function (selectedTab) {
 
         currentTab = newTab;
 
-        document.querySelectorAll('#main-menu, #trending-nfts, #categories, #user-profile')
+        document.querySelectorAll('#main-menu, #trending-nfts, #cart-section, #categories, #user-profile')
             .forEach(section => {
                 section.style.display = "none";
             });
@@ -45,6 +52,7 @@ window.setActiveTab = async function (selectedTab) {
         } else if (currentTab === 'trending-nfts') {
             await loadTrendingNFTs();
         } else if (currentTab === 'cart-section') {
+            await showCartUserHeader();
             renderCart();
         } else if (currentTab === 'categories') {
             // загрузка данных для категорий
@@ -55,43 +63,26 @@ window.setActiveTab = async function (selectedTab) {
         console.error("Error when changing tabs:", error);
     } finally {
         // await hideLoader();
+        await hideCartUserHeader();
+        closeNFTDetails();
     }
 };
 
+async function initializeApp() {
+    // user_Id = getUserIdFromURL();
+    user_Id = 488916773;
 
-const scrollToTopButton = document.getElementById('scrollToTop');
-
-window.addEventListener('scroll', () => {
-    if (window.scrollY > 300) {
-        scrollToTopButton.style.display = 'flex';
-    } else {
-        scrollToTopButton.style.display = 'none';
+    if (!user_Id) {
+        showErrorPopup("error", "User ID is missing in the URL.");
+        return;
     }
-});
 
-scrollToTopButton.addEventListener('click', () => {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth',
-    });
-});
+    // await fetchUserData(user_Id);
+    // await fetchUserNFTs(user_Id);
 
-const container = document.getElementById("container");
-
-export function disableScroll() {
-    document.container.classList.add('no-scroll');
+    await loadTrendingNFTs();
+    // await createCategories();
+    // await createMyNFTCategories();
 }
 
-export function enableScroll() {
-    document.container.classList.remove('no-scroll');
-}
-
-async function showLoader() {
-    document.getElementById("loading-panel").classList.remove("hidden");
-    disableScroll();
-}
-
-async function hideLoader() {
-    document.getElementById("loading-panel").classList.add("hidden");
-    enableScroll();
-}
+document.addEventListener("DOMContentLoaded", initializeApp);

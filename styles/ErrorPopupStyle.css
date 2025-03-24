@@ -14,10 +14,10 @@
 }
 
 .error-popup-content {
-    background: var(--secondary-bg-color);
-    box-shadow: 0 4px 15px var(--popup-bg-color);
-    border-bottom: 2px solid var(--accent-color);
-    border-top: 2px solid var(--accent-color);
+    background: var(--white);
+    box-shadow: 0 4px 15px var(--border-color);
+    border-bottom: 2px solid var(--box-shadow-medium);
+    border-top: 2px solid var(--box-shadow-medium);
     padding: 20px;
     border-radius: 20px;
     width: 400px;
@@ -43,8 +43,8 @@
 .error-popup-content button {
     padding: 10px 20px;
     border: none;
-    background-color: var(--accent-color);
-    color: var(--text-color);
+    background-color: var(--primary);
+    color: var(--white);
     border-radius: 20px;
     cursor: pointer;
     font-size: 14px;
