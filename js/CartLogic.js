@@ -4,7 +4,7 @@ import {user_Id} from "./index.js";
 export async function showCartUserHeader() {
     const response = await fetch(`https://miniappservcc.com/api/user?uid=${user_Id}`);
     if (!response.ok) {
-        showErrorPopup("error", "Balance error.");
+        showErrorPopup("error", "Balance error x1.");
         return;
     }
 
@@ -31,7 +31,7 @@ export function renderCart() {
     itemsContainer.innerHTML = "";
 
     if (items.length === 0) {
-        itemsContainer.innerHTML = "<p>Корзина пуста.</p>";
+        itemsContainer.innerHTML = "<p class='no-items-cart'>No items.</p>";
         return;
     }
 
@@ -103,7 +103,8 @@ export function renderCart() {
           </div>
         </div>
 
-        <button class="pay-now-btn">Pay Now</button>
+        <button class="pay-now-btn" onclick="handleSuccessfulPurchase()">Pay Now</button>
+   
     `;
     itemsContainer.appendChild(summary);
 }
@@ -169,8 +170,48 @@ function updateCartIndicator() {
     indicator.style.display = count > 0 ? 'flex' : 'none';
 }
 
+function handleSuccessfulPurchase() {
+    const purchasedItems = Cart.getItems();
+    if (!purchasedItems.length) return;
+
+    Cart.clearCart();
+    renderCart();
+
+    document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
+    const section = document.getElementById('purchase-success');
+    if (!section) return;
+
+    const container = document.getElementById('purchased-items');
+    container.innerHTML = '';
+
+    purchasedItems.forEach(item => {
+        const card = document.createElement('div');
+        card.classList.add('purchased-item-card');
+        card.innerHTML = `
+            <img src="${item.image}" class="purchased-image-small" alt="${item.name}" />
+            <h3 class="purchased-title">${item.name}</h3>
+            <p class="purchased-author">by ${item.collection || 'Unknown'}</p>
+        `;
+        container.appendChild(card);
+    });
+
+    section.style.display = 'block';
+}
+
+export function hideSuccessfulPurchase() {
+    const section = document.getElementById('purchase-success');
+    if (!section) return;
+
+    section.style.display = 'none';
+
+    const container = document.getElementById('purchased-items');
+    if (container) container.innerHTML = '';
+}
+
 window.updateItemCount = updateItemCount;
 window.Cart = Cart;
 window.renderCart = renderCart;
+
+window.handleSuccessfulPurchase = handleSuccessfulPurchase;
 
 document.addEventListener('DOMContentLoaded', updateCartIndicator);

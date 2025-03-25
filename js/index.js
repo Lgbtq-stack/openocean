@@ -1,7 +1,8 @@
 import {loadTrendingNFTs} from "./TrendingSectionLogic.js"
-import {hideCartUserHeader, renderCart, showCartUserHeader} from "./CartLogic.js";
+import {hideCartUserHeader, hideSuccessfulPurchase, renderCart, showCartUserHeader} from "./CartLogic.js";
 import {closeNFTDetails} from "./ProductDetailsLogic.js";
 import {showErrorPopup} from "./PopupLogic.js";
+import {loadUserData} from "./UserPageLogic.js";
 
 export let user_Id = null;
 
@@ -58,6 +59,7 @@ window.setActiveTab = async function (selectedTab) {
         } else if (currentTab === 'categories') {
             // загрузка данных для категорий
         } else if (currentTab === 'user-profile') {
+            await loadUserData();
             // загрузка профиля
         }
     } catch (error) {
@@ -65,6 +67,7 @@ window.setActiveTab = async function (selectedTab) {
     } finally {
         // await hideLoader();
         closeNFTDetails();
+        hideSuccessfulPurchase();
     }
 };
 

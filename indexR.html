@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="styles/UtilitiesStyle.css">
     <link rel="stylesheet" href="styles/ErrorPopupStyle.css">
     <link rel="stylesheet" href="styles/ProductDetailsStyle.css">
+    <link rel="stylesheet" href="styles/PurchaseHandlerStyle.css">
 </head>
 <body>
 
@@ -113,7 +114,7 @@
             </div>
         </div>
 
-        <h2>🛒 Your Cart</h2>
+        <h2 class="your-cart-title">🛒 Your Cart</h2>
         <div id="cart-items"></div>
     </section>
 
@@ -125,14 +126,17 @@
             <h3>Alex Johnson</h3>
             <p class="bio">NFT Enthusiast & Collector</p>
 
-            <div class="account-balance" id="account-balance">
-                <div class="balance-info">
-                    <span class="balance-label" id="balance-label">Account Balance</span>
-                    <h2 class="balance-amount" id="balance-amount">$12,345.67</h2>
+            <div class="balance-section">
+                <span class="balance-label">Account Balance</span>
+                <div class="balance-row">
+                    <span class="balance-amount">1234244</span>
+                    <img src="content/money-icon.png" alt="Main" class="price-icon" />
+                    <span class="separator">/</span>
+                    <span class="balance-amount">12412</span>
+                    <img src="content/nft_extra.png" alt="Bonus" class="price-icon" />
                 </div>
-                <button class="add-funds-btn" id="add-funds-btn">Add Funds</button>
+                <button class="add-funds-btn">Add Funds</button>
             </div>
-
 
             <div class="progress-level">
                 <span>Level 5</span>
@@ -145,72 +149,28 @@
                 </div>
             </div>
 
-
-
-            <p class="see-all-levels" id="see-all-levels">Show All Levels</p>
+            <p class="see-all-levels" id="see-all-levels">🔽 Show All Levels</p>
 
             <div class="level-list" id="level-list">
-                <div class="level-btn completed collapsable">
-                    <div class="level-title">Level 1: Beginner - Learn the Basics</div>
-                    <div class="level-content">Learn the foundation of NFTs and how the marketplace works.</div>
-                </div>
 
-                <div class="level-btn completed collapsable">
-                    <div class="level-title">Level 2: Novice - Explore Categories</div>
-                    <div class="level-content">Discover different types of NFTs like art, music, domains and more.</div>
-                </div>
-
-                <div class="level-btn completed collapsable">
-                    <div class="level-title">Level 3: Collector - First NFT Purchase</div>
-                    <div class="level-content">Make your first NFT purchase and receive a collector badge.</div>
-                </div>
-
-                <div class="level-btn completed collapsable">
-                    <div class="level-title">Level 4: Enthusiast - Share Your Collection</div>
-                    <div class="level-content">Showcase your NFTs on your profile and social media.</div>
-                </div>
-
-                <div class="level-btn current collapsable">
-                    <div class="level-title">
-                        Level 5: Trader - Engage in Auctions
-                        <div class="level-progress">
-                            <div class="progress-bar-bg">
-                                <div class="progress-bar-fill" style="width: 40%;"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="level-content">Participate in live NFT auctions and start trading rare items.</div>
-                </div>
-
-                <div class="level-btn collapsable">
-                    <div class="level-title">Level 6: Advanced - Create Your NFT</div>
-                    <div class="level-content">Design, mint and list your first NFT for sale.</div>
-                </div>
-
-                <div class="level-btn collapsable">
-                    <div class="level-title">Level 7: Expert - Curate a Gallery</div>
-                    <div class="level-content">Build and share a custom NFT gallery for others to explore.</div>
-                </div>
-
-                <div class="level-btn collapsable">
-                    <div class="level-title">Level 8: Master - Host a Virtual Event</div>
-                    <div class="level-content">Organize a live NFT-related event or exhibition.</div>
-                </div>
-
-                <div class="level-btn collapsable">
-                    <div class="level-title">Level 9: Virtuoso - Mentor New Users</div>
-                    <div class="level-content">Help onboard new users and share your expertise.</div>
-                </div>
-
-                <div class="level-btn collapsable">
-                    <div class="level-title">Level 10: Legend - Unlock Exclusive Content</div>
-                    <div class="level-content">Gain access to exclusive NFTs and hidden collections.</div>
-                </div>
             </div>
 
             <button class="history-btn">Purchase History</button>
         </div>
     </section>
+
+    <section id="purchase-success" class="section" style="display: none;">
+        <div class="success-check">✅</div>
+        <h2 class="success-title">Purchase Successful!</h2>
+        <p class="success-subtitle">Thank you for your purchase.</p>
+
+        <div id="purchased-items" class="purchased-items-grid">
+        </div>
+        <button class="view-collection-btn" onclick="setActiveTab(document.querySelector('.nav-item.trending'))">
+            Go Shopping
+        </button>
+    </section>
+
 
     <footer class="footer">
         <div class="nav-item trending" onclick="setActiveTab(this)">
@@ -233,6 +193,7 @@
 </div>
 
 <!-- Utilities -->
+
 
 
 <div class="nft-details-panel" id="nftDetailsPanel">

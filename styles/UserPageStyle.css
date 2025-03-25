@@ -36,44 +36,62 @@
 }
 
 /* Account Balance Card */
-#account-balance {
-    width: 100%;
-    background-color: var(--white);
+
+.balance-section {
+    background: white;
+    padding: 16px;
     border-radius: 16px;
-    padding: 20px;
     box-shadow: 0 2px 6px var(--bg-color-light);
+    margin: 20px 0;
+    width: 90%;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    margin: 20px 0 20px;
 }
 
-#balance-label {
-    font-size: 16px;
+.balance-label {
+    font-size: 18px;
     font-weight: 600;
-    display: block;
+    margin-bottom: 10px;
 }
 
-#balance-amount {
-    font-size: 24px;
+.balance-row {
+    display: flex;
+    align-items: center;
+    font-size: 20px;
     font-weight: bold;
-    margin-top: 5px;
+    gap: 6px;
+    margin-bottom: 6px;
 }
 
-#add-funds-btn {
-    background-color: var(--primary);
+.separator {
+    margin: 0 6px;
+    font-weight: normal;
+}
+
+.price-icon {
+    width: 22px;
+    height: 22px;
+    vertical-align: middle;
+}
+
+.add-funds-btn {
+    background-color: #4e9eff;
     border: none;
-    color: var(--white);
+    color: #fff;
     padding: 10px 20px;
     border-radius: 24px;
     font-size: 14px;
     font-weight: bold;
     cursor: pointer;
+    margin-top: 10px;
+    align-self: center;
 }
 
 /* Progress & Level */
 .progress-level {
-    width: 100%;
+    width: 90%;
     background-color: var(--white);
     border-radius: 16px;
     padding: 20px;
@@ -102,52 +120,37 @@
 
 /* Level Benefits */
 .level-benefits {
-    background-color: var(--bg-color-light);
+    background-color: #ddd;
     padding: 15px;
-    border-radius: 12px;
-    text-align: center;
-}
-
-.level-benefits strong {
-    display: block;
-    margin-bottom: 5px;
+    border-radius: 20px;
     font-weight: bold;
     font-size: 15px;
-}
-
-.level-benefits p {
-    margin: 0;
-    font-size: 14px;
-}
-
-.collapsible {
-    transition: max-height 0.3s ease, padding 0.3s ease;
-    overflow: hidden;
-    cursor: pointer;
-}
-
-.collapsible.closed p {
-    display: none;
-}
-
-#benefits-toggle {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-weight: bold;
-    font-size: 15px;
-    user-select: none;
+    cursor: pointer;
+    margin-top: 10px;
 }
 
-#benefits-toggle::after {
-    content: '⌄';
-    font-size: 16px;
-    margin-left: 6px;
-    transition: transform 0.3s ease;
+.level-benefits p {
+    margin-top: 10px;
+    font-size: 14px;
+    font-weight: normal;
+    display: none;
 }
 
-.collapsible.open #benefits-toggle::after {
-    transform: rotate(180deg);
+.level-benefits.open p {
+    display: block;
+    font-weight: normal;
+}
+
+.level-benefits::after {
+    content: "▼";
+    font-size: 14px;
+}
+
+.level-benefits.open::after {
+    content: "▲";
 }
 
 /* Purchase Button */
@@ -165,7 +168,7 @@
 
 .see-all-levels {
     text-align: center;
-    margin-top: 12px;
+    margin-top: 30px;
     font-size: 14px;
     color: var(--primary);
     font-weight: bold;
@@ -188,55 +191,46 @@
 }
 
 .level-btn {
-    background-color: #9aa5b1;
-    color: white;
-    padding: 14px 18px;
-    border-radius: 10px;
-    cursor: pointer;
+    border-radius: 20px;
+    padding: 16px 20px;
     font-weight: bold;
-    margin-bottom: 10px;
-    transition: background 0.3s ease;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ddd;
+    transition: background-color 0.3s;
 }
 
-.level-btn.completed {
-    background-color: var(--primary);
-}
-
+.level-btn.completed,
 .level-btn.current {
     background-color: var(--primary);
-    position: relative;
-}
-
-.level-title {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.level-content {
-    font-size: 14px;
-    margin-top: 10px;
-    display: none;
     color: white;
 }
 
-.level-btn.open .level-content {
+.level-btn.locked {
+    background-color: #a8b0c1;
+    color: white;
+    cursor: not-allowed;
+}
+
+.level-btn.collapsable::after {
+    content: '▼';
+    font-size: 14px;
+}
+
+.level-btn.collapsable.open::after {
+    content: '▲';
+}
+
+.level-btn .collapsable-content {
+    display: none;
+    padding-top: 10px;
+    font-size: 14px;
+    color: #222;
+}
+
+.level-btn.open .collapsable-content {
     display: block;
-}
-
-.level-progress {
-    margin-top: 10px;
-}
-
-.progress-bar-bg {
-    width: 100%;
-    height: 6px;
-    background-color: #e0e0e0;
-    border-radius: 3px;
-    overflow: hidden;
-}
-
-.progress-bar-fill {
-    height: 100%;
-    background-color: #ffe66d;
 }
