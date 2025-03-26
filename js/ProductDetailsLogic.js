@@ -8,7 +8,6 @@ export async function showNFTDetails(id, dataSource) {
     try {
         const res = await fetch(`https://miniappservcc.com/api/nfts/search-nft?q=${encodeURIComponent(nft.name)}`);
         const json = await res.json();
-        console.log(json);
 
         if (Array.isArray(json.results)) {
             nft = json.results.find(item => item.name.toLowerCase() === nft.name.toLowerCase());
@@ -76,4 +75,12 @@ export function closeNFTDetails() {
     const detailsPanel = document.getElementById('nftDetailsPanel');
     detailsPanel.classList.remove('show');
     document.body.style.overflow = '';
+}
+
+window.closeNFTDetails = () => {
+    closeNFTDetails();
+}
+
+window.showNFTDetails = (id, dataSource) => {
+    showNFTDetails(id, dataSource);
 }

@@ -196,7 +196,6 @@ export async function loadCategories(page = 1, category) {
                     <p class="collection-label">🏷️ ${item.collection}</p>
                 </div>
                 <button class="details-button">
-<!--                    <img src="content/info.png" alt="Details Icon" class="info-icon" />-->
                     Details
                 </button>
             `;
@@ -380,20 +379,26 @@ searchInput.addEventListener('input', async (e) => {
             card.className = 'card nft-card';
 
             card.innerHTML = `
-            <div class="nft-image-container">
-              <img src="https://miniappservcc.com/get-image?path=${encodeURIComponent(item.image)}" alt="${item.name}" class="nft-image">
-            </div>
-            <div class="nft-details">
-              <h3 class="nft-title">${item.name}</h3>
-              <p>Collection: ${item.collection || 'Unknown'}</p>
-            </div>
-            <button class="details-button" onclick="showNFTDetails(${item.id})">
-              <img src="content/info.png" class="info-icon" alt="Details"> Details
-            </button>
-          `;
+                <div class="nft-image-container">
+                  <img src="https://miniappservcc.com/get-image?path=${encodeURIComponent(item.image)}" alt="${item.name}" class="nft-image">
+                </div>
+                <div class="nft-details">
+                  <h3 class="nft-title">${item.name}</h3>
+                  <p>Collection: ${item.collection || 'Unknown'}</p>
+                </div>
+                <button class="details-button">
+                  <img src="content/info.png" class="info-icon" alt="Details"> Details
+                </button>
+            `;
+
+            const detailsBtn = card.querySelector(".details-button");
+            detailsBtn.addEventListener("click", () => {
+                showNFTDetails(item.id, filteredItems);
+            });
 
             categoryList.appendChild(card);
         });
+
 
     } catch (err) {
         console.error('Search error:', err);
@@ -455,8 +460,8 @@ function renderNFTList(items) {
             <h3 class="nft-title">${item.name}</h3>
             <p>Collection: ${item.collection || 'Unknown'}</p>
           </div>
-          <button class="details-button" onclick="showNFTDetails(${item.id})">
-            <img src="content/info.png" class="info-icon" alt="Details"> Details
+          <button class="details-button" onclick='showNFTDetails(${item.id}, ${JSON.stringify(items)})'>
+            Details
           </button>
         `;
 
