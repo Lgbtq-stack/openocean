@@ -44,12 +44,15 @@
                 <strong>Bonuses</strong>
                 <p id="summary-bonuses">Loading...</p>
             </div>
+
+<!--            <p class="see-all-levels" id="see-all-level-home">🔽 Show All Levels</p>-->
+
+<!--            <div class="level-list" id="all-level-list"></div>-->
         </div>
 
         <div class="liquidity-card">
             <p class="liquidity-text">
-                Liquidity:  <span id="nft-balance">loading...</span>
-                <img src="content/money-icon.png" class="liquidity-icon" />
+                Liquidity:  <span class="nft-balance" id="nft-balance">loading...</span>
             </p>
 
             <div class="liquidity-bar">
@@ -60,6 +63,10 @@
                 Next update in: <span id="countdown-seconds">10</span>s
             </div>
         </div>
+
+        <button class="add-fund-btn" id="add-fund-btn">💰 Add Funds</button>
+
+
     </section>
 
     <!-- Trending NFTs -->
@@ -105,13 +112,13 @@
                 <span id="user-nickname">Alex Johnson</span>
             </div>
             <div class="user-detail">
-                <span id="user-balance">$12,345.67</span>
+                <span id="user-balance">$0</span>
             </div>
             <div class="user-detail">
-                <span id="user-bonus">$2,500.00</span>
+                <span id="user-bonus">0</span>
             </div>
             <div class="user-detail">
-                <span id="user-level">Level 5</span>
+                <span id="user-level">0</span>
             </div>
         </div>
 
@@ -133,10 +140,10 @@
             <div class="balance-section">
                 <span class="balance-label">Account Balance</span>
                 <div class="balance-row">
-                    <span class="balance-amount">1234244</span>
+                    <span class="balance-amount">0</span>
                     <img src="content/money-icon.png" alt="Main" class="price-icon" />
                     <span class="separator">/</span>
-                    <span class="balance-amount">12412</span>
+                    <span class="balance-amount">0</span>
                     <img src="content/nft_extra.png" alt="Bonus" class="price-icon" />
                 </div>
                 <button class="add-funds-btn" id="add-funds-btn">Add Funds</button>
@@ -158,7 +165,7 @@
 
                 <div class="purchase-history-toggle">
                     <button class="purchase-history-btn active" data-type="bought">Bought</button>
-                    <button class="purchase-history-btn" data-type="rent">Rent</button>
+<!--                    <button class="purchase-history-btn" data-type="rent">Rent</button>-->
                 </div>
 
                 <div id="purchase-history-content" class="purchase-history-content"></div>
@@ -194,6 +201,7 @@
                 <li onclick="sortCategoryList('price-desc')">Price: High to Low</li>
                 <li onclick="sortCategoryList('name-asc')">Name: A → Z</li>
                 <li onclick="sortCategoryList('name-desc')">Name: Z → A</li>
+                <li class="clear-filter" onclick="sortCategoryList('clear')">Clear</li>
             </ul>
             <button class="close-sort-btn" onclick="closeSortPopup()">Close</button>
         </div>

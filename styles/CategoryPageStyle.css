@@ -56,6 +56,7 @@
     margin-bottom: 8px;
 }
 
+
 .details-button {
     background: var(--primary);
     border: none;
@@ -282,19 +283,26 @@
     transition: 0.2s;
 }
 
+.clear-filter {
+    font-weight: bold;
+    text-transform: uppercase;
+    color: red;
+}
+
 .sort-popup li:hover {
     background-color: #f5f5f5;
 }
 
 .close-sort-btn {
     margin-top: 12px;
-    padding: 8px 16px;
+    padding: 12px 24px;
     border-radius: 8px;
     border: none;
     background-color: #4a90e2;
     color: white;
     font-weight: bold;
     cursor: pointer;
+    font-size: 16px;
 }
 
 .search-suggestions-panel {

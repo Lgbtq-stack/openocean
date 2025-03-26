@@ -29,7 +29,10 @@ export function startLiquidityCoroutine() {
         const balance = await getTokenBalance(accountId, code, issuer);
         if (balance !== null) {
             const parsed = parseFloat(balance);
-            balanceDisplay.textContent = Number(parsed).toLocaleString('en-US');
+            balanceDisplay.innerHTML = `
+                ${Number(parsed).toLocaleString('en-US')}
+                <img src="content/money-icon.png" class="liquidity-icon" />
+            `;
 
             const max = 10_000_000;
             const percent = Math.min(((max - parsed) / max) * 100, 100);

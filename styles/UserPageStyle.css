@@ -410,6 +410,8 @@
 
 .purchase-history-card {
     display: flex;
+    flex-direction: column;
+
     gap: 16px;
     background: #fafafa;
     padding: 16px;
@@ -419,8 +421,7 @@
 }
 
 .purchase-history-img {
-    width: 80px;
-    height: 80px;
+    width: 100%;
     border-radius: 10px;
     object-fit: cover;
 }
@@ -449,4 +450,37 @@
     width: 16px;
     height: 16px;
     vertical-align: middle;
+}
+
+.rent-section {
+    background: #f7f7f7;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 4px 8px var(--bg-color-light);
+}
+
+.rent-durations {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+}
+
+.rent-duration-btn {
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: #fff;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.rent-duration-btn.selected {
+    background-color: #bde0fe;
+    border-color: #339af0;
+    color: #0077cc;
+}
+
+.rent-price-display {
+    font-size: 20px;
 }

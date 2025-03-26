@@ -6,6 +6,7 @@ let currentCategory = 1;
 
 let categoriesCache = [];
 let currentItems;
+let originalItems = [];
 
 function renderCategoryCards(items) {
     const container = document.querySelector("#categories .cards");
@@ -215,6 +216,7 @@ export async function loadCategories(page = 1, category) {
         lazyLoadImages();
         generatePagination(paging, (newPage) => loadCategories(newPage, category));
         currentItems = items;
+
         renderNFTList(items);
     } catch (err) {
         console.error("Error loading categories:", err);
@@ -373,6 +375,8 @@ searchInput.addEventListener('keypress', (e) => {
         performSearch(lastSearchQuery);
         suggestionPanel.innerHTML = '';
         suggestionPanel.classList.remove('visible');
+
+        searchInput.blur();
     }
 });
 
@@ -505,6 +509,9 @@ function sortCategoryList(type) {
             break;
         case 'name-desc':
             sorted.sort((a, b) => b.name.localeCompare(a.name));
+            break;
+        case 'clear':
+            sorted = [...currentItems];
             break;
     }
 

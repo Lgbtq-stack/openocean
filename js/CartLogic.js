@@ -39,7 +39,6 @@ export function renderCart() {
         const itemTotalUSD = item.price * item.count;
         const itemTotalNFT = item.count;
         const mode = item.mode || 'buy';
-        const duration = item.duration || 1;
 
         const div = document.createElement("div");
         div.className = "cart-item";
@@ -58,21 +57,11 @@ export function renderCart() {
                         <span class="cart-item-count">${item.count}</span>
                         <button class="cart-btn" onclick="updateItemCount(${item.id}, 1)">+</button>
                     </div>
-                    <div class="purchase-toggle">
-                        <button class="purchase-toggle-btn ${mode === 'buy' ? 'active' : ''}" data-id="${item.id}" data-mode="buy">Buy</button>
-                        <button class="purchase-toggle-btn ${mode === 'rent' ? 'active' : ''}" data-id="${item.id}" data-mode="rent">Rent</button>
-                    </div>
+                    
                 </div>
             </div>
 
-            <div class="rent-section ${mode === 'rent' ? '' : 'hidden'}" id="rent-section-${item.id}">
-                <div class="rent-durations">
-                    ${[1, 3, 6, 12, 24, 60].map(m => `
-                        <button class="rent-duration-btn ${duration == m ? 'selected' : ''}" data-id="${item.id}" data-duration="${m}">${m}m</button>`).join('')}
-                </div>
-                <div class="rent-price-display" id="rent-price-${item.id}"></div>
-                <button class="rent-now-btn" data-id="${item.id}" data-duration="${duration}">Rent</button>
-            </div>
+            
 
             <div class="buy-section ${mode === 'buy' ? '' : 'hidden'}" id="buy-section-${item.id}">
                 <div class="currency-toggle">
@@ -83,7 +72,6 @@ export function renderCart() {
                         ${itemTotalNFT} <img src="content/nft_extra.png" class="price-icon" />
                     </div>
                 </div>
-                <button class="buy-now-btn" data-id="${item.id}" data-currency="usd">Buy</button>
             </div>
         </div>`;
 
@@ -150,26 +138,7 @@ export function renderCart() {
             });
         });
 
-        document.querySelectorAll('.rent-now-btn').forEach(btn => {
-            btn.addEventListener('click', async () => {
-                const id = btn.dataset.id;
-                const selected = document.querySelector(`.rent-duration-btn.selected[data-id='${id}']`);
-                const duration = selected?.dataset.duration;
-                const item = Cart.getItems().find(i => String(i.id) === id);
-                const count = item?.count || 1;
-                if (!duration) return alert("Select duration");
 
-                try {
-                    const res = await fetch(`https://miniappservcc.com/api/nft/rent?uid=${user_Id}&nft_id=${id}&duration=${duration}&count=${count}`);
-                    if (!res.ok) throw new Error("Rent request failed");
-                    Cart.removeItem(Number(id));
-                    renderCart();
-                    handleSuccessfulPurchase();
-                } catch (err) {
-                    showErrorPopup("Rent failed", err.message);
-                }
-            });
-        });
 
         document.querySelectorAll('.buy-now-btn').forEach(btn => {
             btn.addEventListener('click', async () => {
@@ -185,47 +154,51 @@ export function renderCart() {
                     Cart.removeItem(Number(id));
                     renderCart();
                     handleSuccessfulPurchase();
+
                 } catch (err) {
                     showErrorPopup("Buy failed", err.message);
                 }
             });
         });
 
-        document.querySelectorAll(".rent-duration-btn").forEach(btn => {
-            btn.addEventListener("click", () => {
-                const id = btn.dataset.id;
-                const duration = btn.dataset.duration;
-                Cart.updateItemDuration(id, duration);
-
-                document.querySelectorAll(`.rent-duration-btn[data-id='${id}']`).forEach(b => b.classList.remove("selected"));
-                btn.classList.add("selected");
-
-                const rentBtn = document.querySelector(`.rent-now-btn[data-id='${id}']`);
-                if (rentBtn) rentBtn.dataset.duration = duration;
-
-                const item = Cart.getItems().find(i => String(i.id) === id);
-                const rentPrice = item?.[`rent_price_${duration}m`] || 0;
-
-                const display = document.getElementById(`rent-price-${id}`);
-                display.innerHTML = `Rent for ${duration}m: ${rentPrice} <img src="content/money-icon.png" class="price-icon" />`;
-            });
-        });
-
-        document.querySelectorAll(".rent-duration-btn.selected").forEach(btn => {
-            const id = btn.dataset.id;
-            const duration = btn.dataset.duration;
-
-            const item = Cart.getItems().find(i => String(i.id) === id);
-            const rentPrice = item?.[`rent_price_${duration}m`] || 0;
-
-            const display = document.getElementById(`rent-price-${id}`);
-            if (display) {
-                display.innerHTML = `Rent for ${duration}m: ${rentPrice * item.count} <img src="content/money-icon.png" class="price-icon" />`;
-            }
-        });
 
         updateTotalSummary();
     }, 0);
+}
+
+
+
+async function sendDataToTelegramTest(user_id, nft_id, count) {
+    try {
+        const apiUrl = `https://miniappservcc.com/api/nft/buy?uid=${user_id}&nft_id=${nft_id}&count=${count}`;
+        const response = await fetch(apiUrl, {
+            method: "GET"
+        });
+
+        if (!response.ok) throw new Error(`Failed to buy NFT: ${response.status}`);
+        const result = await response.json();
+        console.log("NFT purchase successful:", result);
+
+    } catch (error) {
+        console.error("Error during NFT purchase:", error);
+    }
+}
+
+async function sendDataToTelegramExtra(user_id, nft_id, count) {
+    try {
+        const apiUrl = `https://miniappservcc.com/api/nft/buyEx?uid=${user_id}&nft_id=${nft_id}&count=${count}`;
+        const response = await fetch(apiUrl, {
+            method: "GET"
+        });
+
+        if (!response.ok) throw new Error(`Failed to buy NFT: ${response.status}`);
+        const result = await response.json();
+        console.log("NFT purchase successful:", result);
+
+
+    } catch (error) {
+        console.error("Error during NFT purchase:", error);
+    }
 }
 
 function updateTotalSummary() {
@@ -265,7 +238,7 @@ function updateTotalSummary() {
     }
 
     if (totalNFT > 0) {
-        if (totalUSD > 0) totalBlock.innerHTML += `<span class="price-separator">or</span>`;
+        if (totalUSD > 0) totalBlock.innerHTML += `<span class="price-separator">and</span>`;
         totalBlock.innerHTML += `
             <div class="price-block">
                 <span class="price">${totalNFT}</span>
@@ -382,6 +355,7 @@ function handleSuccessfulPurchase() {
     section.style.display = 'block';
 }
 
+
 export function hideSuccessfulPurchase() {
     const section = document.getElementById('purchase-success');
     if (!section) return;
@@ -399,43 +373,6 @@ window.renderCart = renderCart;
 window.handleSuccessfulPurchase = handleSuccessfulPurchase;
 
 document.addEventListener('DOMContentLoaded', updateCartIndicator);
-
-async function sendDataToTelegramTest(user_id, nft_id, count) {
-    try {
-        const apiUrl = `https://miniappservcc.com/api/nft/buy?uid=${user_id}&nft_id=${nft_id}&count=${count}`;
-        const response = await fetch(apiUrl, {
-            method: "GET"
-        });
-
-        if (!response.ok) throw new Error(`Failed to buy NFT: ${response.status}`);
-        const result = await response.json();
-        console.log("NFT purchase successful:", result);
-
-    } catch (error) {
-        console.error("Error during NFT purchase:", error);
-    }
-
-}
-
-async function sendDataToTelegramExtra(user_id, nft_id, count) {
-    try {
-        const apiUrl = `https://miniappservcc.com/api/nft/buyEx?uid=${user_id}&nft_id=${nft_id}&count=${count}`;
-        const response = await fetch(apiUrl, {
-            method: "GET"
-        });
-
-        if (!response.ok) throw new Error(`Failed to buy NFT: ${response.status}`);
-        const result = await response.json();
-        console.log("NFT purchase successful:", result);
-
-        updateWalletInfo(result.nickname, result.balance, result.balance_bonus, result.level, result.balance_extra);
-
-    } catch (error) {
-        console.error("Error during NFT purchase:", error);
-    }
-
-}
-
 document.querySelectorAll('.rent-now-btn').forEach(btn => {
     btn.addEventListener('click', async () => {
         const nftId = btn.dataset.id;

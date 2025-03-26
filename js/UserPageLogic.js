@@ -1,18 +1,21 @@
 import {user_Id} from "./index.js";
 import {levelsConfig} from "./user_level_bonus_config.js";
 import {showPurchaseHistoryPage} from "./HistoryPageLogic.js";
+import {Cart} from "./CartLogic.js";
+import {showErrorPopup} from "./PopupLogic.js";
+import {showSuccessPopup} from "./Utilities.js";
 
 const avatars = [
-    { id: 1, src: "content/AvatarIcons/nft_1.png" },
-    { id: 2, src: "content/AvatarIcons/nft_2.png" },
-    { id: 3, src: "content/AvatarIcons/nft_3.png" },
-    { id: 4, src: "content/AvatarIcons/nft_4.png" },
-    { id: 5, src: "content/AvatarIcons/nft_5.png" },
-    { id: 6, src: "content/AvatarIcons/nft_6.png" },
-    { id: 7, src: "content/AvatarIcons/nft_7.png" },
-    { id: 8, src: "content/AvatarIcons/nft_8.png" },
-    { id: 9, src: "content/AvatarIcons/nft_9.png" },
-    { id: 10, src: "content/AvatarIcons/nft_10.png" },
+    {id: 1, src: "content/AvatarIcons/nft_1.png"},
+    {id: 2, src: "content/AvatarIcons/nft_2.png"},
+    {id: 3, src: "content/AvatarIcons/nft_3.png"},
+    {id: 4, src: "content/AvatarIcons/nft_4.png"},
+    {id: 5, src: "content/AvatarIcons/nft_5.png"},
+    {id: 6, src: "content/AvatarIcons/nft_6.png"},
+    {id: 7, src: "content/AvatarIcons/nft_7.png"},
+    {id: 8, src: "content/AvatarIcons/nft_8.png"},
+    {id: 9, src: "content/AvatarIcons/nft_9.png"},
+    {id: 10, src: "content/AvatarIcons/nft_10.png"},
 ];
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -81,7 +84,7 @@ function renderUserProgressLevel(user) {
     progressBar.appendChild(progressFill);
 
     const benefitsWrapper = document.createElement("div");
-    benefitsWrapper.className = "level-benefits collapsible closed";
+    benefitsWrapper.className = "level-benefits collapsible open";
     benefitsWrapper.id = "level-benefits";
 
     const toggle = document.createElement("div");
@@ -89,11 +92,11 @@ function renderUserProgressLevel(user) {
     toggle.className = "toggle-arrow";
 
     const toggleText = document.createElement("span");
-    toggleText.textContent = "Current Level Benefits ";
+    toggleText.textContent = "";
 
     const arrow = document.createElement("span");
     arrow.className = "arrow-icon";
-    arrow.textContent = " 🔽";
+    // arrow.textContent = " 🔽";
 
     toggle.appendChild(toggleText);
     toggle.appendChild(arrow);
@@ -109,11 +112,11 @@ function renderUserProgressLevel(user) {
     progressEl.appendChild(progressBar);
     progressEl.appendChild(benefitsWrapper);
 
-    toggle.addEventListener('click', () => {
-        benefitsWrapper.classList.toggle('open');
-        benefitsWrapper.classList.toggle('closed');
-        arrow.style.transform = benefitsWrapper.classList.contains('open') ? "rotate(180deg)" : "rotate(0deg)";
-    });
+    // toggle.addEventListener('click', () => {
+    //     benefitsWrapper.classList.toggle('open');
+    //     benefitsWrapper.classList.toggle('closed');
+    //     arrow.style.transform = benefitsWrapper.classList.contains('open') ? "rotate(180deg)" : "rotate(0deg)";
+    // });
 
     document.getElementById("add-funds-btn").addEventListener("click", () => {
         showRechargePopup();
@@ -128,7 +131,7 @@ function renderLevelButtons(currentLevel) {
     const levelList = document.getElementById("level-list");
     levelList.innerHTML = "";
 
-    levelsConfig.forEach(({ level, title, description }) => {
+    levelsConfig.forEach(({level, title, description}) => {
         const levelNum = parseInt(level.replace("Level ", ""));
 
         const btn = document.createElement("div");
@@ -152,17 +155,19 @@ function renderLevelButtons(currentLevel) {
             </div>
         `;
 
-        // if (levelNum <= currentLevel) {
-            btn.addEventListener("click", () => {
-                btn.classList.toggle("open");
+        btn.addEventListener("click", () => {
+            document.querySelectorAll(".level-btn.open").forEach(el => {
+                el.classList.remove("open");
             });
-        // }
+
+            btn.classList.add("open");
+        });
 
         levelList.appendChild(btn);
     });
 }
 
-function showRechargePopup() {
+export function showRechargePopup() {
     const overlay = document.getElementById("popup-overlay");
     const content = document.getElementById("recharge-content");
     const memoField = document.getElementById("memo-value");
@@ -195,7 +200,7 @@ function renderIconPanel() {
     const grid = document.querySelector(".icon-grid");
     grid.innerHTML = "";
 
-    avatars.forEach(({ id, src }) => {
+    avatars.forEach(({id, src}) => {
         const img = document.createElement("img");
         img.src = src;
         img.alt = `Avatar ${id}`;
@@ -258,47 +263,81 @@ async function loadUserHistory(type) {
         list.forEach(item => {
             const card = document.createElement("div");
             card.className = "purchase-history-card";
-
-            if (type === "rent") {
-                const nft = item.nft;
-                const imageUrl = `https://miniappservcc.com/get-image?path=${nft.image}`;
-                const collectionName = nft.collection?.name || 'Unknown';
-                const rentedAt = new Date(item.rented_at).toLocaleString();
-                const expiresAt = new Date(item.expires_at).toLocaleString();
-
-                card.innerHTML = `
-                    <img src="${imageUrl}" alt="${nft.name}" class="purchase-history-img" />
-                    <div class="purchase-history-info">
-                        <div class="purchase-history-title">${nft.name}</div>
-                        <p><strong>Collection:</strong> ${collectionName}</p>
-                        <p><strong>Count:</strong> ${item.count}</p>
-                        <p><strong>Rent Price:</strong> ${item.rent_price * item.count} <img src="content/money-icon.png" class="price-icon" /></p>
-                        <p><strong>Duration:</strong> ${item.duration_months} month(s)</p>
-                        <p><strong>Rented:</strong> ${rentedAt}</p>
-                        <p><strong>Expires:</strong> ${expiresAt}</p>
-                    </div>
-                `;
-            } else {
-                card.innerHTML = `
-                    <img src="https://miniappservcc.com/get-image?path=${item.image}" class="purchase-history-img" />
-                    <div class="purchase-history-info">
-                        <strong class="purchase-history-title">${item.name}</strong>
-                        <p><b>Collection:</b> ${item.collection}</p>
-                        <p><b>Count:</b> ${item.count}</p>
-                        <p><b>Price:</b> ${item.price * item.count} <img src="content/${item.currency === 'nft' ? 'nft_extra' : 'money-icon'}.png" class="price-icon" /></p>
-                        <p ><b>Purchased: </b>${new Date(item.purchased_at).toLocaleString()}</p>
-                    </div>
-                `;
-            }
-
+            card.innerHTML = `
+                <img src="https://miniappservcc.com/get-image?path=${item.image}" class="purchase-history-img" />
+                <div class="purchase-history-info">
+                    <strong class="purchase-history-title">${item.name}</strong>
+                    <p><b>Collection:</b> ${item.collection}</p>
+                    <p><b>Count:</b> ${item.count}</p>
+                    <p><b>Price:</b> ${item.price * item.count} <img src="content/${item.currency === 'nft' ? 'nft_extra' : 'money-icon'}.png" class="price-icon" /></p>
+                    <p ><b>Purchased: </b>${new Date(item.purchased_at).toLocaleString()}</p>
+                </div>
+                <div class="rent-durations">
+                    ${[1, 3, 6, 12, 24, 60].map(m => {
+                                const rentPrice = item[`rent_price_${m}m`] || 0;
+                                return `<button class="rent-duration-btn ${item.duration == m ? 'selected' : ''}" 
+                                    data-id="${item.id}" 
+                                    data-duration="${m}" 
+                                    data-price="${rentPrice}">
+                                    ${m}m
+                                </button>`;
+                            }).join('')}
+                </div>
+                 <div class="rent-price-display" id="rent-price-${item.id}"></div>
+                 <button class="rent-now-btn" data-id="${item.id}" data-duration="${item.duration}">Rent</button>
+            `;
             container.appendChild(card);
+            console.log(item);
         });
 
     } catch (err) {
         console.error("Error loading history:", err);
         container.innerHTML = "<p>Error loading history.</p>";
     }
+
+    container.querySelectorAll(".rent-duration-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            const id = btn.dataset.id;
+            const duration = btn.dataset.duration;
+            const price = btn.dataset.price;
+
+            const card = btn.closest(".purchase-history-card");
+
+            card.querySelectorAll(`.rent-duration-btn[data-id='${id}']`)
+                .forEach(b => b.classList.remove("selected"));
+            btn.classList.add("selected");
+
+            const rentBtn = card.querySelector(`.rent-now-btn[data-id='${id}']`);
+            if (rentBtn) rentBtn.dataset.duration = duration;
+
+            const display = card.querySelector(`#rent-price-${id}`);
+            if (display) {
+                display.innerHTML = `Rent for ${duration}m: ${price} <img src="content/money-icon.png" class="price-icon" />`;
+            }
+        });
+    });
+
+
+    container.querySelectorAll(".rent-now-btn").forEach(btn => {
+        btn.addEventListener('click', async () => {
+            const id = btn.dataset.id;
+            const duration = btn.dataset.duration;
+
+            if (!duration) return alert("Select duration");
+
+            try {
+                const res = await fetch(`https://miniappservcc.com/api/nft/rent?uid=${user_Id}&nft_id=${id}&duration=${duration}&count=1`);
+                if (!res.ok) throw new Error("Rent request failed");
+                showSuccessPopup("✅ Rented successfully!");
+                await loadUserHistory("rent");
+            } catch (err) {
+                showErrorPopup("Rent failed", err.message);
+            }
+        });
+    });
+
 }
+
 
 window.closePopup = closePopup;
 window.closeIconPanel = closeIconPanel;

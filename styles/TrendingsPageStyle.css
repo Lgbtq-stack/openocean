@@ -47,3 +47,10 @@
     font-weight: bold;
     text-transform: capitalize;
 }
+
+#trending-nfts .price-icon {
+    width: 15px;
+    height: 15px;
+    vertical-align: middle;
+    margin-right: 5px;
+}

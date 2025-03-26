@@ -54,7 +54,6 @@ window.setActiveTab = async function (selectedTab) {
 
         if (currentTab === 'main-menu') {
             await loadHomepageLevelSummary();
-            startLiquidityCoroutine();
         } else if (currentTab === 'trending-nfts') {
             await loadTrendingNFTs();
         } else if (currentTab === 'cart-section') {
