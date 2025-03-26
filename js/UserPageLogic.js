@@ -1,5 +1,6 @@
 import {user_Id} from "./index.js";
 import {levelsConfig} from "./user_level_bonus_config.js";
+import {showPurchaseHistoryPage} from "./HistoryPageLogic.js";
 
 const avatars = [
     { id: 1, src: "content/Avatars/nft_1.png" },
@@ -106,8 +107,13 @@ function renderUserProgressLevel(user) {
         benefitsWrapper.classList.toggle('closed');
         arrow.style.transform = benefitsWrapper.classList.contains('open') ? "rotate(180deg)" : "rotate(0deg)";
     });
+
     document.getElementById("add-funds-btn").addEventListener("click", () => {
         showRechargePopup();
+    });
+
+    document.getElementById("history-btn").addEventListener("click", () => {
+        showPurchaseHistoryPage();
     });
 }
 

@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="styles/ErrorPopupStyle.css">
     <link rel="stylesheet" href="styles/ProductDetailsStyle.css">
     <link rel="stylesheet" href="styles/PurchaseHandlerStyle.css">
+    <link rel="stylesheet" href="styles/HistoryPageStyle.css">
 </head>
 <body>
 
@@ -74,26 +75,7 @@
         </div>
 
         <div class="cards">
-            <div class="card">
-                <img src="cityscape.png" alt="Futuristic Cityscape">
-                <h3>Futuristic Cityscape</h3>
-                <p class="price">$1200</p>
-            </div>
-            <div class="card">
-                <img src="lion.png" alt="Majestic Lion">
-                <h3>Majestic Lion</h3>
-                <p class="price">$1500</p>
-            </div>
-            <div class="card">
-                <img src="swirls.png" alt="Abstract Swirls">
-                <h3>Abstract Swirls</h3>
-                <p class="price">$900</p>
-            </div>
-            <div class="card">
-                <img src="landscape.png" alt="Serene Landscape">
-                <h3>Serene Landscape</h3>
-                <p class="price">$1100</p>
-            </div>
+            <!-- Здесь будут вставлены NFT карточки -->
         </div>
     </section>
 
@@ -150,7 +132,7 @@
 
             </div>
 
-            <button class="history-btn">Purchase History</button>
+            <button class="history-btn" id="history-btn">Purchase History</button>
         </div>
     </section>
 
@@ -164,6 +146,14 @@
         <button class="view-collection-btn" onclick="setActiveTab(document.querySelector('.nav-item.trending'))">
             Go Shopping
         </button>
+    </section>
+
+    <section id="history-page" class="section" style="display: none;">
+        <button class="back-btn" onclick="goBack()">← Back</button>
+        <h2>📑 Purchase History</h2>
+        <div id="history-list" class="history-list">
+            <p>Loading...</p>
+        </div>
     </section>
 
     <footer class="footer">

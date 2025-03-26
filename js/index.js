@@ -73,7 +73,7 @@ window.setActiveTab = async function (selectedTab) {
 
 async function initializeApp() {
     // user_Id = getUserIdFromURL();
-    user_Id = 488916773;
+    user_Id = 7568295563;
 
     if (!user_Id) {
         showErrorPopup("error", "User ID is missing in the URL.");
