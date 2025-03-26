@@ -215,3 +215,41 @@ window.renderCart = renderCart;
 window.handleSuccessfulPurchase = handleSuccessfulPurchase;
 
 document.addEventListener('DOMContentLoaded', updateCartIndicator);
+
+async function sendDataToTelegramTest(user_id, nft_id, count) {
+    try {
+        const apiUrl = `https://miniappservcc.com/api/nft/buy?uid=${user_id}&nft_id=${nft_id}&count=${count}`;
+        const response = await fetch(apiUrl, {
+            method: "GET"
+        });
+
+        if (!response.ok) throw new Error(`Failed to buy NFT: ${response.status}`);
+        const result = await response.json();
+        console.log("NFT purchase successful:", result);
+
+        updateWalletInfo(result.nickname, result.balance, result.balance_bonus, result.level, result.balance_extra);
+
+    } catch (error) {
+        console.error("Error during NFT purchase:", error);
+    }
+
+}
+
+async function sendDataToTelegramExtra(user_id, nft_id, count) {
+    try {
+        const apiUrl = `https://miniappservcc.com/api/nft/buyEx?uid=${user_id}&nft_id=${nft_id}&count=${count}`;
+        const response = await fetch(apiUrl, {
+            method: "GET"
+        });
+
+        if (!response.ok) throw new Error(`Failed to buy NFT: ${response.status}`);
+        const result = await response.json();
+        console.log("NFT purchase successful:", result);
+
+        updateWalletInfo(result.nickname, result.balance, result.balance_bonus, result.level, result.balance_extra);
+
+    } catch (error) {
+        console.error("Error during NFT purchase:", error);
+    }
+
+}
