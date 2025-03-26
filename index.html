@@ -30,11 +30,11 @@
     <div class="hero-content" id="hero-content">
         <h1>Discover and Trade Digital Collectibles</h1>
         <div class="nft-showcase">
-            <img src="content/nft_1.png" alt="NFT 1">
-            <img src="content/nft_2.png" alt="NFT 2">
-            <img src="content/nft_3.png" alt="NFT 3">
-            <img src="content/nft_4.png" alt="NFT 4">
-            <img src="content/nft_5.png" alt="NFT 5">
+            <img src="content/Avatars/nft_1.png" alt="NFT 1">
+            <img src="content/Avatars/nft_2.png" alt="NFT 2">
+            <img src="content/Avatars/nft_3.png" alt="NFT 3">
+            <img src="content/Avatars/nft_4.png" alt="NFT 4">
+            <img src="content/Avatars/nft_5.png" alt="NFT 5">
         </div>
         <p>Browse trending NFTs and become part of the growing NFT community.</p>
 
@@ -186,8 +186,7 @@
 
 <div id="popup-overlay" class="popup-overlay">
     <div class="popup-content" id="popup-content">
-        <h2 id="popup-title">Recharge/Withdraw</h2>
-
+        <h2 id="popup-title">Recharge</h2>
         <div id="recharge-content" style="display: none;">
             <p class="instructions-text">Follow the instructions to deposit funds:</p>
             <ol class="recharge-steps">
@@ -224,23 +223,6 @@
             </ol>
             <p class="important-text"><strong>IMPORTANT:</strong> Ensure the MEMO matches exactly to avoid losing your funds.</p>
             <button class="ok-button" onclick="closePopup()">OK</button>
-        </div>
-
-        <div id="withdraw-content" class="withdraw-content" style="display: none;">
-            <p>Enter the withdrawal details:</p>
-
-            <input type="text" id="wallet-input" class="input-field" placeholder="Recipient Wallet" />
-
-            <p class="warning-withdraw">⚠️ You need to add trustline for NFT asset.</p>
-
-            <input type="number" id="amount-input" class="input-field" placeholder="Amount" />
-
-            <p class="warning-withdraw">⚠️ Your wallet will be credited within 15 minutes.</p>
-
-            <div class="popup-buttons">
-                <button id="confirm-button" class="confirm-button">Confirm</button>
-                <button id="close-popup-button" class="close-popup-button" onclick="closePopup()">Cancel</button>
-            </div>
         </div>
     </div>
 </div>

@@ -1,3 +1,5 @@
+import {showErrorPopup} from "./PopupLogic.js";
+
 export function showSuccessPopup(message = "Success!") {
     const toast = document.getElementById("toast-notification");
     if (!toast) return;
@@ -44,3 +46,25 @@ scrollToTopButton.addEventListener('click', () => {
         behavior: 'smooth',
     });
 });
+
+window.copyToClipboard = function(elementId) {
+    const element = document.getElementById(elementId);
+    if (!element) {
+        console.error(`Element with ID "${elementId}" not found.`);
+        return;
+    }
+
+    const text = element.textContent.trim();
+
+    if (text.length === 0) {
+        showErrorPopup("warning", "Nothing to copy!");
+        return;
+    }
+
+    navigator.clipboard.writeText(text)
+        .then(() => showErrorPopup("success", "Copied to clipboard"))
+        .catch((err) => {
+            console.error("Failed to copy text: ", err);
+            showErrorPopup("error", "Failed to copy text. Please try again.");
+        });
+}

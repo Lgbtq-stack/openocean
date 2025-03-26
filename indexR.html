@@ -122,9 +122,12 @@
     <section id="user-profile" class="section" style="display:none;">
         <h2>👤 My Profile</h2>
         <div class="profile-card">
-            <img src="user-photo.png" alt="User Photo" class="user-photo">
+            <button id="user-photo-button" class="user-photo-button">
+                <img src="content/user.png" alt="User Photo" class="user-photo">
+            </button>
+
             <h3>Alex Johnson</h3>
-            <p class="bio">NFT Enthusiast & Collector</p>
+<!--            <p class="bio">NFT Enthusiast & Collector</p>-->
 
             <div class="balance-section">
                 <span class="balance-label">Account Balance</span>
@@ -135,18 +138,10 @@
                     <span class="balance-amount">12412</span>
                     <img src="content/nft_extra.png" alt="Bonus" class="price-icon" />
                 </div>
-                <button class="add-funds-btn">Add Funds</button>
+                <button class="add-funds-btn" id="add-funds-btn">Add Funds</button>
             </div>
 
-            <div class="progress-level">
-                <span>Level 5</span>
-                <div class="progress-bar">
-                    <div class="progress" style="width:70%;"></div>
-                </div>
-                <div class="level-benefits collapsible closed" id="level-benefits">
-                    <strong id="benefits-toggle">Current Level Benefits</strong>
-                    <p id="benefits-text">As a Level 5 member, you enjoy exclusive benefits.</p>
-                </div>
+            <div class="progress-level" id="progress-level">
             </div>
 
             <p class="see-all-levels" id="see-all-levels">🔽 Show All Levels</p>
@@ -171,7 +166,6 @@
         </button>
     </section>
 
-
     <footer class="footer">
         <div class="nav-item trending" onclick="setActiveTab(this)">
             <img src="content/trending.png" alt="Trendings" class="nav-icon">
@@ -193,8 +187,6 @@
 </div>
 
 <!-- Utilities -->
-
-
 
 <div class="nft-details-panel" id="nftDetailsPanel">
     <div class="panel-content">
@@ -232,6 +224,59 @@
         <h2 id="error-title">Warning</h2>
         <p id="error-message">Something went wrong. Please try again.</p>
         <button id="close-error-popup-button">Close</button>
+    </div>
+</div>
+
+<div id="popup-overlay" class="popup-overlay">
+    <div class="popup-content" id="popup-content">
+        <h2 id="popup-title">Recharge</h2>
+        <div id="recharge-content" style="display: none;">
+            <p class="instructions-text">Follow the instructions to deposit funds</p>
+            <ol class="recharge-steps">
+                <li>
+                    <p>You need to buy NFT asset on the following link:</p>
+                    <div class="copy-section">
+                        <strong>URL:</strong>
+                        <p><span id="link-address-popup">https://lobstr.co/trade/NFT:GBBWC7PI3LX4GNQ2AMF3HOHJCTHFWSIADMCB2DZIRNM6IKIVRTXMJTRG</span></p>
+                        <button class="copy-button" onclick="openWebPage('link-address-popup')">OPEN</button>
+                    </div>
+                </li>
+
+                <li>
+                    <p>Transfer funds to the following wallet:</p>
+                    <div class="copy-section">
+                        <strong>Wallet:</strong>
+                        <p><span id="wallet-address-popup"> GC2JTXEMO7WLT4DECCRRZKJXW26RECLSR3FUXADX262OQ6PJEQCJIYM4</span></p>
+                        <button class="copy-button" onclick="copyToClipboard('wallet-address-popup')">COPY</button>
+                    </div>
+                </li>
+
+                <li>
+                    <p>Add the following MEMO to your transfer:</p>
+                    <div class="copy-section">
+                        <strong>MEMO:</strong>
+                        <p><span id="memo-value"></span></p>
+                        <button class="copy-button" onclick="copyToClipboard('memo-value')">COPY</button>
+                    </div>
+                </li>
+
+                <li>
+                    <p>The balance will be updated within 5 minutes.</p>
+                </li>
+            </ol>
+            <p class="important-text"><strong>IMPORTANT:</strong> Ensure the MEMO matches exactly to avoid losing your funds.</p>
+            <button class="ok-button" onclick="closePopup()">OK</button>
+        </div>
+    </div>
+</div>
+
+<div id="icon-panel-overlay" class="icon-overlay" style="display: none;">
+    <div class="icon-panel-wrapper">
+        <div id="icon-picker-panel" class="icon-panel">
+            <button onclick="closeIconPanel()" class="close-icon-panel">✖</button>
+            <h3>Select an icon</h3>
+            <div class="icon-grid"></div>
+        </div>
     </div>
 </div>
 
