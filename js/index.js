@@ -3,6 +3,7 @@ import {hideCartUserHeader, hideSuccessfulPurchase, renderCart, showCartUserHead
 import {closeNFTDetails} from "./ProductDetailsLogic.js";
 import {showErrorPopup} from "./PopupLogic.js";
 import {loadUserData} from "./UserPageLogic.js";
+import {loadHomepageLevelSummary} from "./HomePageLogic.js";
 
 export let user_Id = null;
 
@@ -50,7 +51,7 @@ window.setActiveTab = async function (selectedTab) {
         await hideCartUserHeader();
 
         if (currentTab === 'main-menu') {
-            // здесь можно выполнить функции, специфичные для главного меню
+            await loadHomepageLevelSummary();
         } else if (currentTab === 'trending-nfts') {
             await loadTrendingNFTs();
         } else if (currentTab === 'cart-section') {
@@ -60,7 +61,6 @@ window.setActiveTab = async function (selectedTab) {
             // загрузка данных для категорий
         } else if (currentTab === 'user-profile') {
             await loadUserData();
-            // загрузка профиля
         }
     } catch (error) {
         console.error("Error when changing tabs:", error);
@@ -80,12 +80,9 @@ async function initializeApp() {
         return;
     }
 
-    // await fetchUserData(user_Id);
-    // await fetchUserNFTs(user_Id);
-
     await loadTrendingNFTs();
-    // await createCategories();
-    // await createMyNFTCategories();
+    await loadHomepageLevelSummary();
+
 }
 
 document.addEventListener("DOMContentLoaded", initializeApp);

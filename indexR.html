@@ -34,21 +34,17 @@
             rewards
             awaiting you as you level up.</p>
 
-        <div class="card">
+        <div class="card" id="level-summary-card">
             <h3>Level Progress</h3>
             <div class="progress-bar">
-                <div class="progress" style="width: 70%;"></div>
+                <div class="progress" id="summary-progress-fill" style="width: 0%;"></div>
             </div>
             <div class="bonuses">
                 <strong>Bonuses</strong>
-                <p>
-                    Level 5 Bonuses:<br>
-                    Early access to new releases<br>
-                    Exclusive discounts<br>
-                    VIP support
-                </p>
+                <p id="summary-bonuses">Loading...</p>
             </div>
         </div>
+
 
         <div class="card">
             <h3>Points to Next Level</h3>
@@ -180,7 +176,7 @@
 
 <div class="nft-details-panel" id="nftDetailsPanel">
     <div class="panel-content">
-        <button class="close-panel" onclick="closeNFTDetails()">< Back</button>
+        <button class="close-panel" onclick="closeNFTDetails()">← Back</button>
         <img id="nft-image" class="nft-image" src="" alt="NFT Image">
         <h2 id="nft-title" class="nft-title">NFT Title</h2>
         <p id="nft-description">Description here</p>
