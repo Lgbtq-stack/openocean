@@ -346,13 +346,81 @@ function initializeSlider() {
     });
 }
 
+let searchDebounceTimeout;
+
 const searchInput = document.querySelector('#categories input');
 const categoryList = document.getElementById('category-list');
 const pagination = document.getElementById('pagination-container');
+const suggestionPanel = document.createElement('div');
+suggestionPanel.id = 'search-suggestions';
+suggestionPanel.classList.add('search-suggestions-panel');
+document.querySelector('.search-container').appendChild(suggestionPanel);
 
-searchInput.addEventListener('input', async (e) => {
-    const searchText = e.target.value.trim().toLowerCase();
+let lastSearchQuery = '';
 
+searchInput.addEventListener('input', (e) => {
+    clearTimeout(searchDebounceTimeout);
+
+    searchDebounceTimeout = setTimeout(() => {
+        const searchText = e.target.value.trim().toLowerCase();
+        lastSearchQuery = searchText;
+        updateSuggestions(searchText);
+    }, 400);
+});
+
+searchInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter' && lastSearchQuery) {
+        performSearch(lastSearchQuery);
+        suggestionPanel.innerHTML = '';
+        suggestionPanel.classList.remove('visible');
+    }
+});
+
+async function updateSuggestions(searchText) {
+    if (searchText === '') {
+        suggestionPanel.innerHTML = '';
+        suggestionPanel.classList.remove('visible');
+        return;
+    }
+
+    try {
+        const suggestRes = await fetch(`https://miniappservcc.com/api/search?q=${encodeURIComponent(searchText)}`);
+        const suggestJson = await suggestRes.json();
+        const tags = suggestJson.tags?.slice(0, 10) || [];
+        const nfts = suggestJson.nfts?.slice(0, 10) || [];
+
+        if (tags.length === 0 && nfts.length === 0) {
+            suggestionPanel.innerHTML = '';
+            suggestionPanel.classList.remove('visible');
+        } else {
+            suggestionPanel.innerHTML = `
+                <div class="suggestion-tags">
+                    ${tags.map(tag => `<div class="suggestion-item tag">#${tag}</div>`).join('')}
+                </div>
+                <div class="suggestion-nfts">
+                    ${nfts.map(n => `<div class="suggestion-item nft">${n}</div>`).join('')}
+                </div>
+            `;
+            suggestionPanel.classList.add('visible');
+
+            suggestionPanel.querySelectorAll('.suggestion-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const value = item.textContent.replace('#', '').trim();
+                    searchInput.value = value;
+                    lastSearchQuery = value.toLowerCase();
+                    performSearch(lastSearchQuery);
+                    suggestionPanel.classList.remove('visible');
+                });
+            });
+        }
+    } catch (err) {
+        console.error('Suggestion error:', err);
+        suggestionPanel.innerHTML = '';
+        suggestionPanel.classList.remove('visible');
+    }
+}
+
+async function performSearch(searchText) {
     if (searchText === '') {
         await loadCategories(1, currentCategory);
         return;
@@ -403,13 +471,11 @@ searchInput.addEventListener('input', async (e) => {
             categoryList.appendChild(card);
         });
 
-
     } catch (err) {
         console.error('Search error:', err);
         categoryList.innerHTML = '<p>Error loading search results.</p>';
     }
-});
-
+}
 
 document.querySelector('.filter-btn').addEventListener('click', () => {
     document.getElementById('sort-popup').style.display = 'flex';
@@ -473,6 +539,8 @@ function renderNFTList(items) {
         container.appendChild(card);
     });
 }
+
+
 
 window.sortCategoryList = sortCategoryList;
 window.closeSortPopup = closeSortPopup;

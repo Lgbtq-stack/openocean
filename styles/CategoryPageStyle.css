@@ -201,6 +201,7 @@
 }
 
 .search-container {
+    position: relative;
     display: flex;
     gap: 10px;
     padding: 0 16px;
@@ -294,4 +295,55 @@
     color: white;
     font-weight: bold;
     cursor: pointer;
+}
+
+.search-suggestions-panel {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    max-height: 300px;
+    overflow-y: auto;
+    background: white;
+    border: 1px solid #ccc;
+    border-top: none;
+    z-index: 99999;
+    padding: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    display: none;
+}
+
+.search-suggestions-panel.visible {
+    display: block;
+    z-index: 99999;
+
+}
+
+.suggestion-tags,
+.suggestion-nfts {
+    margin-bottom: 10px;
+}
+
+.suggestion-item {
+    padding: 6px 10px;
+    margin-bottom: 5px;
+    border-radius: 6px;
+    cursor: pointer;
+    background: #f6f6f6;
+    transition: background 0.2s ease;
+    font-size: 14px;
+}
+
+.suggestion-item:hover {
+    background: #eaeaea;
+}
+
+.suggestion-item.tag::before {
+    content: "#";
+    margin-right: 4px;
+    color: #888;
+}
+
+.suggestion-item.nft {
+    font-weight: 500;
 }
