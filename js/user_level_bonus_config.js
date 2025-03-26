@@ -12,7 +12,7 @@ export const levelsConfig = [
         range: "500 – 4999",
         title: "Spend (500 – 5,000 NFTs)",
         description: [
-            "🖼 3 FREE NFTs OF YOUR CHOICE",
+            "🖼 3 FREE NFTs OF YOUR CHOICE \n",
             "🌽 0.5% Ownership stake in global food & agriculture reserves"
         ]
     },
@@ -21,8 +21,8 @@ export const levelsConfig = [
         range: "5000 – 24999",
         title: "Spend (5,000 – 25,000 NFTs)",
         description: [
-            "🖼 5 FREE NFTs",
-            "🌽 0.1% Ownership stake in global food & agriculture reserves",
+            "🖼 5 FREE NFTs \n",
+            "🌽 0.1% Ownership stake in global food & agriculture reserves \n",
             "💧 0.1% Ownership stake in water purification & distribution networks"
         ]
     },

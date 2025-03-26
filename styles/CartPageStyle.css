@@ -60,15 +60,10 @@
 }
 
 .price-icon {
-    width: 20px;
-    height: 20px;
+    width: 15px;
+    height: 15px;
     vertical-align: middle;
-    margin-right: 10px;
-
-}
-
-.your-cart-title {
-
+    margin-right: 5px;
 }
 
 .cart-item {
@@ -94,7 +89,7 @@
 
 .cart-item-image {
     width: 150px;
-    height: 100px;
+    height: 120px;
     object-fit: cover;
     border-radius: 8px;
 }
@@ -149,6 +144,7 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
+    margin-top: 5px;
 }
 
 .cart-total-row {
@@ -216,4 +212,49 @@
     border-radius: 16px;
     border: none;
     cursor: pointer;
+}
+
+.rent-section {
+    text-align: center;
+}
+
+.rent-durations {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 5px;
+}
+
+.rent-duration-btn {
+    padding: 4px 10px;
+    font-size: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #f0f0f0;
+    cursor: pointer;
+}
+
+.rent-duration-btn.selected {
+    background-color: #28a745;
+    color: white;
+    font-weight: bold;
+    border-color: #28a745;
+}
+
+.rent-now-btn {
+    padding: 6px 30px;
+    font-size: 14px;
+    border: none;
+    border-radius: 8px;
+    background-color: #28a745;
+    color: white;
+    cursor: pointer;
+    margin-top: 5px;
+}
+
+
+
+.rent-price-display {
+    margin-top: 8px;
+    text-align: center;
 }

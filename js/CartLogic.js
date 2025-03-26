@@ -53,7 +53,7 @@ export function renderCart() {
                 <button class="remove-item-btn" onclick="Cart.removeItem(${item.id}); renderCart();">✕</button>
                 
                 <div class="cart-card-header">
-                    <img src="${item.image}" class="cart-item-image large" alt="${item.name}" />
+                    <img src="https://miniappservcc.com/get-image?path=${item.image}" class="cart-item-image large" alt="${item.name}" />
                     <div class="cart-item-info">
                         <strong class="cart-item-title">${item.name}</strong>
                         <p class="cart-item-collection">${item.collection || "Collection"}</p>
@@ -62,19 +62,27 @@ export function renderCart() {
                             <span class="cart-item-count">${item.count}</span>
                             <button class="cart-btn" onclick="updateItemCount(${item.id}, 1)">+</button>
                         </div>
+                        <div class="cart-prices">
+                            <div class="price-block">
+                                <span class="price">${itemTotalUSD.toFixed(2)}</span>
+                                <img src="content/money-icon.png" class="price-icon" alt="USD" />
+                            </div>
+                            <span class="price-separator">or</span>
+                            <div class="price-block">
+                                <span class="price">${itemTotalNFT}</span>
+                                <img src="content/nft_extra.png" class="price-icon" alt="NFT" />
+                            </div>
+                        </div>
                     </div>
                 </div>
-        
-                <div class="cart-prices">
-                    <div class="price-block">
-                        <span class="price">${itemTotalUSD.toFixed(2)}</span>
-                        <img src="content/money-icon.png" class="price-icon" alt="USD" />
+                <div class="rent-section">
+                    <div class="rent-durations">
+                        ${[1, 3, 6, 12, 24, 60].map(month => `
+                        <button class="rent-duration-btn" data-id="${item.id}" data-duration="${month}">${month}m</button>
+                        `).join('')}
                     </div>
-                    <span class="price-separator">or</span>
-                    <div class="price-block">
-                        <span class="price">${itemTotalNFT}</span>
-                        <img src="content/nft_extra.png" class="price-icon" alt="NFT" />
-                    </div>
+                    <div class="rent-price-display" id="rent-price-${item.id}"></div>
+                    <button class="rent-now-btn" data-id="${item.id}">Rent</button>
                 </div>
             </div>
         `;
@@ -107,6 +115,61 @@ export function renderCart() {
    
     `;
     itemsContainer.appendChild(summary);
+
+    setTimeout(() => {
+        document.querySelectorAll('.rent-duration-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = btn.dataset.id;
+                const duration = btn.dataset.duration;
+
+                document.querySelectorAll(`.rent-duration-btn[data-id="${id}"]`).forEach(b => b.classList.remove("selected"));
+                btn.classList.add("selected");
+
+                const rentBtn = document.querySelector(`.rent-now-btn[data-id="${id}"]`);
+                if (rentBtn) rentBtn.dataset.duration = duration;
+
+                const item = Cart.getItems().find(i => String(i.id) === id);
+                const rentPrice = item?.[`rent_price_${duration}m`] || item?.rent?.[`${duration}m`] || 0;
+
+                const display = document.getElementById(`rent-price-${id}`);
+                display.innerHTML = `Rent for ${duration}m: ${rentPrice} <img src="content/money-icon.png" class="price-icon" />`;
+            });
+        });
+
+        document.querySelectorAll('.rent-now-btn').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const id = btn.dataset.id;
+                const duration = btn.dataset.duration;
+
+                if (!duration) {
+                    alert("Please select a rent duration.");
+                    return;
+                }
+
+                const item = Cart.getItems().find(i => String(i.id) === id);
+                if (!item) return;
+
+                const count = item.count;
+
+                    console.log(user_Id, id, duration, count);
+                try {
+                    const res = await fetch(`https://miniappservcc.com/api/nft/rent?uid=${user_Id}&nft_id=${id}&duration=${duration}&count=${count}`);
+                    if (!res.ok) throw new Error("Rent request failed");
+
+                    Cart.removeItem(Number(id));
+                    renderCart();
+
+                    handleSuccessfulPurchase();
+
+                } catch (err) {
+                    console.error("Rent error:", err);
+                    alert("Failed to rent NFT. Please try again.");
+                }
+            });
+        });
+    }, 0);
+
+
 }
 
 export const Cart = {
@@ -188,7 +251,7 @@ function handleSuccessfulPurchase() {
         const card = document.createElement('div');
         card.classList.add('purchased-item-card');
         card.innerHTML = `
-            <img src="${item.image}" class="purchased-image-small" alt="${item.name}" />
+            <img src="https://miniappservcc.com/get-image?path=${item.image}" class="purchased-image-small" alt="${item.name}" />
             <h3 class="purchased-title">${item.name}</h3>
             <p class="purchased-author">by ${item.collection || 'Unknown'}</p>
         `;
@@ -253,3 +316,42 @@ async function sendDataToTelegramExtra(user_id, nft_id, count) {
     }
 
 }
+
+document.querySelectorAll('.rent-now-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+        const nftId = btn.dataset.id;
+        const selectedBtn = document.querySelector(`.rent-duration-btn.selected[data-id="${nftId}"]`);
+        const duration = selectedBtn?.dataset.duration;
+
+        const item = Cart.getItems().find(i => String(i.id) === nftId);
+        const count = item?.count || 1;
+
+        if (!duration) {
+            alert("⏱ Please select duration.");
+            return;
+        }
+
+        try {
+            const url = `https://miniappservcc.com/api/nft/rent?uid=${user_Id}&nft_id=${nftId}&duration=${duration}&count=${count}`;
+            const res = await fetch(url);
+            const json = await res.json();
+
+            alert("✅ Rent successful!");
+            console.log("Rent response:", json);
+        } catch (err) {
+            console.error("❌ Rent error:", err);
+            alert("Failed to rent NFT.");
+        }
+    });
+});
+
+document.querySelectorAll('.rent-duration-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const nftId = btn.dataset.id;
+
+        document.querySelectorAll(`.rent-duration-btn[data-id="${nftId}"]`)
+            .forEach(b => b.classList.remove('selected'));
+
+        btn.classList.add('selected');
+    });
+});

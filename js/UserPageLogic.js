@@ -145,11 +145,11 @@ function renderLevelButtons(currentLevel) {
             </div>
         `;
 
-        if (levelNum <= currentLevel) {
+        // if (levelNum <= currentLevel) {
             btn.addEventListener("click", () => {
                 btn.classList.toggle("open");
             });
-        }
+        // }
 
         levelList.appendChild(btn);
     });
