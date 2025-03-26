@@ -18,6 +18,81 @@ function renderCategoryCards(items) {
     });
 }
 
+let currentPage = 1;
+let currentCategory = 1;
+
+function generatePagination(paging, onPageChange) {
+    const { page, totalPages } = paging;
+    const paginationContainer = document.getElementById("pagination-container");
+
+    if (!paginationContainer) {
+        return;
+    }
+
+    paginationContainer.innerHTML = "";
+
+    if (page > 1) {
+        const prevButton = document.createElement("button");
+        prevButton.textContent = "<";
+        prevButton.className = "pagination-btn";
+        prevButton.addEventListener("click", () => onPageChange(page - 1));
+        paginationContainer.appendChild(prevButton);
+    }
+
+    const firstPage = createPageButton(1, page, onPageChange);
+    paginationContainer.appendChild(firstPage);
+
+    if (page > 3) {
+        const dots = document.createElement("span");
+        dots.textContent = "...";
+        dots.className = "dots";
+        paginationContainer.appendChild(dots);
+    }
+
+    for (let i = Math.max(2, page - 1); i <= Math.min(totalPages - 1, page + 1); i++) {
+        const pageButton = createPageButton(i, page, onPageChange);
+        paginationContainer.appendChild(pageButton);
+    }
+
+    if (page < totalPages - 2) {
+        const dots = document.createElement("span");
+        dots.textContent = "...";
+        dots.className = "dots";
+        paginationContainer.appendChild(dots);
+    }
+
+    if (totalPages > 1) {
+        const lastPage = createPageButton(totalPages, page, onPageChange);
+        paginationContainer.appendChild(lastPage);
+    }
+
+    if (page < totalPages) {
+        const nextButton = document.createElement("button");
+        nextButton.textContent = ">";
+        nextButton.className = "pagination-btn";
+        nextButton.addEventListener("click", () => onPageChange(page + 1));
+        paginationContainer.appendChild(nextButton);
+    }
+}
+
+function createPageButton(pageNumber, currentPage, onPageChange) {
+    const button = document.createElement("button");
+    button.textContent = pageNumber;
+    button.className = "pagination-btn";
+
+    if (pageNumber === currentPage) {
+        button.classList.add("active");
+    }
+
+    button.addEventListener("click", () => {
+        onPageChange(pageNumber);
+        scrollToTop();
+    });
+
+    return button;
+}
+
+
 function showCategories() {
     document.getElementById("categories").style.display = "block";
     renderCategoryCards(nftItems);
@@ -98,78 +173,3 @@ export async function loadCategories(page = 1, category) {
         console.error("Error loading categories:", err);
     }
 }
-
-let currentPage = 1;
-let currentCategory = 1;
-
-function generatePagination(paging, onPageChange) {
-    const { page, totalPages } = paging;
-    const paginationContainer = document.getElementById("pagination-container");
-
-    if (!paginationContainer) {
-        return;
-    }
-
-    paginationContainer.innerHTML = "";
-
-    if (page > 1) {
-        const prevButton = document.createElement("button");
-        prevButton.textContent = "<";
-        prevButton.className = "pagination-btn";
-        prevButton.addEventListener("click", () => onPageChange(page - 1));
-        paginationContainer.appendChild(prevButton);
-    }
-
-    const firstPage = createPageButton(1, page, onPageChange);
-    paginationContainer.appendChild(firstPage);
-
-    if (page > 3) {
-        const dots = document.createElement("span");
-        dots.textContent = "...";
-        dots.className = "dots";
-        paginationContainer.appendChild(dots);
-    }
-
-    for (let i = Math.max(2, page - 1); i <= Math.min(totalPages - 1, page + 1); i++) {
-        const pageButton = createPageButton(i, page, onPageChange);
-        paginationContainer.appendChild(pageButton);
-    }
-
-    if (page < totalPages - 2) {
-        const dots = document.createElement("span");
-        dots.textContent = "...";
-        dots.className = "dots";
-        paginationContainer.appendChild(dots);
-    }
-
-    if (totalPages > 1) {
-        const lastPage = createPageButton(totalPages, page, onPageChange);
-        paginationContainer.appendChild(lastPage);
-    }
-
-    if (page < totalPages) {
-        const nextButton = document.createElement("button");
-        nextButton.textContent = ">";
-        nextButton.className = "pagination-btn";
-        nextButton.addEventListener("click", () => onPageChange(page + 1));
-        paginationContainer.appendChild(nextButton);
-    }
-}
-
-function createPageButton(pageNumber, currentPage, onPageChange) {
-    const button = document.createElement("button");
-    button.textContent = pageNumber;
-    button.className = "pagination-btn";
-
-    if (pageNumber === currentPage) {
-        button.classList.add("active");
-    }
-
-    button.addEventListener("click", () => {
-        onPageChange(pageNumber);
-        scrollToTop();
-    });
-
-    return button;
-}
-
