@@ -4,7 +4,7 @@ import {closeNFTDetails} from "./ProductDetailsLogic.js";
 import {showErrorPopup} from "./PopupLogic.js";
 import {loadUserData} from "./UserPageLogic.js";
 import {loadHomepageLevelSummary} from "./HomePageLogic.js";
-import {loadCategories} from "./CategorySectionLogic.js";
+import {createCategories, loadCategories} from "./CategorySectionLogic.js";
 
 export let user_Id = null;
 
@@ -69,8 +69,6 @@ window.setActiveTab = async function (selectedTab) {
         // await hideLoader();
         closeNFTDetails();
         hideSuccessfulPurchase();
-
-        loadCategories()
     }
 };
 
@@ -85,7 +83,7 @@ async function initializeApp() {
 
     await loadTrendingNFTs();
     await loadHomepageLevelSummary();
-
+    await createCategories();
 }
 
 document.addEventListener("DOMContentLoaded", initializeApp);

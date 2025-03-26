@@ -613,51 +613,6 @@ function initializeNFTSlider() {
     });
 }
 
-async function createCategories() {
-    const sliderList = document.querySelector(".slider-category-list");
-    if (!sliderList) {
-        console.error("Element with class 'slider-category-list' not found in DOM.");
-        return;
-    }
-
-    sliderList.innerHTML = "";
-
-    const categories = await loadCategoriesOnce(false);
-    if (categories.length === 0) {
-        console.error("No categories available.");
-        return;
-    }
-
-    let firstCategory = categories[0].id;
-    currentCategory = firstCategory;
-    currentPage = 1;
-
-    categories.forEach(category => {
-        const button = document.createElement("button");
-        button.classList.add("slider-category-item");
-        button.textContent = category.name;
-
-        if (category.id === firstCategory) {
-            button.classList.add("active-category");
-        }
-
-        button.addEventListener("click", () => {
-            document.querySelectorAll(".slider-category-item").forEach(btn => btn.classList.remove("active-category"));
-            button.classList.add("active-category");
-
-            currentCategory = category.id;
-            currentPage = 1;
-            document.getElementById("category-list").innerHTML = "";
-            loadCategories(currentPage, currentCategory);
-        });
-
-        sliderList.appendChild(button);
-    });
-
-    document.getElementById("category-list").innerHTML = "";
-    await loadCategories(currentPage, currentCategory);
-    initializeSlider();
-}
 
 
 let currentPage = 1;
