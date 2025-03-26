@@ -2,7 +2,7 @@ import {loadTrendingNFTs} from "./TrendingSectionLogic.js"
 import {hideCartUserHeader, hideSuccessfulPurchase, renderCart, showCartUserHeader} from "./CartLogic.js";
 import {closeNFTDetails} from "./ProductDetailsLogic.js";
 import {showErrorPopup} from "./PopupLogic.js";
-import {loadUserData, setupUserTransactions} from "./UserPageLogic.js";
+import {loadUserData} from "./UserPageLogic.js";
 import {loadHomepageLevelSummary} from "./HomePageLogic.js";
 import {createCategories} from "./CategorySectionLogic.js";
 import {startLiquidityCoroutine} from "./StellarHandler.js";

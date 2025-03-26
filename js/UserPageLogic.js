@@ -3,11 +3,16 @@ import {levelsConfig} from "./user_level_bonus_config.js";
 import {showPurchaseHistoryPage} from "./HistoryPageLogic.js";
 
 const avatars = [
-    { id: 1, src: "content/Avatars/nft_1.png" },
-    { id: 2, src: "content/Avatars/nft_2.png" },
-    { id: 3, src: "content/Avatars/nft_3.png" },
-    { id: 4, src: "content/Avatars/nft_4.png" },
-    { id: 5, src: "content/Avatars/nft_5.png" },
+    { id: 1, src: "content/AvatarIcons/nft_1.png" },
+    { id: 2, src: "content/AvatarIcons/nft_2.png" },
+    { id: 3, src: "content/AvatarIcons/nft_3.png" },
+    { id: 4, src: "content/AvatarIcons/nft_4.png" },
+    { id: 5, src: "content/AvatarIcons/nft_5.png" },
+    { id: 6, src: "content/AvatarIcons/nft_6.png" },
+    { id: 7, src: "content/AvatarIcons/nft_7.png" },
+    { id: 8, src: "content/AvatarIcons/nft_8.png" },
+    { id: 9, src: "content/AvatarIcons/nft_9.png" },
+    { id: 10, src: "content/AvatarIcons/nft_10.png" },
 ];
 
 document.addEventListener('DOMContentLoaded', async () => {
