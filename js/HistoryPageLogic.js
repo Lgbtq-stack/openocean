@@ -27,21 +27,21 @@ export async function showPurchaseHistoryPage() {
                 : "NFT Extra Icon";
 
             return `
-        <div class="history-item">
-            <img src="${item.image}" alt="${item.name}" class="history-image">
-            <div class="history-info">
-                <h4>${item.name}</h4>
-                <p><strong>Collection:</strong> ${item.collection}</p>
-                <p>
-                    <strong>Price:</strong>
-                    $${item.price.toLocaleString()} × ${item.count}
-                </p>
-                <p><strong>Type:</strong> 
-                    <img src="${iconSrc}" alt="${iconAlt}" class="price-icon" /></p>
-                <p class="date">${new Date(item.purchased_at).toLocaleString()}</p>
-            </div>
-        </div>
-    `;
+                <div class="history-item">
+                    <img src="https://miniappservcc.com/get-image?path=${item.image}" alt="${item.name}" class="history-image">
+                    <div class="history-info">
+                        <h4>${item.name}</h4>
+                        <p><strong>Collection:</strong> ${item.collection}</p>
+                        <p>
+                            <strong>Price:</strong>
+                            $${item.price.toLocaleString()} × ${item.count}
+                        </p>
+                        <p><strong>Type:</strong> 
+                            <img src="${iconSrc}" alt="${iconAlt}" class="price-icon" /></p>
+                        <p class="date">${new Date(item.purchased_at).toLocaleString()}</p>
+                    </div>
+                </div>
+            `;
         }).join('');
 
     } catch (err) {

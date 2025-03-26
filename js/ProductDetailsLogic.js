@@ -1,18 +1,42 @@
 import {Cart} from "./CartLogic.js";
 import {showSuccessPopup} from "./Utilities.js";
 
-export function showNFTDetails(id, dataSource) {
-    const nft = dataSource.find(item => item.id === id || item.id === Number(id));
-    if (!nft) return;
+export async function showNFTDetails(id, dataSource) {
 
-    document.getElementById('nft-image').src = nft.image;
+    let nft = dataSource?.find(item => item.id === id || item.id === Number(id));
+
+    try {
+        const res = await fetch(`https://miniappservcc.com/api/nfts/search-nft?q=${encodeURIComponent(nft.name)}`);
+        const json = await res.json();
+        console.log(json);
+
+        if (Array.isArray(json.results)) {
+            nft = json.results.find(item => item.name.toLowerCase() === nft.name.toLowerCase());
+        }
+
+        if (!nft) {
+            console.warn("NFT not found by name:", nft.name);
+            return;
+        }
+    } catch (err) {
+        console.error("Failed to fetch NFT data by name:", err);
+        return;
+    }
+
+    document.getElementById('nft-image').src = `https://miniappservcc.com/get-image?path=${nft.image}`;
     document.getElementById('nft-title').textContent = nft.name;
-
     document.getElementById('nft-description').textContent = nft.description || 'No description available';
-    document.getElementById('nft-collection').textContent = nft.collection?.name || nft.collection || 'Unknown';
+    document.getElementById('nft-collection').textContent = nft.collection || 'Unknown';
 
-    // 💰 Цены с иконками
-    const priceHTML = `
+    const tagContainer = document.getElementById('nft-tags');
+    if (tagContainer) {
+        const tags = nft.tags || [];
+        tagContainer.innerHTML = tags.length
+            ? tags.map(tag => `<span class="nft-tag">${tag.name}</span>`).join(' ')
+            : '<span class="nft-tag">No tags</span>';
+    }
+
+    document.getElementById('nft-price').innerHTML = `
         <p class="nft-price">
             ${nft.price}
             <img src="content/money-icon.png" alt="Money Icon" class="price-icon" /> or 
@@ -22,17 +46,12 @@ export function showNFTDetails(id, dataSource) {
             <img src="content/nft_extra.png" alt="NFT Extra Icon" class="price-icon" />
         </p>
     `;
-    document.getElementById('nft-price').innerHTML = priceHTML;
 
-    const closeBtn = document.querySelector('.close-panel');
-    if (closeBtn) {
-        closeBtn.addEventListener('click', closeNFTDetails, { once: true });
-    }
-
-    const detailsPanel = document.getElementById('nftDetailsPanel');
-    detailsPanel.classList.add('show');
-
+    // Панелька
+    document.getElementById('nftDetailsPanel').classList.add('show');
     document.body.style.overflow = 'hidden';
+
+    document.querySelector('.close-panel')?.addEventListener('click', closeNFTDetails, { once: true });
 
     setTimeout(() => {
         const addToCartBtn = document.querySelector('.add-to-cart-button');
@@ -42,7 +61,7 @@ export function showNFTDetails(id, dataSource) {
                     id: nft.id,
                     name: nft.name,
                     image: nft.image,
-                    collection: nft.collection?.name || nft.collection || 'Unknown',
+                    collection: nft.collection || 'Unknown',
                     price: nft.price,
                     count: 1
                 });
@@ -53,10 +72,8 @@ export function showNFTDetails(id, dataSource) {
     }, 0);
 }
 
-
 export function closeNFTDetails() {
     const detailsPanel = document.getElementById('nftDetailsPanel');
     detailsPanel.classList.remove('show');
-
     document.body.style.overflow = '';
 }

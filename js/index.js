@@ -59,7 +59,7 @@ window.setActiveTab = async function (selectedTab) {
             await showCartUserHeader();
             renderCart();
         } else if (currentTab === 'categories') {
-            // загрузка данных для категорий
+
         } else if (currentTab === 'user-profile') {
             await loadUserData();
         }
