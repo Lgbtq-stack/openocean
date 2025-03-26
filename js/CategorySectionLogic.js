@@ -166,17 +166,12 @@ export async function loadCategories(page = 1, category) {
     }
 
     try {
-        console.log(`Loading category: ${category.name}`);
-
         const response = await fetch(`https://miniappservcc.com/api/collections?collection_id=${category.id}&page=${page}`);
         if (!response.ok) throw new Error(`Fetch failed: ${response.status}`);
 
         const data = await response.json();
         const items = Array.isArray(data.data) ? data.data : [];
         const paging = data.paging || { page: 1, totalPages: 1 };
-
-        console.log("Fetched items:", items);
-
         const cardsContainer = document.getElementById("category-list");
         if (!cardsContainer) {
             console.error("Container #category-list not found");
@@ -192,6 +187,14 @@ export async function loadCategories(page = 1, category) {
             card.innerHTML = `
                 <div class="card-content">
                     <img src="${item.image}" alt="${item.name}" class="nft-image">
+                    <p class="nft-price">
+                    ${item.price}
+                    <img src="content/money-icon.png" alt="Money Icon" class="price-icon" /> or 
+                </p>
+                <p class="nft-price">
+                    1
+                    <img src="content/nft_extra.png" alt="NFT Extra Icon" class="price-icon" />
+                </p>
                     <h4>${item.name}</h4>
                     <p class="collection-label">🏷️ ${item.collection}</p>
                 </div>
@@ -384,6 +387,7 @@ searchInput.addEventListener('input', async (e) => {
                 </div>
                 <div class="nft-details">
                   <h3 class="nft-title">${item.name}</h3>
+                  <p class="nft-price">${item.price} <img src="content/money-icon.png" alt="Money Icon" class="price-icon" /></p>
                   <p>Collection: ${item.collection || 'Unknown'}</p>
                 </div>
                 <button class="details-button">
@@ -458,6 +462,7 @@ function renderNFTList(items) {
           </div>
           <div class="nft-details">
             <h3 class="nft-title">${item.name}</h3>
+            <p class="nft-price">${item.price} <img src="content/money-icon.png" alt="Money Icon" class="price-icon" /></p>
             <p>Collection: ${item.collection || 'Unknown'}</p>
           </div>
           <button class="details-button" onclick='showNFTDetails(${item.id}, ${JSON.stringify(items)})'>
@@ -468,8 +473,6 @@ function renderNFTList(items) {
         container.appendChild(card);
     });
 }
-
-
 
 window.sortCategoryList = sortCategoryList;
 window.closeSortPopup = closeSortPopup;

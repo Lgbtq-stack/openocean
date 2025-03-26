@@ -47,8 +47,6 @@ async function loadCategoriesOnce(includeAll = false) {
             name: c.meta.name,
         }));
 
-        console.log("Categories loaded and cached:", categoriesCache);
-
         return includeAll ? [{ id: "", name: "All" }, ...categoriesCache] : categoriesCache;
     } catch (error) {
         showErrorPopup("error", `Error loading categories: ${error.message}`);

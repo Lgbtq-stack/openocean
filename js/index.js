@@ -2,9 +2,10 @@ import {loadTrendingNFTs} from "./TrendingSectionLogic.js"
 import {hideCartUserHeader, hideSuccessfulPurchase, renderCart, showCartUserHeader} from "./CartLogic.js";
 import {closeNFTDetails} from "./ProductDetailsLogic.js";
 import {showErrorPopup} from "./PopupLogic.js";
-import {loadUserData} from "./UserPageLogic.js";
+import {loadUserData, setupUserTransactions} from "./UserPageLogic.js";
 import {loadHomepageLevelSummary} from "./HomePageLogic.js";
-import {createCategories, loadCategories} from "./CategorySectionLogic.js";
+import {createCategories} from "./CategorySectionLogic.js";
+import {startLiquidityCoroutine} from "./StellarHandler.js";
 
 export let user_Id = null;
 
@@ -53,6 +54,7 @@ window.setActiveTab = async function (selectedTab) {
 
         if (currentTab === 'main-menu') {
             await loadHomepageLevelSummary();
+            startLiquidityCoroutine();
         } else if (currentTab === 'trending-nfts') {
             await loadTrendingNFTs();
         } else if (currentTab === 'cart-section') {
@@ -83,6 +85,8 @@ async function initializeApp() {
     await loadTrendingNFTs();
     await loadHomepageLevelSummary();
     await createCategories();
+    startLiquidityCoroutine();
+
 }
 
 document.addEventListener("DOMContentLoaded", initializeApp);

@@ -46,13 +46,19 @@
             </div>
         </div>
 
+        <div class="liquidity-card">
+            <p class="liquidity-text">
+                Liquidity:  <span id="nft-balance">loading...</span>
+                <img src="content/money-icon.png" class="liquidity-icon" />
+            </p>
 
-        <div class="card">
-            <h3>Points to Next Level</h3>
-            <div class="progress-bar">
-                <div class="progress" style="width: 30%;"></div>
+            <div class="liquidity-bar">
+                <div class="liquidity-fill" id="liquidity-progress" style="width: 0%;"></div>
             </div>
-            <p class="points">1,000,000 to 0</p>
+
+            <div class="liquidity-timer">
+                Next update in: <span id="countdown-seconds">10</span>s
+            </div>
         </div>
     </section>
 
@@ -145,6 +151,17 @@
             </div>
 
             <button class="history-btn" id="history-btn">Purchase History</button>
+
+            <div class="user-transactions">
+                <h3 class="user-transactions-title">🧾 My NFT Collection</h3>
+
+                <div class="purchase-history-toggle">
+                    <button class="purchase-history-btn active" data-type="bought">Bought</button>
+                    <button class="purchase-history-btn" data-type="rent">Rent</button>
+                </div>
+
+                <div id="purchase-history-content" class="purchase-history-content"></div>
+            </div>
         </div>
     </section>
 
@@ -297,9 +314,19 @@
     </div>
 </div>
 
+<div id="cart-added-popup" class="cart-popup-overlay hidden">
+    <div class="cart-popup-box">
+        <p class="cart-popup-message">✅ Item added to cart</p>
+        <div class="cart-popup-actions">
+            <button class="cart-popup-btn cart-popup-continue">Continue</button>
+            <button class="cart-popup-btn cart-popup-goto">Go to Cart</button>
+        </div>
+    </div>
+</div>
 <!-- JS -->
 
 <script type="module" src="js/index.js"></script>
+<script type="module" src="js/StellarHandler.js"></script>
 <script type="module" src="js/CategorySectionLogic.js"></script>
 <script type="module" src="js/CartLogic.js"></script>
 <script type="module" src="js/UserPageLogic.js"></script>

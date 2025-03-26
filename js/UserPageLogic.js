@@ -39,6 +39,8 @@ export async function loadUserData() {
     if (avatar) {
         document.querySelector(".user-photo").src = avatar.src;
     }
+    setupUserTransactions();
+
 }
 
 function renderUserProgressLevel(user) {
@@ -207,6 +209,91 @@ document.getElementById("user-photo-button").addEventListener("click", () => {
     renderIconPanel();
 });
 
+
+export function setupUserTransactions() {
+    const toggleButtons = document.querySelectorAll(".purchase-history-btn");
+    const historyContainer = document.getElementById("purchase-history-content");
+
+    if (!toggleButtons.length || !historyContainer) return;
+
+    toggleButtons.forEach(btn => {
+        btn.addEventListener("click", async () => {
+            toggleButtons.forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+
+            const type = btn.dataset.type;
+            await loadUserHistory(type);
+        });
+    });
+
+    loadUserHistory("bought");
+}
+
+async function loadUserHistory(type) {
+    const container = document.getElementById("purchase-history-content");
+    container.innerHTML = "<p>Loading...</p>";
+
+    const endpoint =
+        type === "rent"
+            ? `https://miniappservcc.com/api/user/rentals?uid=${user_Id}`
+            : `https://miniappservcc.com/api/user/purchase_history?uid=${user_Id}`;
+
+    try {
+        const res = await fetch(endpoint);
+        const data = await res.json();
+
+        const list = type === "rent" ? data.rentals : data;
+
+        if (!Array.isArray(list) || list.length === 0) {
+            container.innerHTML = "<p>No items found.</p>";
+            return;
+        }
+
+        container.innerHTML = "";
+        list.forEach(item => {
+            const card = document.createElement("div");
+            card.className = "purchase-history-card";
+
+            if (type === "rent") {
+                const nft = item.nft;
+                const imageUrl = `https://miniappservcc.com/get-image?path=${nft.image}`;
+                const collectionName = nft.collection?.name || 'Unknown';
+                const rentedAt = new Date(item.rented_at).toLocaleString();
+                const expiresAt = new Date(item.expires_at).toLocaleString();
+
+                card.innerHTML = `
+                    <img src="${imageUrl}" alt="${nft.name}" class="purchase-history-img" />
+                    <div class="purchase-history-info">
+                        <div class="purchase-history-title">${nft.name}</div>
+                        <p><strong>Collection:</strong> ${collectionName}</p>
+                        <p><strong>Count:</strong> ${item.count}</p>
+                        <p><strong>Rent Price:</strong> ${item.rent_price * item.count} <img src="content/money-icon.png" class="price-icon" /></p>
+                        <p><strong>Duration:</strong> ${item.duration_months} month(s)</p>
+                        <p><strong>Rented:</strong> ${rentedAt}</p>
+                        <p><strong>Expires:</strong> ${expiresAt}</p>
+                    </div>
+                `;
+            } else {
+                card.innerHTML = `
+                    <img src="https://miniappservcc.com/get-image?path=${item.image}" class="purchase-history-img" />
+                    <div class="purchase-history-info">
+                        <strong class="purchase-history-title">${item.name}</strong>
+                        <p><b>Collection:</b> ${item.collection}</p>
+                        <p><b>Count:</b> ${item.count}</p>
+                        <p><b>Price:</b> ${item.price * item.count} <img src="content/${item.currency === 'nft' ? 'nft_extra' : 'money-icon'}.png" class="price-icon" /></p>
+                        <p ><b>Purchased: </b>${new Date(item.purchased_at).toLocaleString()}</p>
+                    </div>
+                `;
+            }
+
+            container.appendChild(card);
+        });
+
+    } catch (err) {
+        console.error("Error loading history:", err);
+        container.innerHTML = "<p>Error loading history.</p>";
+    }
+}
 
 window.closePopup = closePopup;
 window.closeIconPanel = closeIconPanel;

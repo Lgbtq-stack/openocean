@@ -1,3 +1,7 @@
+.hidden {
+    display: none !important;
+}
+
 #cart-section {
     max-width: 100vw;
     box-sizing: border-box;
@@ -74,7 +78,7 @@
     position: relative;
     background: white;
     border-radius: 16px;
-    padding: 15px;
+    padding: 15px 15px 15px 0px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.05);
     display: flex;
     flex-direction: column;
@@ -85,13 +89,6 @@
     display: flex;
     align-items: center;
     gap: 12px;
-}
-
-.cart-item-image {
-    width: 150px;
-    height: 120px;
-    object-fit: cover;
-    border-radius: 8px;
 }
 
 .cart-item-info .cart-item-title {
@@ -257,4 +254,201 @@
 .rent-price-display {
     margin-top: 8px;
     text-align: center;
+}
+/* Общие стили */
+.cart-item {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    margin-bottom: 24px;
+    padding: 16px;
+    transition: all 0.3s ease;
+}
+
+.cart-card-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.cart-item-image.large {
+    width: 140px;
+    height: 140px;
+    border-radius: 12px;
+    object-fit: cover;
+}
+
+.cart-item-info {
+    flex: 1;
+}
+
+.cart-item-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.cart-item-collection {
+    font-size: 14px;
+    color: #888;
+    margin: 4px 0 12px;
+}
+
+.cart-item-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.cart-btn {
+    padding: 4px 10px;
+    border: 1px solid #ccc;
+    background: #fff;
+    border-radius: 6px;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.cart-item-count {
+    font-size: 16px;
+    min-width: 24px;
+    text-align: center;
+}
+
+/* Переключатель режима */
+.purchase-toggle {
+    display: flex;
+    gap: 8px;
+    margin: 12px 0;
+}
+
+.purchase-toggle-btn {
+    flex: 1;
+    padding: 5px;
+    border: 1px solid #ccc;
+    background: #f9f9f9;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.purchase-toggle-btn.active {
+    background: #e0f0ff;
+    border-color: #409eff;
+    color: #409eff;
+}
+
+/* Блок цен */
+.cart-prices {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 12px 0;
+}
+
+.price-block {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.price-icon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+}
+
+.price-separator {
+    font-size: 12px;
+    color: #888;
+}
+
+/* Выбор валюты */
+.currency-toggle {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.currency-option {
+    flex: 1;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    background: #f0f0f0;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    text-align: center;
+}
+
+.currency-option.selected {
+    background: #cce5ff;
+    border-color: #339af0;
+    color: #0077cc;
+}
+
+/* Rent секция */
+.rent-section {
+    background: #f7f7f7;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 4px 8px var(--bg-color-light);
+}
+
+.rent-durations {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+}
+
+.rent-duration-btn {
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: #fff;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.rent-duration-btn.selected {
+    background-color: #bde0fe;
+    border-color: #339af0;
+    color: #0077cc;
+}
+
+.rent-price-display {
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+/* Кнопки Buy / Rent */
+.rent-now-btn,
+.buy-now-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #28a745;
+    box-shadow: 0 4px 8px var(--bg-color-light);
+
+    color: #fff;
+    border: none;
+    font-size: 15px;
+    font-weight: bold;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.buy-now-btn {
+    background-color: #007bff;
+}
+
+.rent-now-btn:hover {
+    background-color: #218838;
+}
+
+.buy-now-btn:hover {
+    background-color: #0069d9;
 }

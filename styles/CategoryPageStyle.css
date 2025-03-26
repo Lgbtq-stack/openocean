@@ -34,6 +34,10 @@
     border-top-right-radius: 18px;
 }
 
+.nft-details p {
+    font-size: 16px;
+}
+
 .nft-title {
     text-align: center;
 }
@@ -47,7 +51,7 @@
 
 .nft-card p {
     text-align: center;
-    font-size: 12px;
+    font-size: 14px;
     color: #666;
     margin-bottom: 8px;
 }

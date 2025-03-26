@@ -9,6 +9,7 @@ export async function showNFTDetails(id, dataSource) {
         const res = await fetch(`https://miniappservcc.com/api/nfts/search-nft?q=${encodeURIComponent(nft.name)}`);
         const json = await res.json();
 
+        console.log(json);
         if (Array.isArray(json.results)) {
             nft = json.results.find(item => item.name.toLowerCase() === nft.name.toLowerCase());
         }
@@ -62,12 +63,33 @@ export async function showNFTDetails(id, dataSource) {
                     image: nft.image,
                     collection: nft.collection || 'Unknown',
                     price: nft.price,
-                    count: 1
+                    count: 1,
+                    rent_price_1m: nft.rent_price_1m,
+                    rent_price_3m: nft.rent_price_3m,
+                    rent_price_6m: nft.rent_price_6m,
+                    rent_price_12m: nft.rent_price_12m,
+                    rent_price_24m: nft.rent_price_24m,
+                    rent_price_60m: nft.rent_price_60m
                 });
-                showSuccessPopup("✔ Added to cart");
-                closeNFTDetails();
+
+                document.getElementById('cart-added-popup')?.classList.remove('hidden');
             };
         }
+
+        document.querySelector('.cart-popup-continue')?.addEventListener('click', () => {
+            document.getElementById('cart-added-popup')?.classList.add('hidden');
+            document.getElementById('nftDetailsPanel')?.classList.remove('show');
+            document.body.style.overflow = '';
+        });
+
+        document.querySelector('.cart-popup-goto')?.addEventListener('click', () => {
+            document.getElementById('cart-added-popup')?.classList.add('hidden');
+            document.getElementById('nftDetailsPanel')?.classList.remove('show');
+            document.body.style.overflow = '';
+
+            setActiveTab(document.querySelector('.nav-item.cart'));
+        });
+
     }, 0);
 }
 
