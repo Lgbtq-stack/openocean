@@ -12,12 +12,13 @@
 }
 .purchased-items-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 16px;
     padding: 10px;
     margin: 20px 0;
     max-height: 400px;
     overflow-y: auto;
+
 }
 
 .purchased-item-card {

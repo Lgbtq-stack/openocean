@@ -69,6 +69,7 @@ window.setActiveTab = async function (selectedTab) {
         // await hideLoader();
         closeNFTDetails();
         hideSuccessfulPurchase();
+        goBack();
     }
 };
 
