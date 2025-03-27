@@ -23,7 +23,7 @@ export async function showNFTDetails(id, dataSource) {
         return;
     }
 
-    document.getElementById('nft-image').src = `https://miniappservcc.com/get-image?path=${nft.image}`;
+    document.getElementById('nft-image').src = `https://miniappservcc.com${nft.image}`;
     document.getElementById('nft-title').textContent = nft.name;
     document.getElementById('nft-description').textContent = nft.description || 'No description available';
     document.getElementById('nft-collection').textContent = nft.collection || 'Unknown';

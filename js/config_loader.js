@@ -117,7 +117,7 @@ function renderPurchasedNFTs(nfts) {
 
             nftCard.innerHTML = `
                 <div class="my-nft-image-container">
-                    <img src="https://miniappservcc.com/get-image?path=${nft.image}" alt="${nft.name}" class="my-nft-card-image">
+                    <img src="https://miniappservcc.com${nft.image}" alt="${nft.name}" class="my-nft-card-image">
                 </div>
                 <h3 class="my-nft-card-title">${nft.name}</h3>
                 <div class="my-nft-info-row">
@@ -397,7 +397,7 @@ async function loadCategories(page, category) {
 
             card.innerHTML = `
                 <div class="nft-image-container">
-                    <img src="https://miniappservcc.com/get-image?path=${item.image}" alt="${item.name}" class="nft-image">
+                    <img src="https://miniappservcc.com${item.image}" alt="${item.name}" class="nft-image">
                 </div>
                 <div class="nft-details">
                     <h3 class="nft-title">${item.name}</h3>

@@ -16,7 +16,7 @@ export async function loadTrendingNFTs() {
             card.className = 'card';
 
             card.innerHTML = `
-                <img src="https://miniappservcc.com/get-image?path=${nft.image}" alt="${nft.name}">
+                <img src="https://miniappservcc.com${nft.image}" alt="${nft.name}">
                 <h3>${nft.name}</h3>
                 <p class="collection">Collection: ${nft.collection || 'Unknown'}</p>            
 <!--                <p class="nft-price">${nft.price} <img src="content/money-icon.png" alt="Money Icon" class="price-icon" /></p>-->

@@ -28,7 +28,7 @@ export async function showPurchaseHistoryPage() {
 
             return `
                 <div class="history-item">
-                    <img src="https://miniappservcc.com/get-image?path=${item.nft.image}" alt="${item.name}" class="history-image">
+                    <img src="https://miniappservcc.com${item.nft.image}" alt="${item.name}" class="history-image">
                     <div class="history-info">
                         <h4>${item.nft.name}</h4>
                         <p><strong>Collection:</strong> ${item.nft.collection.name}</p>
