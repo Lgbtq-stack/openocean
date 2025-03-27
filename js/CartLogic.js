@@ -57,11 +57,8 @@ export function renderCart() {
                         <span class="cart-item-count">${item.count}</span>
                         <button class="cart-btn" onclick="updateItemCount(${item.id}, 1)">+</button>
                     </div>
-                    
                 </div>
             </div>
-
-            
 
             <div class="buy-section ${mode === 'buy' ? '' : 'hidden'}" id="buy-section-${item.id}">
                 <div class="currency-toggle">
@@ -137,8 +134,6 @@ export function renderCart() {
                 updateTotalSummary();
             });
         });
-
-
 
         document.querySelectorAll('.buy-now-btn').forEach(btn => {
             btn.addEventListener('click', async () => {

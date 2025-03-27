@@ -1,7 +1,6 @@
 import {user_Id} from "./index.js";
 import {levelsConfig} from "./user_level_bonus_config.js";
 import {showPurchaseHistoryPage} from "./HistoryPageLogic.js";
-import {Cart} from "./CartLogic.js";
 import {showErrorPopup} from "./PopupLogic.js";
 import {showSuccessPopup} from "./Utilities.js";
 
@@ -226,33 +225,28 @@ export function setupUserTransactions() {
 
     if (!toggleButtons.length || !historyContainer) return;
 
-    toggleButtons.forEach(btn => {
-        btn.addEventListener("click", async () => {
-            toggleButtons.forEach(b => b.classList.remove("active"));
-            btn.classList.add("active");
+    // toggleButtons.forEach(btn => {
+    //     btn.addEventListener("click", async () => {
+    //         toggleButtons.forEach(b => b.classList.remove("active"));
+    //         btn.classList.add("active");
+    //
+    //         const type = btn.dataset.type;
+    //         await loadUserHistory(type);
+    //     });
+    // });
 
-            const type = btn.dataset.type;
-            await loadUserHistory(type);
-        });
-    });
-
-    loadUserHistory("bought");
+    loadUserHistory();
 }
 
-async function loadUserHistory(type) {
+async function loadUserHistory() {
     const container = document.getElementById("purchase-history-content");
     container.innerHTML = "<p>Loading...</p>";
 
-    const endpoint =
-        type === "rent"
-            ? `https://miniappservcc.com/api/user/rentals?uid=${user_Id}`
-            : `https://miniappservcc.com/api/user/purchase_history?uid=${user_Id}`;
 
     try {
-        const res = await fetch(endpoint);
-        const data = await res.json();
+        const res = await fetch(`https://miniappservcc.com/api/collections?user_id=${user_Id}`);
+        const { data: list } = await res.json();
 
-        const list = type === "rent" ? data.rentals : data;
 
         if (!Array.isArray(list) || list.length === 0) {
             container.innerHTML = "<p>No items found.</p>";
@@ -264,30 +258,30 @@ async function loadUserHistory(type) {
             const card = document.createElement("div");
             card.className = "purchase-history-card";
             card.innerHTML = `
-                <img src="https://miniappservcc.com/get-image?path=${item.image}" class="purchase-history-img" />
+                <img src="${item.image}" class="purchase-history-img" />
                 <div class="purchase-history-info">
                     <strong class="purchase-history-title">${item.name}</strong>
-                    <p><b>Collection:</b> ${item.collection}</p>
+                    <p><b>Collection:</b> ${item.collection.name}</p>
                     <p><b>Count:</b> ${item.count}</p>
                     <p><b>Price:</b> ${item.price * item.count} <img src="content/${item.currency === 'nft' ? 'nft_extra' : 'money-icon'}.png" class="price-icon" /></p>
-                    <p ><b>Purchased: </b>${new Date(item.purchased_at).toLocaleString()}</p>
                 </div>
                 <div class="rent-durations">
                     ${[1, 3, 6, 12, 24, 60].map(m => {
                                 const rentPrice = item[`rent_price_${m}m`] || 0;
+                                const totalPrice = rentPrice * (item.count || 1);
                                 return `<button class="rent-duration-btn ${item.duration == m ? 'selected' : ''}" 
-                                    data-id="${item.id}" 
-                                    data-duration="${m}" 
-                                    data-price="${rentPrice}">
-                                    ${m}m
-                                </button>`;
+                            data-id="${item.id}" 
+                            data-duration="${m}" 
+                            data-price="${totalPrice}">
+                            
+                            ${m}m
+                        </button>`;
                             }).join('')}
                 </div>
                  <div class="rent-price-display" id="rent-price-${item.id}"></div>
-                 <button class="rent-now-btn" data-id="${item.id}" data-duration="${item.duration}">Rent</button>
+                 <button class="rent-now-btn" data-id="${item.id}" data-duration="${item.duration}" data-count="${item.count}"">Rent</button>
             `;
             container.appendChild(card);
-            console.log(item);
         });
 
     } catch (err) {
@@ -320,13 +314,14 @@ async function loadUserHistory(type) {
 
     container.querySelectorAll(".rent-now-btn").forEach(btn => {
         btn.addEventListener('click', async () => {
-            const id = btn.dataset.id;
-            const duration = btn.dataset.duration;
+            const id = Number(btn.dataset.id);
+            const duration = Number(btn.dataset.duration);
+            const count = Number(btn.dataset.count);
 
             if (!duration) return alert("Select duration");
 
             try {
-                const res = await fetch(`https://miniappservcc.com/api/nft/rent?uid=${user_Id}&nft_id=${id}&duration=${duration}&count=1`);
+                const res = await fetch(`https://miniappservcc.com/api/nft/rent?uid=${user_Id}&nft_id=${id}&duration=${duration}&count=${count}`);
                 if (!res.ok) throw new Error("Rent request failed");
                 showSuccessPopup("✅ Rented successfully!");
                 await loadUserHistory("rent");
