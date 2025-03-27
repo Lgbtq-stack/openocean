@@ -265,7 +265,7 @@ async function loadUserHistory() {
                     <p><b>Count:</b> ${item.count}</p>
                     <p><b>Price:</b> ${item.price * item.count} <img src="content/${item.currency === 'nft' ? 'nft_extra' : 'money-icon'}.png" class="price-icon" /></p>
                 </div>
-                <div class="rent-durations">
+                /*<div class="rent-durations">
                     ${[1, 3, 6, 12, 24, 60].map(m => {
                                 const rentPrice = item[`rent_price_${m}m`] || 0;
                                 const totalPrice = rentPrice * (item.count || 1);
@@ -279,7 +279,7 @@ async function loadUserHistory() {
                             }).join('')}
                 </div>
                  <div class="rent-price-display" id="rent-price-${item.id}"></div>
-                 <button class="rent-now-btn" data-id="${item.id}" data-duration="${item.duration}" data-count="${item.count}"">Rent</button>
+                 <button class="rent-now-btn" data-id="${item.id}" data-duration="${item.duration}" data-count="${item.count}"">Rent</button>*/
             `;
             container.appendChild(card);
         });

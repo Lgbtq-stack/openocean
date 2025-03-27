@@ -90,78 +90,69 @@ export function renderCart() {
     itemsContainer.appendChild(summary);
 
     setTimeout(() => {
-        document.querySelectorAll(".purchase-toggle-btn").forEach(btn => {
-            btn.addEventListener("click", () => {
-                const id = btn.dataset.id;
-                const mode = btn.dataset.mode;
-
-                Cart.updateItemMode(id, mode);
-
-                const items = Cart.getItems();
-                const item = items.find(i => String(i.id) === id);
-                if (item) {
-                    item.mode = mode;
-                    Cart.saveItems(items);
-                }
-
-                document.querySelectorAll(`.purchase-toggle-btn[data-id='${id}']`).forEach(b => b.classList.remove("active"));
-                btn.classList.add("active");
-
-                const rentSection = document.getElementById(`rent-section-${id}`);
-                const buySection = document.getElementById(`buy-section-${id}`);
-
-                if (rentSection && buySection) {
-                    rentSection.classList.add("hidden");
-                    buySection.classList.add("hidden");
-                    if (mode === "rent") rentSection.classList.remove("hidden");
-                    else if (mode === "buy") buySection.classList.remove("hidden");
-                }
-
-                updateTotalSummary();
-            });
-        });
-
-
         document.querySelectorAll(".currency-option").forEach(option => {
             option.addEventListener("click", () => {
                 const id = option.dataset.id;
                 const currency = option.dataset.currency;
 
-                document.querySelectorAll(`.currency-option[data-id='${id}']`).forEach(b => b.classList.remove("selected"));
+                Cart.updateItemMoneyType(id, currency);
+
+                document.querySelectorAll(`.currency-option[data-id='${id}']`)
+                    .forEach(b => b.classList.remove("selected"));
                 option.classList.add("selected");
 
-                document.querySelector(`.buy-now-btn[data-id='${id}']`).dataset.currency = currency;
+                const btn = document.querySelector(`.buy-now-btn[data-id='${id}']`);
+                if (btn) {
+                    btn.dataset.currency = currency;
+                }
+
                 updateTotalSummary();
             });
         });
 
-        document.querySelectorAll('.buy-now-btn').forEach(btn => {
+
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        document.querySelectorAll('.pay-now-btn').forEach(btn => {
             btn.addEventListener('click', async () => {
-                const id = btn.dataset.id;
-                const currency = btn.dataset.currency;
-                const item = Cart.getItems().find(i => String(i.id) === id);
-                const count = item?.count || 1;
-                const endpoint = currency === 'usd' ? 'buy' : 'buyEx';
 
-                try {
-                    const res = await fetch(`https://miniappservcc.com/api/nft/${endpoint}?uid=${user_Id}&nft_id=${id}&count=${count}`);
-                    if (!res.ok) throw new Error("Buy request failed");
-                    Cart.removeItem(Number(id));
-                    renderCart();
-                    handleSuccessfulPurchase();
+                const items = Cart.getItems();
+                const usdPurchases = [];
+                const nftPurchases = [];
 
-                } catch (err) {
-                    showErrorPopup("Buy failed", err.message);
+                items.forEach(item => {
+                    const itemCurrency = item.moneyType || 'usd';
+
+                    if (itemCurrency === "usd") {
+                        usdPurchases.push({ id: item.id, count: item.count });
+                    } else if (itemCurrency === "nft") {
+                        nftPurchases.push({ id: item.id, count: item.count });
+                    }
+                });
+
+                for (const product of usdPurchases) {
+
+                    await sendDataToTelegramTest(user_Id, product.id, product.count);
+                    await delay(600);
                 }
+
+                for (const product of nftPurchases) {
+
+                    await sendDataToTelegramExtra(user_Id, product.id, product.count);
+                    await delay(600);
+                }
+
+                Cart.clearCart();
+                renderCart();
+                handleSuccessfulPurchase();
             });
         });
-
 
         updateTotalSummary();
     }, 0);
 }
-
-
 
 async function sendDataToTelegramTest(user_id, nft_id, count) {
     try {
@@ -207,9 +198,14 @@ function updateTotalSummary() {
         const mode = item.mode || 'buy';
 
         if (mode === 'buy') {
-            const currency = document.querySelector(`.buy-now-btn[data-id='${id}']`)?.dataset.currency || 'usd';
-            if (currency === 'usd') totalUSD += item.price * count;
-            else totalNFT += count;
+            const selectedCurrencyBtn = document.querySelector(`.currency-option.selected[data-id='${id}']`);
+            const currency = selectedCurrencyBtn?.dataset.currency || 'usd';
+
+            if (currency === 'usd') {
+                totalUSD += item.price * count;
+            } else if (currency === 'nft') {
+                totalNFT += count;
+            }
         }
 
         if (mode === 'rent') {
@@ -257,6 +253,10 @@ export const Cart = {
         const items = this.getItems();
         const existing = items.find(i => i.id === item.id);
 
+        if (!item.moneyType) {
+            item.moneyType = 'usd';
+        }
+
         if (existing) {
             existing.count += item.count;
         } else {
@@ -280,11 +280,11 @@ export const Cart = {
         return this.getItems().reduce((total, item) => total + item.count, 0);
     },
 
-    updateItemMode: function(id, mode) {
+    updateItemMoneyType: function(id, moneyType) {
         const items = this.getItems();
         const item = items.find(i => i.id === Number(id));
         if (item) {
-            item.mode = mode;
+            item.moneyType = moneyType;
             this.saveItems(items);
         }
     },
@@ -326,8 +326,6 @@ function handleSuccessfulPurchase() {
     const purchasedItems = Cart.getItems();
     if (!purchasedItems.length) return;
 
-    Cart.clearCart();
-    renderCart();
 
     document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
     const section = document.getElementById('purchase-success');
