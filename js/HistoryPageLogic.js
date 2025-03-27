@@ -28,13 +28,13 @@ export async function showPurchaseHistoryPage() {
 
             return `
                 <div class="history-item">
-                    <img src="https://miniappservcc.com/get-image?path=${item.image}" alt="${item.name}" class="history-image">
+                    <img src="https://miniappservcc.com/get-image?path=${item.nft.image}" alt="${item.name}" class="history-image">
                     <div class="history-info">
-                        <h4>${item.name}</h4>
-                        <p><strong>Collection:</strong> ${item.collection}</p>
+                        <h4>${item.nft.name}</h4>
+                        <p><strong>Collection:</strong> ${item.nft.collection.name}</p>
                         <p>
                             <strong>Price:</strong>
-                            $${item.price.toLocaleString()} × ${item.count}
+                            $${item.nft.price.toLocaleString()} × ${item.count}
                         </p>
                         <p><strong>Type:</strong> 
                             <img src="${iconSrc}" alt="${iconAlt}" class="price-icon" /></p>
