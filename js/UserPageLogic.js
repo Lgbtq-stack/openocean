@@ -243,11 +243,9 @@ async function loadUserHistory() {
     const container = document.getElementById("purchase-history-content");
     container.innerHTML = "<p>Loading...</p>";
 
-
     try {
-        const res = await fetch(`https://miniappservcc.com/api/collections?user_id=${user_Id}`);
+        const res = await fetch(`https://miniappservcc.com/api/user/mynft?uid=${user_Id}`);
         const { data: list } = await res.json();
-
 
         if (!Array.isArray(list) || list.length === 0) {
             container.innerHTML = "<p>No items found.</p>";
@@ -255,68 +253,125 @@ async function loadUserHistory() {
         }
 
         container.innerHTML = "";
-        list.forEach(item => {
-            const card = document.createElement("div");
-            card.className = "purchase-history-card";
-            card.innerHTML = `
-                <img src="https://miniappservcc.com/get-image?path=${item.image}" class="purchase-history-img" />
-                <div class="purchase-history-info">
-                    <strong class="purchase-history-title">${item.name}</strong>
-                    <p><b>Collection:</b> ${item.collection.name}</p>
-                    <p><b>Count:</b> ${item.count}</p>
-                    <p><b>Price:</b> ${item.price * item.count} <img src="content/${item.currency === 'nft' ? 'nft_extra' : 'money-icon'}.png" class="price-icon" /></p>
-                </div>
-            `;
-            container.appendChild(card);
+
+        list
+            .filter(item => item.nft && Object.keys(item.nft).length > 0)
+            .forEach(item => {
+                const card = document.createElement("div");
+                card.className = "purchase-history-card";
+
+                // Выбор первой длительности по умолчанию
+                const firstDuration = 1;
+                const firstPrice = (item.nft[`rent_price_${firstDuration}m`] || 0) * item.count;
+
+                const rentBlock = !item.rent ? `
+                    <div class="rent-durations">
+                        ${[1, 3, 6, 12, 24, 60].map((m, i) => {
+                    const rentPrice = item.nft[`rent_price_${m}m`] || 0;
+                    const totalPrice = rentPrice * (item.count || 1);
+                    const selected = i === 0 ? 'selected' : '';
+                    return `<button class="rent-duration-btn ${selected}" 
+                                data-id="${item.id}" 
+                                data-duration="${m}" 
+                                data-price="${totalPrice}">
+                                ${m}m
+                            </button>`;
+                }).join('')}
+                    </div>
+                    <div class="rent-price-display" id="rent-price-${item.id}">
+                        For ${firstDuration}m you will receive: ${firstPrice} 
+                        <img src="/content/xml-icon.png" class="price-icon" />
+                    </div>
+                    <button class="rent-now-btn" 
+                        data-id="${item.id}" 
+                        data-duration="${firstDuration}" 
+                        data-count="${item.count}">
+                        Rent
+                    </button>
+                ` : `
+                    <div class="rent-price-display rent-receive-display">
+                        You will receive ${item.nft[`rent_price_${item.rent.duration_months}m`] * item.count} 
+                        <img src="/content/xml-icon.png" class="price-icon" />
+                    </div>
+                `;
+
+                card.innerHTML = `
+                    <img src="https://miniappservcc.com/get-image?path=${item.nft.image}" class="purchase-history-img" />
+                    <div class="purchase-history-info">
+                        <strong class="purchase-history-title">${item.nft.name}</strong>
+                        <p><b>Collection:</b> ${item.nft.collection.name}</p>
+                        <p><b>Count:</b> ${item.count}</p>
+                        <p><b>Price:</b> ${item.nft.price * item.count} 
+                            <img src="content/money-icon.png" class="price-icon" />
+                        </p>
+                    </div>
+                    ${rentBlock}
+                `;
+
+                container.appendChild(card);
+            });
+
+        container.querySelectorAll(".rent-duration-btn").forEach(btn => {
+            btn.addEventListener("click", () => {
+                const id = btn.dataset.id;
+                const duration = btn.dataset.duration;
+                const price = btn.dataset.price;
+
+                const card = btn.closest(".purchase-history-card");
+
+                card.querySelectorAll(`.rent-duration-btn[data-id='${id}']`)
+                    .forEach(b => b.classList.remove("selected"));
+                btn.classList.add("selected");
+
+                const rentBtn = card.querySelector(`.rent-now-btn[data-id='${id}']`);
+                if (rentBtn) rentBtn.dataset.duration = duration;
+
+                const display = card.querySelector(`#rent-price-${id}`);
+                if (display) {
+                    display.innerHTML = `For ${duration}m you will receive: ${price} 
+                        <img src="/content/xml-icon.png" class="price-icon" />`;
+                }
+            });
         });
+
+        container.querySelectorAll(".rent-now-btn").forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const id = Number(btn.dataset.id);
+                const duration = Number(btn.dataset.duration);
+
+                if (!duration) return alert("Select duration");
+
+                try {
+                    const res = await fetch(`https://miniappservcc.com/api/nft/rent?uid=${user_Id}&user_nft_id=${id}&duration=${duration}`);
+                    if (!res.ok) throw new Error("Rent request failed");
+
+                    showSuccessPopup("✅ Rented successfully!");
+
+                    const card = btn.closest(".purchase-history-card");
+                    const rentPrice = card.querySelector(`.rent-duration-btn.selected`)?.dataset.price || 0;
+
+                    card.querySelectorAll(".rent-durations, .rent-now-btn").forEach(el => el.remove());
+
+                    const priceDisplay = card.querySelector(".rent-price-display");
+                    if (priceDisplay) {
+                        priceDisplay.classList.add("rent-receive-display");
+                        priceDisplay.innerHTML = `
+                    You will receive ${rentPrice}
+                    <img src="/content/xml-icon.png" class="price-icon" />
+                `;
+                    }
+
+                } catch (err) {
+                    showErrorPopup("warning", "Rent failed");
+                }
+            });
+        });
+
 
     } catch (err) {
         console.error("Error loading history:", err);
         container.innerHTML = "<p>Error loading history.</p>";
     }
-
-    container.querySelectorAll(".rent-duration-btn").forEach(btn => {
-        btn.addEventListener("click", () => {
-            const id = btn.dataset.id;
-            const duration = btn.dataset.duration;
-            const price = btn.dataset.price;
-
-            const card = btn.closest(".purchase-history-card");
-
-            card.querySelectorAll(`.rent-duration-btn[data-id='${id}']`)
-                .forEach(b => b.classList.remove("selected"));
-            btn.classList.add("selected");
-
-            const rentBtn = card.querySelector(`.rent-now-btn[data-id='${id}']`);
-            if (rentBtn) rentBtn.dataset.duration = duration;
-
-            const display = card.querySelector(`#rent-price-${id}`);
-            if (display) {
-                display.innerHTML = `Rent for ${duration}m: ${price} <img src="content/money-icon.png" class="price-icon" />`;
-            }
-        });
-    });
-
-
-    container.querySelectorAll(".rent-now-btn").forEach(btn => {
-        btn.addEventListener('click', async () => {
-            const id = Number(btn.dataset.id);
-            const duration = Number(btn.dataset.duration);
-            const count = Number(btn.dataset.count);
-
-            if (!duration) return alert("Select duration");
-
-            try {
-                const res = await fetch(`https://miniappservcc.com/api/nft/rent?uid=${user_Id}&nft_id=${id}&duration=${duration}&count=${count}`);
-                if (!res.ok) throw new Error("Rent request failed");
-                showSuccessPopup("✅ Rented successfully!");
-                await loadUserHistory("rent");
-            } catch (err) {
-                showErrorPopup("Rent failed", err.message);
-            }
-        });
-    });
-
 }
 
 

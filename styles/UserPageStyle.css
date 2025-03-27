@@ -482,5 +482,20 @@
 }
 
 .rent-price-display {
-    font-size: 20px;
+
+    background-color: var(--primary);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px var(--bg-color-light);
+    padding: 8px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--white);
+    white-space: nowrap;
+    text-align: center;
 }
+
+
+.rent-price-display .price-icon {
+    width: 26px;
+}
+
