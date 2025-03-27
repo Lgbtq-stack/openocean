@@ -48,7 +48,7 @@ export function renderCart() {
         <div class="cart-card">
             <button class="remove-item-btn" onclick="Cart.removeItem(${item.id}); renderCart();">✕</button>
             <div class="cart-card-header">
-                <img src="https://miniappservcc.com${item.image}" class="cart-item-image large" alt="${item.name}" />
+                <img src="https://miniappservcc.com/get-image?path={item.image}" class="cart-item-image large" alt="${item.name}" />
                 <div class="cart-item-info">
                     <strong class="cart-item-title">${item.name}</strong>
                     <p class="cart-item-collection">${item.collection || "Collection"}</p>
@@ -338,7 +338,7 @@ function handleSuccessfulPurchase() {
         const card = document.createElement('div');
         card.classList.add('purchased-item-card');
         card.innerHTML = `
-            <img src="https://miniappservcc.com${item.image}" class="purchased-image-small" alt="${item.name}" />
+            <img src="https://miniappservcc.com/get-image?path=${item.image}" class="purchased-image-small" alt="${item.name}" />
             <h3 class="purchased-title">${item.name}</h3>
             <p class="purchased-author">by ${item.collection || 'Unknown'}</p>
         `;

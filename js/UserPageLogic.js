@@ -259,7 +259,7 @@ async function loadUserHistory() {
             const card = document.createElement("div");
             card.className = "purchase-history-card";
             card.innerHTML = `
-                <img src="https://miniappservcc.com${item.image}" class="purchase-history-img" />
+                <img src="https://miniappservcc.com/get-image?path=${item.image}" class="purchase-history-img" />
                 <div class="purchase-history-info">
                     <strong class="purchase-history-title">${item.name}</strong>
                     <p><b>Collection:</b> ${item.collection.name}</p>
