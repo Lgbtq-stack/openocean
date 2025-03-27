@@ -17,7 +17,7 @@ function renderCategoryCards(items) {
         card.className = "nft-card";
 
         card.innerHTML = `
-            <img src="${item.image}" alt="${item.name}">
+            <img src="https://miniappservcc.com/get-image?path=${item.image}" alt="${item.name}">
             <h4>${item.name}</h4>
             <p>$${item.price.toLocaleString()}</p>
         `;
@@ -187,7 +187,7 @@ export async function loadCategories(page = 1, category) {
 
             card.innerHTML = `
                 <div class="card-content">
-                    <img src="${item.image}" alt="${item.name}" class="nft-image">
+                    <img src="https://miniappservcc.com/get-image?path=${item.image}" alt="${item.name}" class="nft-image">
                     <p class="nft-price">
                     ${item.price}
                     <img src="content/money-icon.png" alt="Money Icon" class="price-icon" /> or 
@@ -531,7 +531,7 @@ function renderNFTList(items) {
 
         card.innerHTML = `
           <div class="nft-image-container">
-            <img src="${item.image}" alt="${item.name}" class="nft-image">
+            <img src="https://miniappservcc.com/get-image?path=${item.image}" alt="${item.name}" class="nft-image">
           </div>
           <div class="nft-details">
             <h3 class="nft-title">${item.name}</h3>
