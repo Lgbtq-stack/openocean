@@ -53,6 +53,10 @@ export async function showNFTDetails(id, dataSource) {
 
     document.querySelector('.close-panel')?.addEventListener('click', closeNFTDetails, { once: true });
 
+    let quantity = 1;
+    const qtyValue = document.getElementById("nft-qty-value");
+    if (qtyValue) qtyValue.textContent = quantity;
+
     setTimeout(() => {
         const addToCartBtn = document.querySelector('.add-to-cart-button');
 
