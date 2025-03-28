@@ -55,6 +55,21 @@ export async function showNFTDetails(id, dataSource) {
 
     setTimeout(() => {
         const addToCartBtn = document.querySelector('.add-to-cart-button');
+
+        let quantity = 1;
+
+        document.getElementById("nft-qty-increment")?.addEventListener("click", () => {
+            quantity++;
+            document.getElementById("nft-qty-value").textContent = quantity;
+        });
+
+        document.getElementById("nft-qty-decrement")?.addEventListener("click", () => {
+            if (quantity > 1) {
+                quantity--;
+                document.getElementById("nft-qty-value").textContent = quantity;
+            }
+        });
+
         if (addToCartBtn) {
             addToCartBtn.onclick = () => {
                 Cart.addItem({
@@ -63,7 +78,7 @@ export async function showNFTDetails(id, dataSource) {
                     image: nft.image,
                     collection: nft.collection || 'Unknown',
                     price: nft.price,
-                    count: 1,
+                    count: quantity,
                     rent_price_1m: nft.rent_price_1m,
                     rent_price_3m: nft.rent_price_3m,
                     rent_price_6m: nft.rent_price_6m,
@@ -75,6 +90,7 @@ export async function showNFTDetails(id, dataSource) {
                 document.getElementById('cart-added-popup')?.classList.remove('hidden');
             };
         }
+
 
         document.querySelector('.cart-popup-continue')?.addEventListener('click', () => {
             document.getElementById('cart-added-popup')?.classList.add('hidden');
