@@ -6,6 +6,7 @@ import {loadUserData} from "./UserPageLogic.js";
 import {loadHomepageLevelSummary} from "./HomePageLogic.js";
 import {createCategories} from "./CategorySectionLogic.js";
 import {startLiquidityCoroutine} from "./StellarHandler.js";
+import {scrollToTop} from "./Utilities.js";
 
 export let user_Id = null;
 
@@ -19,6 +20,15 @@ document.addEventListener('DOMContentLoaded', () => {
     Telegram.WebApp.expand();
     tg = Telegram.WebApp;
 });
+
+function openWebPage() {
+    const url = document.getElementById("link-address-popup").textContent.trim();
+    if (url) {
+        window.open(url, '_blank');
+    } else {
+        console.error("URL is empty or invalid.");
+    }
+}
 
 window.setActiveTab = async function (selectedTab) {
     // await showLoader();
@@ -69,13 +79,15 @@ window.setActiveTab = async function (selectedTab) {
         // await hideLoader();
         closeNFTDetails();
         hideSuccessfulPurchase();
+        scrollToTop();
         goBack();
+        goDepositHistoryBack();
     }
 };
 
 async function initializeApp() {
     // user_Id = getUserIdFromURL();
-    user_Id = 7568295563;
+    user_Id = 350104566;
 
     if (!user_Id) {
         showErrorPopup("error", "User ID is missing in the URL.");
@@ -88,5 +100,8 @@ async function initializeApp() {
     startLiquidityCoroutine();
 
 }
+
+window.openWebPage = openWebPage;
+
 
 document.addEventListener("DOMContentLoaded", initializeApp);
