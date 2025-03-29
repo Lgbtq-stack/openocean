@@ -183,7 +183,7 @@
 
         <div id="purchased-items" class="purchased-items-grid">
         </div>
-        <button class="view-collection-btn" onclick="setActiveTab(document.querySelector('.nav-item.trending'))">
+        <button class="view-collection-btn" onclick="completePurchase()">
             Go Shopping
         </button>
     </section>
@@ -261,10 +261,20 @@
             </span>
         </div>
 
+        <div class="currency-toggle">
+            <div class="currency-option selected" id="currency-usd">USD</div>
+            <div class="currency-option" id="currency-nft">NFT</div>
+        </div>
+
         <div class="quantity-controls">
             <button class="qty-btn decrement" id="nft-qty-decrement">−</button>
             <span id="nft-qty-value">1</span>
             <button class="qty-btn increment" id="nft-qty-increment">+</button>
+        </div>
+
+        <div class="total-price-display">
+            Total: <span id="total-price-value"></span>
+            <img id="total-price-icon" class="price-icon" />
         </div>
 
         <button class="add-to-cart-button">Add to Cart</button>

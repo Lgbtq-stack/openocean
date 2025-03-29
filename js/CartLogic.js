@@ -18,12 +18,12 @@ export async function showCartUserHeader() {
     document.getElementById('user-balance').innerHTML = `
                 <img src="content/money-icon.png" class="price-icon" alt="NFT" />${userData.balance}`;
     document.getElementById('user-bonus').innerHTML = `
-                <img src="content/nft_extra.png" class="price-icon" alt="Extra" />${userData.balance_bonus}`;
+                <img src="content/nft_extra.png" class="price-icon" alt="Extra" />${userData.balance_extra}`;
     document.getElementById('user-level').textContent = `📊 ${userData.level}`;
     header.classList.add('show');
 
     window.usdBalance = userData.balance || 0;
-    window.nftBalance = userData.balance_bonus || 0;
+    window.nftBalance = userData.balance_extra || 0;
 }
 
 export function hideCartUserHeader() {
@@ -68,10 +68,10 @@ export function renderCart() {
 
             <div class="buy-section ${mode === 'buy' ? '' : 'hidden'}" id="buy-section-${item.id}">
                 <div class="currency-toggle">
-                    <div class="currency-option selected" data-id="${item.id}" data-currency="usd">
+                    <div class="currency-option ${item.moneyType === 'usd' ? 'selected' : ''}" data-id="${item.id}" data-currency="usd">
                         ${itemTotalUSD.toFixed(2)} <img src="content/money-icon.png" class="price-icon" />
                     </div>
-                    <div class="currency-option" data-id="${item.id}" data-currency="nft">
+                    <div class="currency-option ${item.moneyType === 'nft' ? 'selected' : ''}" data-id="${item.id}" data-currency="nft">
                         ${itemTotalNFT} <img src="content/nft_extra.png" class="price-icon" />
                     </div>
                 </div>
@@ -168,8 +168,6 @@ export function renderCart() {
                     await delay(600);
                 }
 
-                Cart.clearCart();
-                renderCart();
                 handleSuccessfulPurchase();
             });
         });
@@ -372,6 +370,12 @@ function handleSuccessfulPurchase() {
     section.style.display = 'block';
 }
 
+export function completePurchase() {
+
+    Cart.clearCart();
+    renderCart();
+    setActiveTab(document.querySelector('.nav-item.trending'));
+}
 
 export function hideSuccessfulPurchase() {
     const section = document.getElementById('purchase-success');
@@ -386,6 +390,7 @@ export function hideSuccessfulPurchase() {
 window.updateItemCount = updateItemCount;
 window.Cart = Cart;
 window.renderCart = renderCart;
+window.completePurchase = completePurchase;
 
 window.handleSuccessfulPurchase = handleSuccessfulPurchase;
 

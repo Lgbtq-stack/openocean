@@ -16,7 +16,16 @@ export async function showDepositHistoryPage() {
             return;
         }
 
-        container.innerHTML = data.map(item => {
+        const totalAmount = data.reduce((sum, item) => sum + Number(item.amount || 0), 0);
+
+        const totalHTML = `
+            <div class="deposit-total">
+                <strong>Total Deposited:</strong> $${totalAmount.toFixed(2)} 
+                <img src="/content/xml-icon.png" class="deposit-history-price-icon" />
+            </div>
+        `;
+
+        const itemsHTML = data.map(item => {
             const date = new Date(item.created_at).toLocaleString("en-US", {
                 year: 'numeric',
                 month: 'short',
@@ -36,6 +45,7 @@ export async function showDepositHistoryPage() {
             `;
         }).join('');
 
+        container.innerHTML = totalHTML + itemsHTML;
     } catch (err) {
         console.error(err);
         container.innerHTML = "<p>Error loading history.</p>";

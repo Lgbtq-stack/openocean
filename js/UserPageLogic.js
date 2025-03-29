@@ -309,7 +309,7 @@ async function loadUserHistory() {
                     </button>
                 ` : `
                     <div class="rent-price-display rent-receive-display">
-                        All ${item.count} items are rented out.
+                        All items are rented out.
                         <img src="/content/xml-icon.png" class="price-icon" />
                     </div>
                 `;
@@ -330,6 +330,43 @@ async function loadUserHistory() {
                     ${rentBlock}
                 `;
 
+                if (Array.isArray(item.rent) && item.rent.length > 0) {
+                    const summaryWrapper = document.createElement("div");
+                    summaryWrapper.className = "rent-summary-wrapper";
+
+                    const grouped = {};
+                    item.rent.forEach(r => {
+                        if (!grouped[r.duration_months]) grouped[r.duration_months] = 0;
+                        grouped[r.duration_months] += r.count;
+                    });
+
+                    let totalProfit = 0;
+
+                    Object.entries(grouped).forEach(([duration, count]) => {
+                        const pricePerOne = item.nft[`rent_price_${duration}m`] || 0;
+                        const subtotal = pricePerOne * count;
+                        totalProfit += subtotal;
+
+                        const panel = document.createElement("div");
+                        panel.className = "rent-summary-panel";
+                        panel.innerHTML = `
+                            <p><b>${count}</b> items rented for <b>${duration}m : <b>${subtotal}</b>
+                                <img src="/content/xml-icon.png" class="price-icon" />
+                            </p>`;
+                                        summaryWrapper.appendChild(panel);
+                                    });
+
+                                    const totalBlock = document.createElement("div");
+                                    totalBlock.className = "rent-summary-total";
+                                    totalBlock.innerHTML = `
+                        <p><b>Total Rental Income:</b> ${totalProfit} 
+                            <img src="/content/xml-icon.png" class="price-icon" />
+                        </p>
+                    `;
+
+                    summaryWrapper.appendChild(totalBlock);
+                    card.appendChild(summaryWrapper);
+                }
                 container.appendChild(card);
             });
 
@@ -419,32 +456,51 @@ async function loadUserHistory() {
                     const display = card.querySelector(`#rent-price-${id}`);
                     const totalPrice = count * pricePerMonth;
 
-                    // Обновляем текст In Rent / Available
+                    // Обновление отображения In Rent / Available
                     const rentInfo = card.querySelector(".purchase-history-info p:nth-child(3)");
                     const [currentInRent, currentAvailable] = rentInfo.textContent.match(/\d+/g).map(Number);
                     const newInRent = currentInRent + count;
                     const newAvailable = currentAvailable - count;
 
                     rentInfo.innerHTML = `
-                        <b>In Rent:</b> ${newInRent} /
-                        <b>Available:</b> ${newAvailable}
-                    `;
+                <b>In Rent:</b> ${newInRent} /
+                <b>Available:</b> ${newAvailable}
+            `;
+
+                    const qtyControl = card.querySelector(".rent-quantity-control");
+                    if (qtyControl) {
+                        qtyControl.dataset.max = newAvailable;
+
+                        const decrementBtn = qtyControl.querySelector(".decrement");
+                        const incrementBtn = qtyControl.querySelector(".increment");
+                        const qtyValue = qtyControl.querySelector(".qty-value");
+                        let currentQty = parseInt(qtyValue.textContent);
+
+                        if (currentQty > newAvailable) {
+                            currentQty = newAvailable;
+                            qtyValue.textContent = newAvailable;
+                            btn.dataset.count = newAvailable;
+                        }
+
+                        decrementBtn.disabled = currentQty <= 1;
+                        incrementBtn.disabled = currentQty >= newAvailable;
+                    }
 
                     if (newAvailable <= 0) {
                         card.querySelectorAll(".rent-durations, .rent-now-btn, .rent-quantity-control").forEach(el => el.remove());
                         if (display) {
                             display.classList.add("rent-receive-display");
                             display.innerHTML = `
-                                You will receive ${totalPrice}
-                                <img src="/content/xml-icon.png" class="price-icon" />
-                            `;
+                        You will receive ${totalPrice}
+                        <img src="/content/xml-icon.png" class="price-icon" />
+                    `;
                         }
                     } else {
                         if (display) {
                             display.innerHTML = `
-                                You will receive ${totalPrice}
-                                <img src="/content/xml-icon.png" class="price-icon" />
-                            `;
+                        You will receive ${totalPrice}
+                        <img src="/content/xml-icon.png" class="price-icon" />
+                    `;
                         }
                     }
 
@@ -458,6 +514,47 @@ async function loadUserHistory() {
         console.error("Error loading history:", err);
         container.innerHTML = "<p>Error loading history.</p>";
     }
+}
+
+function updateRentalIncomePanel(item, card) {
+    const rentData = item.rent || [];
+    const grouped = {};
+
+    rentData.forEach(r => {
+        const duration = r.duration_months;
+        if (!grouped[duration]) {
+            grouped[duration] = 0;
+        }
+        grouped[duration] += r.count;
+    });
+
+    const incomePanel = card.querySelector(".rental-income-panel");
+    if (!incomePanel) return;
+
+    let totalIncome = 0;
+    incomePanel.innerHTML = '';
+
+    Object.entries(grouped).forEach(([duration, count]) => {
+        const price = item.nft[`rent_price_${duration}m`] || 0;
+        const income = price * count;
+        totalIncome += income;
+
+        incomePanel.innerHTML += `
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                <span>${count} items rented for ${duration}m :</span>
+                <span><strong>${income}</strong> <img src="/content/xml-icon.png" class="price-icon" /></span>
+            </div>
+            <hr />
+        `;
+    });
+
+    incomePanel.innerHTML += `
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px;">
+            <strong>Total Rental Income:</strong>
+            <strong>${totalIncome}</strong>
+            <img src="/content/xml-icon.png" class="price-icon" />
+        </div>
+    `;
 }
 
 window.closePopup = closePopup;
