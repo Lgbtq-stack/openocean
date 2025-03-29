@@ -37,8 +37,8 @@ export async function loadUserData() {
     document.querySelector(".profile-card h3").textContent = user.nickname;
     // document.querySelector(".bio").textContent = user.bio || "NFT Enthusiast & Collector";
 
-    document.querySelectorAll(".balance-amount")[0].textContent = parseFloat(user.balance).toLocaleString();
-    document.querySelectorAll(".balance-amount")[1].textContent = parseFloat(user.balance_bonus).toLocaleString();
+    document.getElementById("nft-balance-amount").textContent = user.balance;
+    document.getElementById("extra-balance-amount").textContent = user.balance_extra;
 
     renderUserProgressLevel(user);
     renderLevelButtons(user.level);
@@ -253,7 +253,7 @@ async function loadUserHistory() {
         const { data: list } = await res.json();
 
         if (!Array.isArray(list) || list.length === 0) {
-            container.innerHTML = "<p>No items found.</p>";
+            container.innerHTML = "<p class='no-rent-items'>No items found.</p>";
             return;
         }
 
@@ -451,7 +451,7 @@ async function loadUserHistory() {
                     if (!res.ok) throw new Error("Rent request failed");
 
                     showSuccessPopup("✅ Rented successfully!");
-
+                    await loadUserHistory();
                     const card = btn.closest(".purchase-history-card");
                     const display = card.querySelector(`#rent-price-${id}`);
                     const totalPrice = count * pricePerMonth;
@@ -491,19 +491,18 @@ async function loadUserHistory() {
                         if (display) {
                             display.classList.add("rent-receive-display");
                             display.innerHTML = `
-                        You will receive ${totalPrice}
-                        <img src="/content/xml-icon.png" class="price-icon" />
-                    `;
+                            You will receive ${totalPrice}
+                            <img src="/content/xml-icon.png" class="price-icon" />
+                        `;
                         }
                     } else {
                         if (display) {
                             display.innerHTML = `
-                        You will receive ${totalPrice}
-                        <img src="/content/xml-icon.png" class="price-icon" />
-                    `;
+                            You will receive ${totalPrice}
+                            <img src="/content/xml-icon.png" class="price-icon" />
+                        `;
                         }
                     }
-
                 } catch (err) {
                     showErrorPopup("warning", "Rent failed");
                 }
@@ -514,47 +513,6 @@ async function loadUserHistory() {
         console.error("Error loading history:", err);
         container.innerHTML = "<p>Error loading history.</p>";
     }
-}
-
-function updateRentalIncomePanel(item, card) {
-    const rentData = item.rent || [];
-    const grouped = {};
-
-    rentData.forEach(r => {
-        const duration = r.duration_months;
-        if (!grouped[duration]) {
-            grouped[duration] = 0;
-        }
-        grouped[duration] += r.count;
-    });
-
-    const incomePanel = card.querySelector(".rental-income-panel");
-    if (!incomePanel) return;
-
-    let totalIncome = 0;
-    incomePanel.innerHTML = '';
-
-    Object.entries(grouped).forEach(([duration, count]) => {
-        const price = item.nft[`rent_price_${duration}m`] || 0;
-        const income = price * count;
-        totalIncome += income;
-
-        incomePanel.innerHTML += `
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-                <span>${count} items rented for ${duration}m :</span>
-                <span><strong>${income}</strong> <img src="/content/xml-icon.png" class="price-icon" /></span>
-            </div>
-            <hr />
-        `;
-    });
-
-    incomePanel.innerHTML += `
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px;">
-            <strong>Total Rental Income:</strong>
-            <strong>${totalIncome}</strong>
-            <img src="/content/xml-icon.png" class="price-icon" />
-        </div>
-    `;
 }
 
 window.closePopup = closePopup;
