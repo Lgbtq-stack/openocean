@@ -421,13 +421,12 @@
     flex-direction: column;
     gap: 16px;
 
-    padding: 16px 20px;
+    padding: 16px 10px;
 }
 
 .purchase-history-card {
     display: flex;
     flex-direction: column;
-
     gap: 16px;
     background: #fafafa;
     padding: 16px;
@@ -477,13 +476,11 @@
 
 .rent-durations {
     display: flex;
-    gap: 8px;
-    margin-bottom: 10px;
     flex-wrap: wrap;
 }
 
 .rent-duration-btn {
-    padding: 6px 10px;
+    padding: 6px 5px;
     border: 1px solid #ccc;
     border-radius: 8px;
     background: #fff;
@@ -508,8 +505,12 @@
     color: var(--white);
     white-space: nowrap;
     text-align: center;
+
 }
 
+.rent-now-btn {
+    margin-bottom: 10px;
+}
 
 .rent-price-display .price-icon {
     width: 26px;
@@ -523,7 +524,13 @@
     margin-top: 5px;
 }
 
-.qty-btn {
+.rent-text{
+    margin: -10px 0;
+    font-size: 14px;
+    color: #7c7c7c;
+}
+
+.purchase-history-card .qty-btn {
     background-color: #4A90E2;
     color: white;
     border: none;
@@ -534,9 +541,10 @@
     cursor: pointer;
     transition: background-color 0.2s;
     font-weight: bold;
+    text-align: center;
 }
 
-.qty-btn:disabled {
+.purchase-history-card .qty-btn:disabled {
     background-color: #cccccc;
     cursor: not-allowed;
 }
@@ -581,4 +589,60 @@
 
 .rent-summary-total p {
     margin: 10px 0;
+}
+
+.add-funds-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5); /* затемнение */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* поверх всего */
+}
+
+.add-funds-container {
+    background: white;
+    padding: 25px 30px 10px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.add-funds-container p {
+    font-size: 20px;
+    margin: 0;
+}
+.add-funds-buttons{
+    background: white;
+    padding: 20px 30px;
+    border-radius: 12px;
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+}
+
+.add-funds-button {
+    padding: 12px 24px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    background-color: #00cc66;
+    color: white;
+    cursor: pointer;
+}
+
+.close-add-funds-button {
+    padding: 12px 24px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    background-color: var(--primary);
+    color: white;
 }

@@ -457,14 +457,7 @@ async function checkTrustline(accountId) {
 
 
 
-window.openWebPage = function(elementId) {
-    const url = document.getElementById(elementId).textContent.trim();
-    if (url) {
-        window.open(url, '_blank');
-    } else {
-        console.error("URL is empty or invalid.");
-    }
-}
+
 
 
 function disableScroll() {
@@ -533,6 +526,5 @@ async function refreshUserBalance(showPopup = true) {
         }, 5000);
     }
 }
-
 
 

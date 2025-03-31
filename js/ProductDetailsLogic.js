@@ -62,20 +62,10 @@ export async function showNFTDetails(id, dataSource) {
 
         let quantity = 1;
 
-        document.getElementById("nft-qty-increment")?.addEventListener("click", () => {
-            quantity++;
-            document.getElementById("nft-qty-value").textContent = quantity;
-        });
-
-        document.getElementById("nft-qty-decrement")?.addEventListener("click", () => {
-            if (quantity > 1) {
-                quantity--;
-                document.getElementById("nft-qty-value").textContent = quantity;
-            }
-        });
-
         let selectedCurrency = 'usd';
 
+        document.getElementById("currency-usd").classList.add("selected");
+        document.getElementById("currency-nft").classList.remove("selected");
         function updateTotalPrice() {
             const price = selectedCurrency === 'usd' ? nft.price : 1;
             const total = price * quantity;

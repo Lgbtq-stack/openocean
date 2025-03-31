@@ -84,9 +84,6 @@ export function renderCart() {
     const summary = document.createElement("div");
     summary.classList.add("cart-summary");
     summary.innerHTML = `
-        <div class="promo-container">
-            <input type="text" class="promo-input" placeholder="Enter promo code" />
-        </div>
         <div class="cart-total-row">
           <span class="total-label">Total price:</span>
           <div class="total-values"></div>
@@ -395,6 +392,7 @@ window.completePurchase = completePurchase;
 window.handleSuccessfulPurchase = handleSuccessfulPurchase;
 
 document.addEventListener('DOMContentLoaded', updateCartIndicator);
+
 document.querySelectorAll('.rent-now-btn').forEach(btn => {
     btn.addEventListener('click', async () => {
         const nftId = btn.dataset.id;

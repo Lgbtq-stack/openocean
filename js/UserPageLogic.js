@@ -65,16 +65,18 @@ function renderUserProgressLevel(user) {
         return;
     }
 
-    const maxRangeStr = levelData.range.split("–")[1].trim().replace(/,/g, "");
-    const maxRange = parseInt(maxRangeStr, 10);
+    const [rangeMin, rangeMax] = levelData.range
+        .split(/[-–—]/)
+        .map(val => parseInt(val.trim().replace(/,/g, "")));
 
     const totalDeposit = user.total_deposit || 0;
-    const progress = Math.min((totalDeposit / maxRange) * 100, 100);
+    const progress = Math.min((totalDeposit / rangeMax) * 100, 100);
+    const remaining = Math.max(0, rangeMax - totalDeposit);
 
     progressEl.innerHTML = "";
 
     const levelSpan = document.createElement("span");
-    levelSpan.textContent = `Current Level: ${user.level}`;
+    levelSpan.innerHTML = `Level: ${user.level} – Remaining to next level: ${Math.round(remaining).toLocaleString()} <img src="content/money-icon.png" class="price-icon"/>`;
 
     const progressBar = document.createElement("div");
     progressBar.className = "progress-bar";
@@ -98,7 +100,6 @@ function renderUserProgressLevel(user) {
 
     const arrow = document.createElement("span");
     arrow.className = "arrow-icon";
-    // arrow.textContent = " 🔽";
 
     toggle.appendChild(toggleText);
     toggle.appendChild(arrow);
@@ -114,21 +115,15 @@ function renderUserProgressLevel(user) {
     progressEl.appendChild(progressBar);
     progressEl.appendChild(benefitsWrapper);
 
-    // toggle.addEventListener('click', () => {
-    //     benefitsWrapper.classList.toggle('open');
-    //     benefitsWrapper.classList.toggle('closed');
-    //     arrow.style.transform = benefitsWrapper.classList.contains('open') ? "rotate(180deg)" : "rotate(0deg)";
-    // });
-
-    document.getElementById("add-funds-btn").addEventListener("click", () => {
-        showRechargePopup();
+    document.getElementById("add-funds-btn")?.addEventListener("click", () => {
+        showRechargeChoicePopup();
     });
 
-    document.getElementById("history-btn").addEventListener("click", () => {
+    document.getElementById("history-btn")?.addEventListener("click", () => {
         showPurchaseHistoryPage();
     });
 
-    document.getElementById("deposit-history-btn").addEventListener("click", () => {
+    document.getElementById("deposit-history-btn")?.addEventListener("click", () => {
         showDepositHistoryPage();
     });
 }
@@ -173,20 +168,47 @@ function renderLevelButtons(currentLevel) {
     });
 }
 
+export function showRechargeChoicePopup() {
+    const overlay = document.getElementById("add-funds-popup");
+    overlay.style.display = "flex";
+}
+
 export function showRechargePopup() {
+    closePopup();
     const overlay = document.getElementById("popup-overlay");
     const content = document.getElementById("recharge-content");
     const memoField = document.getElementById("memo-value");
+
 
     memoField.textContent = user_Id;
 
     overlay.style.display = "flex";
     content.style.display = "block";
 }
+export function showRechargeBonusPopup() {
+    closePopup();
+    const overlay = document.getElementById("popup-overlay-bonus");
+    const content = document.getElementById("recharge-content-bonus");
+    const memoField = document.getElementById("memo-value-bonus");
+
+    memoField.textContent = user_Id;
+
+    overlay.style.display = "flex";
+    content.style.display = "block";
+
+}
+
+window.showRechargePopup = showRechargePopup;
+window.showRechargeBonusPopup = showRechargeBonusPopup;
+window.closePopup = closePopup;
 
 function closePopup() {
     document.getElementById("popup-overlay").style.display = "none";
     document.getElementById("recharge-content").style.display = "none";
+    document.getElementById("popup-overlay-bonus").style.display = "none";
+    document.getElementById("recharge-content-bonus").style.display = "none";
+    document.getElementById("add-funds-popup").style.display = "none";
+
 }
 
 async function selectIcon(iconId) {
@@ -273,7 +295,7 @@ function renderUserHistory(list) {
     const container = document.getElementById("purchase-history-content");
 
     if (!Array.isArray(list) || list.length === 0) {
-        container.innerHTML = "<p class='no-rent-items'>No items found.</p>";
+        container.innerHTML = "<p class='no-rent-items'>No NFT found.</p>";
         return;
     }
 
@@ -299,6 +321,10 @@ function renderUserHistory(list) {
                 <span class="qty-value" id="qty-value-${item.id}">${firstCount}</span>
                 <button class="qty-btn increment" data-id="${item.id}">+</button>
             </div>
+            
+            <div class="rent-quantity-control" data-max="${availableCount}">
+                <span class="rent-text">Rent out your NFT: </span>
+            </div>
 
             <div class="rent-durations">
                 ${[1, 3, 6, 12, 24, 60].map((m, i) => {
@@ -314,8 +340,8 @@ function renderUserHistory(list) {
             </div>
 
             <div class="rent-price-display" id="rent-price-${item.id}">
-                For ${firstCount}x ${firstDuration}m you will receive: ${firstPrice} 
-                <img src="/content/xml-icon.png" class="price-icon" />
+                Your monthly rent: ${firstPrice} 
+                <img src="content/xml-icon.png" class="price-icon" />
             </div>
 
             <button class="rent-now-btn" 
@@ -327,8 +353,8 @@ function renderUserHistory(list) {
             </button>
         ` : `
             <div class="rent-price-display rent-receive-display">
-                All items are rented out.
-                <img src="/content/xml-icon.png" class="price-icon" />
+                All NFT are rented out.
+                <img src="content/xml-icon.png" class="price-icon" />
             </div>
         `;
 
@@ -362,8 +388,8 @@ function renderUserHistory(list) {
                 const panel = document.createElement("div");
                 panel.className = "rent-summary-panel";
                 panel.innerHTML = `
-                    <p><b>${count}</b> items rented for <b>${duration}m</b>: <b>${subtotal}</b>
-                        <img src="/content/xml-icon.png" class="price-icon" />
+                    <p><b>${count}</b> NFT rented for <b>${duration}m</b>: <b>${subtotal}</b>
+                        <img src="content/xml-icon.png" class="price-icon" />
                     </p>`;
                 summaryWrapper.appendChild(panel);
             });
@@ -372,7 +398,7 @@ function renderUserHistory(list) {
             totalBlock.className = "rent-summary-total";
             totalBlock.innerHTML = `
                 <p><b>Total Rental Income:</b> ${totalProfit} 
-                    <img src="/content/xml-icon.png" class="price-icon" />
+                    <img src="content/xml-icon.png" class="price-icon" />
                 </p>`;
 
             summaryWrapper.appendChild(totalBlock);
@@ -405,8 +431,8 @@ function renderUserHistory(list) {
 
                 const display = container.querySelector(`#rent-price-${id}`);
                 if (display) {
-                    display.innerHTML = `For ${value}x ${duration}m you will receive: ${newTotal} 
-                        <img src="/content/xml-icon.png" class="price-icon" />`;
+                    display.innerHTML = `Your monthly rent: ${newTotal}
+                        <img src="content/xml-icon.png" class="price-icon" />`;
                 }
 
                 rentBtn.dataset.pricePerMonth = pricePerOne;
@@ -438,8 +464,8 @@ function renderUserHistory(list) {
 
             const display = card.querySelector(`#rent-price-${id}`);
             if (display) {
-                display.innerHTML = `For ${qty}x ${duration}m you will receive: ${newTotal} 
-                    <img src="/content/xml-icon.png" class="price-icon" />`;
+                display.innerHTML = `Your monthly rent: ${newTotal} 
+                    <img src="content/xml-icon.png" class="price-icon" />`;
             }
         });
     });

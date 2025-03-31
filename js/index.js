@@ -21,6 +21,19 @@ document.addEventListener('DOMContentLoaded', () => {
     tg = Telegram.WebApp;
 });
 
+function getUserIdFromURL() {
+    const urlParams = new URLSearchParams(window.location.search);
+    user_Id = urlParams.get("user_id");
+
+    if (user_Id) {
+        console.log(`User ID from URL: ${user_Id}`);
+        return user_Id;
+    } else {
+        console.warn("User ID not found in the URL.");
+        return null;
+    }
+}
+
 function openWebPage() {
     const url = document.getElementById("link-address-popup").textContent.trim();
     if (url) {

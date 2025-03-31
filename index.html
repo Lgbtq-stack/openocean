@@ -36,7 +36,7 @@
             Track how many NFTs need to be sold before ALL FLIPS are activated simultaneously!.</p>
 
         <div class="card" id="level-summary-card">
-            <h3>Level Progress</h3>
+            <h3 id="level-progress">Level Progress</h3>
             <div class="progress-bar">
                 <div class="progress" id="summary-progress-fill" style="width: 0%;"></div>
             </div>
@@ -253,17 +253,17 @@
         <h4>Prices</h4>
         <div id="nft-price" class="nft-price-container">
             <span class="price-block">
-                175.00 <img src="content/money-icon.png" class="price-icon" alt="NFT"/>
+                0 <img src="content/money-icon.png" class="price-icon" alt="NFT"/>
             </span>
             <span class="price-separator">or</span>
             <span class="price-block">
-                1 <img src="content/nft_extra.png" class="price-icon" alt="Bonus"/>
+                0 <img src="content/nft_extra.png" class="price-icon" alt="Bonus"/>
             </span>
         </div>
 
         <div class="currency-toggle">
-            <div class="currency-option selected" id="currency-usd">USD</div>
-            <div class="currency-option" id="currency-nft">NFT</div>
+            <div class="currency-option selected" id="currency-usd"><img src="content/money-icon.png" class="price-icon" alt="NFT"/></div>
+            <div class="currency-option" id="currency-nft"><img src="content/nft_extra.png" class="price-icon" alt="Bonus"/></div>
         </div>
 
         <div class="quantity-controls">
@@ -297,6 +297,24 @@
     </div>
 </div>
 
+<div id="add-funds-popup" class="add-funds-popup" style="display: none;" >
+    <div class="add-funds-container">
+        <p> Choose currency to deposit:</p>
+        <div class="add-funds-buttons">
+            <button class="add-funds-button" id="add-funds-usd" onclick="showRechargeBonusPopup()">
+                Add XML
+            </button>
+            <button class="add-funds-button" id="add-funds-nft" onclick="showRechargePopup()">
+                Add NFT
+            </button>
+        </div>
+
+        <button class="close-add-funds-button" id="close-add-funds-nft" onclick="closePopup()">
+            Close
+        </button>
+    </div>
+</div>
+
 <div id="popup-overlay" class="popup-overlay">
     <div class="popup-content" id="popup-content">
         <h2 id="popup-title">Recharge</h2>
@@ -327,6 +345,40 @@
                         <strong>MEMO:</strong>
                         <p><span id="memo-value"></span></p>
                         <button class="copy-button" onclick="copyToClipboard('memo-value')">COPY</button>
+                    </div>
+                </li>
+
+                <li>
+                    <p>The balance will be updated within 5 minutes.</p>
+                </li>
+            </ol>
+            <p class="important-text"><strong>IMPORTANT:</strong> Ensure the MEMO matches exactly to avoid losing your funds.</p>
+            <button class="ok-button" onclick="closePopup()">OK</button>
+        </div>
+    </div>
+</div>
+
+<div id="popup-overlay-bonus" class="popup-overlay">
+    <div class="popup-content" id="popup-content-bonus">
+        <h2 id="popup-title-bonus">Recharge</h2>
+        <div id="recharge-content-bonus" style="display: none;">
+            <p class="instructions-text">Follow the instructions to deposit funds</p>
+            <ol class="recharge-steps">
+                <li>
+                    <p>Transfer funds to the following wallet:</p>
+                    <div class="copy-section">
+                        <strong>Wallet:</strong>
+                        <p><span id="wallet-address-popup-bonus"> GC2JTXEMO7WLT4DECCRRZKJXW26RECLSR3FUXADX262OQ6PJEQCJIYM4</span></p>
+                        <button class="copy-button" onclick="copyToClipboard('wallet-address-popup-bonus')">COPY</button>
+                    </div>
+                </li>
+
+                <li>
+                    <p>Add the following MEMO to your transfer:</p>
+                    <div class="copy-section">
+                        <strong>MEMO:</strong>
+                        <p><span id="memo-value-bonus"></span></p>
+                        <button class="copy-button" onclick="copyToClipboard('memo-value-bonus')">COPY</button>
                     </div>
                 </li>
 
