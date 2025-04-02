@@ -13,6 +13,11 @@
     overflow: hidden;
     padding: 12px;
 }
+
+.nft-card.limited{
+    box-shadow: 0 0 8px gold;
+}
+
 .category-list .card {
     margin: 0;
 }
@@ -71,6 +76,15 @@
     cursor: pointer;
     border-radius: 20px;
     width: 100%;
+}
+
+.details-button.limited {
+    box-shadow: 0 0 8px gold;
+
+    background: rgb(255,253,194);
+    background: linear-gradient(90deg, rgba(255,253,194,1) 0%, rgba(255,224,0,1) 50%, rgba(255,253,194,1) 100%);
+
+    color: var(--black);
 }
 
 .details-button img {

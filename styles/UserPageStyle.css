@@ -435,6 +435,10 @@
     align-items: center;
 }
 
+.purchase-history-card.limited{
+    box-shadow: 0 0 8px gold;
+}
+
 .purchase-history-img {
     width: 100%;
     border-radius: 10px;

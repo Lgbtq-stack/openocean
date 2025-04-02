@@ -15,7 +15,7 @@ function renderCategoryCards(items) {
 
     items.forEach(item => {
         const card = document.createElement("div");
-        card.className = "nft-card";
+        card.className = item.isLimited ? "nft-card limited" : "nft-card";
 
         card.innerHTML = `
             <img src="https://miniappservcc.com/get-image?path=${item.image}" alt="${item.name}">
@@ -26,7 +26,6 @@ function renderCategoryCards(items) {
         container.appendChild(card);
     });
 }
-
 function generatePagination(paging, onPageChange) {
     const { page, totalPages } = paging;
     const paginationContainer = document.getElementById("pagination-container");
@@ -181,36 +180,48 @@ export async function loadCategories(page = 1, category) {
 
         items.forEach(item => {
             const card = document.createElement("div");
-            card.className = "card nft-card";
+            card.className = item.isLimited ? "card nft-card limited" : "card nft-card";
 
             card.innerHTML = `
                 <div class="card-content">
                     <img src="https://miniappservcc.com/get-image?path=${item.image}" alt="${item.name}" class="nft-image">
                     <p class="nft-price">
-                    ${item.price}
-                    <img src="content/money-icon.png" alt="Money Icon" class="price-icon" /> or 
-                </p>
-                <p class="nft-price">
-                    1
-                    <img src="content/nft_extra.png" alt="NFT Extra Icon" class="price-icon" />
-                </p>
+                        ${item.price}
+                        <img src="content/money-icon.png" alt="Money Icon" class="price-icon" /> or 
+                    </p>
+                    <p class="nft-price">
+                        1
+                        <img src="content/nft_extra.png" alt="NFT Extra Icon" class="price-icon" />
+                    </p>
                     <h4>${item.name}</h4>
                     <p class="collection-label">🏷️ ${item.collection}</p>
                 </div>
-                <button class="details-button">
+                <button class="details-button ${item.isLimited ? 'limited' : ''}">
                     Details
                 </button>
             `;
 
-            const detailsBtn = card.querySelector(".details-button");
-            detailsBtn.addEventListener("click", () => {
-                showNFTDetails(item.id, items);
-            });
+            const button = document.createElement("button");
+            if (item.isLimited && item.limitedCount < 1) {
+                button.className = "details-button sold-out";
+                button.textContent = "Sold Out";
+                button.disabled = true;
+                button.style.backgroundColor = "#ccc";
+                button.style.cursor = "not-allowed";
+            } else {
+                button.className = item.isLimited ? "details-button limited" : "details-button";
+                button.textContent = "Details";
+                button.addEventListener("click", () => {
+                    if (item.isLimited) {
+                        showLimitedNFTDetails(item.id, items);
+                    } else {
+                        showNFTDetails(item.id, items);
+                    }
+                });
+            }
 
             cardsContainer.appendChild(card);
-
         });
-
         lazyLoadImages();
         generatePagination(paging, (newPage) => loadCategories(newPage, category));
         currentItems = items;
@@ -448,31 +459,45 @@ async function performSearch(searchText) {
             return;
         }
 
+
         filteredItems.forEach(item => {
             const card = document.createElement('div');
-            card.className = 'card nft-card';
+            card.className = item.isLimited ? 'card nft-card limited' : 'card nft-card';
 
             card.innerHTML = `
                 <div class="nft-image-container">
-                  <img src="https://miniappservcc.com/get-image?path=${encodeURIComponent(item.image)}" alt="${item.name}" class="nft-image">
+                    <img src="https://miniappservcc.com/get-image?path=${encodeURIComponent(item.image)}" alt="${item.name}" class="nft-image">
                 </div>
                 <div class="nft-details">
-                  <h3 class="nft-title">${item.name}</h3>
-                  <p class="nft-price">${item.price} <img src="content/money-icon.png" alt="Money Icon" class="price-icon" /></p>
-                  <p>Collection: ${item.collection || 'Unknown'}</p>
+                    <h3 class="nft-title">${item.name}</h3>
+                    <p class="nft-price">Price: ${item.price} <img src="content/money-icon.png" alt="Money Icon" class="price-icon" /></p>
+                    <p>Collection: ${item.collection || 'Unknown'}</p>
                 </div>
-                <button class="details-button">
-                  <img src="content/info.png" class="info-icon" alt="Details"> Details
-                </button>
             `;
 
-            const detailsBtn = card.querySelector(".details-button");
-            detailsBtn.addEventListener("click", () => {
-                showNFTDetails(item.id, filteredItems);
-            });
+            const button = document.createElement("button");
+            if (item.isLimited && item.limitedCount < 1) {
+                button.className = "details-button sold-out";
+                button.textContent = "Sold Out";
+                button.disabled = true;
+                button.style.backgroundColor = "#ccc";
+                button.style.cursor = "not-allowed";
+            } else {
+                button.className = item.isLimited ? "details-button limited" : "details-button";
+                button.textContent = "Details";
+                button.addEventListener("click", () => {
+                    if (item.isLimited) {
+                        showLimitedNFTDetails(item.id, filteredItems);
+                    } else {
+                        showNFTDetails(item.id, filteredItems);
+                    }
+                });
+            }
 
+            card.appendChild(button);
             categoryList.appendChild(card);
         });
+
 
     } catch (err) {
         console.error('Search error:', err);
@@ -522,9 +547,14 @@ function renderNFTList(items) {
     const container = document.getElementById("category-list");
     container.innerHTML = '';
 
+    if (items.length > 0) {
+        items[0].isLimited = true;
+        items[0].limitedCount = 2;
+    }
+
     items.forEach(item => {
         const card = document.createElement("div");
-        card.className = "card nft-card";
+        card.className = item.isLimited ? "card nft-card limited" : "card nft-card";
         card.setAttribute("data-price", item.price);
         card.setAttribute("data-name", item.name);
 
@@ -534,17 +564,29 @@ function renderNFTList(items) {
           </div>
           <div class="nft-details">
             <h3 class="nft-title">${item.name}</h3>
-            <p class="nft-price">${item.price} <img src="content/money-icon.png" alt="Money Icon" class="price-icon" /></p>
+            <p class="nft-price">Price: ${item.price} <img src="content/money-icon.png" alt="Money Icon" class="price-icon" /></p>
             <p>Collection: ${item.collection || 'Unknown'}</p>
           </div>
         `;
 
         const button = document.createElement("button");
-        button.className = "details-button";
-        button.textContent = "Details";
-        button.addEventListener("click", () => {
-            showNFTDetails(item.id, items);
-        });
+        if (item.isLimited && item.limitedCount < 1) {
+            button.className = "details-button sold-out";
+            button.textContent = "Sold Out";
+            button.disabled = true;
+            button.style.backgroundColor = "#ccc";
+            button.style.cursor = "not-allowed";
+        } else {
+            button.className = item.isLimited ? "details-button limited" : "details-button";
+            button.textContent = "Details";
+            button.addEventListener("click", () => {
+                if (item.isLimited) {
+                    showLimitedNFTDetails(item.id, items);
+                } else {
+                    showNFTDetails(item.id, items);
+                }
+            });
+        }
 
         card.appendChild(button);
         container.appendChild(card);

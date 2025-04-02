@@ -198,7 +198,7 @@ export async function showLimitedNFTDetails(id, dataSource) {
     const incrementBtn = document.getElementById("limited-nft-qty-increment");
     const decrementBtn = document.getElementById("limited-nft-qty-decrement");
 
-    if (nft.count <= 2) {
+    if (nft.count <=2) {
         quantityControls.style.display = 'none';
     }
 

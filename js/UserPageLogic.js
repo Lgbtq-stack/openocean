@@ -303,12 +303,13 @@ function renderUserHistory(list) {
 
     list.filter(item => item.nft && Object.keys(item.nft).length > 0).forEach(item => {
         const card = document.createElement("div");
-        card.className = "purchase-history-card";
+        card.className = "purchase-history-card" + (item.nft.isLimited ? " limited" : "");
 
+        const totalCount = item.nft.isLimited ? item.nft.limitedCount : item.count;
         const rentedCount = Array.isArray(item.rent)
             ? item.rent.reduce((sum, r) => sum + (r.count || 0), 0)
             : 0;
-        const availableCount = item.count - rentedCount;
+        const availableCount = totalCount - rentedCount;
 
         const firstDuration = 1;
         const firstCount = 1;
@@ -364,10 +365,11 @@ function renderUserHistory(list) {
                 <strong>${item.nft.name}</strong>
                 <p><b>Collection:</b> ${item.nft.collection.name}</p>
                 <p><b>In Rent:</b> ${rentedCount} / <b>Available:</b> ${availableCount}</p>
-                <p><b>Price:</b> ${item.nft.price * item.count} <img src="content/money-icon.png" class="price-icon"/></p>
+                <p><b>Price:</b> ${item.nft.price * totalCount} <img src="content/money-icon.png" class="price-icon"/></p>
             </div>
             ${rentBlock}
         `;
+
         if (Array.isArray(item.rent) && item.rent.length > 0) {
             const summaryWrapper = document.createElement("div");
             summaryWrapper.className = "rent-summary-wrapper";
