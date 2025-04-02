@@ -5,8 +5,13 @@
 }
 
 #trending-nfts .card {
-    background-color: var(--white);
+    background: rgb(255,253,194);
+    background: linear-gradient(90deg, rgba(255,253,194,1) 0%, rgba(255,224,0,1) 50%, rgba(255,253,194,1) 100%);
     border-radius: 12px;
+
+    /*background-image: url('/content/gold_texture.png');*/
+    background-size: cover;
+    background-position: center;
     box-shadow: 0 3px 8px var(--box-shadow-soft);
     padding: 10px;
     text-align: center;
@@ -32,14 +37,16 @@
 #trending-nfts .collection {
     font-size: 13px;
     color: var(--text-color);
+    margin: 10px 0;
 }
 
 
 #trending-nfts .card-btn {
     margin-top: auto;
     padding: 6px 12px;
-    background-color: var(--primary);
-    color: var(--white);
+    background: rgb(255,253,194);
+    background: linear-gradient(90deg, rgba(255,253,194,1) 0%, rgba(255,224,0,1) 50%, rgba(255,253,194,1) 100%);
+    color: var(--black);
     border: none;
     border-radius: 20px;
     cursor: pointer;

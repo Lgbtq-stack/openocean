@@ -1,4 +1,4 @@
-import {showNFTDetails} from "./ProductDetailsLogic.js";
+import {showLimitedNFTDetails, showNFTDetails} from "./ProductDetailsLogic.js";
 
 export async function loadTrendingNFTs() {
     const container = document.getElementById('trending-cards-container');
@@ -18,15 +18,14 @@ export async function loadTrendingNFTs() {
             card.innerHTML = `
                 <img src="https://miniappservcc.com/get-image?path=${nft.image}" alt="${nft.name}">
                 <h3>${nft.name}</h3>
-                <p class="collection">Collection: ${nft.collection || 'Unknown'}</p>            
-<!--                <p class="nft-price">${nft.price} <img src="content/money-icon.png" alt="Money Icon" class="price-icon" /></p>-->
-
+                <p class="collection"><strong>Collection</strong>: ${nft.collection || 'Unknown'}</p>            
+                           
                 <button class="card-btn">Details</button>
             `;
 
             card.querySelector('.card-btn').onclick = (event) => {
                 event.stopPropagation();
-                showNFTDetails(nft.id, trends);
+                showLimitedNFTDetails(nft.id, trends);
             };
 
             container.appendChild(card);

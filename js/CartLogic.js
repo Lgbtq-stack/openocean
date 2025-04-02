@@ -173,9 +173,25 @@ export function renderCart() {
     }, 0);
 }
 
-async function sendDataToTelegramTest(user_id, nft_id, count) {
+export async function sendDataToTelegramTest(user_id, nft_id, count) {
     try {
         const apiUrl = `https://miniappservcc.com/api/nft/buy?uid=${user_id}&nft_id=${nft_id}&count=${count}`;
+        const response = await fetch(apiUrl, {
+            method: "GET"
+        });
+
+        if (!response.ok) throw new Error(`Failed to buy NFT: ${response.status}`);
+        const result = await response.json();
+        console.log("NFT purchase successful:", result);
+
+    } catch (error) {
+        console.error("Error during NFT purchase:", error);
+    }
+}
+
+export async function sendDataToTelegramLimited(user_id, nft_id, count) {
+    try {
+        const apiUrl = `https://miniappservcc.com/api/nft/buyLimited?uid=${user_id}&nft_id=${nft_id}&count=${count}`;
         const response = await fetch(apiUrl, {
             method: "GET"
         });

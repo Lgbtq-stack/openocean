@@ -198,3 +198,66 @@ strong {
         font-size: 20px;
     }
 }
+
+/* Are you sure */
+
+/* Popup Overlay */
+.are-you-sure-popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+}
+
+.are-you-sure-popup-overlay.hidden {
+    display: none;
+}
+
+.are-you-sure-popup-box {
+    background: #ffffff;
+    padding: 25px 20px;
+    border-radius: 12px;
+    max-width: 400px;
+    width: 70%;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.are-you-sure-popup-message {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.are-you-sure-popup-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.are-you-sure-popup-btn {
+    padding: 10px 20px;
+    font-size: 15px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s ease;
+}
+
+.are-you-sure-popup-continue {
+    background-color: #28a745;
+    color: white;
+}
+
+
+.are-you-sure-popup-close {
+    background-color: #dc3545;
+    color: white;
+}
