@@ -176,9 +176,7 @@ export async function loadCategories(page = 1, category) {
     }
 
     try {
-        const url = `https://miniappservcc.com/api/collections?collection_id=${category.id}&page=${page}`;
-
-        const response = await fetch(url);
+        const response = await fetch(`https://miniappservcc.com/api/collections?collection_id=${category.id}&page=${page}`);
         if (!response.ok) throw new Error(`Fetch failed: ${response.status}`);
 
         const data = await response.json();
@@ -296,12 +294,7 @@ async function loadCategoriesOnce(includeAll = false) {
     }
 
     try {
-        const isAdmin = user_Id === 350104566;
-        const endpoint = isAdmin
-            ? "https://miniappservcc.com/api/collections_test?admin_id=350104566&limit=100"
-            : "https://miniappservcc.com/api/collections";
-
-        const response = await fetch(endpoint);
+        const response = await fetch("https://miniappservcc.com/api/collections?limit=100");
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
