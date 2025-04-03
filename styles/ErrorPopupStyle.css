@@ -252,14 +252,13 @@ strong {
 }
 
 .are-you-sure-popup-continue {
-    background: rgb(255,253,194);
-    background: linear-gradient(90deg, rgba(255,253,194,1) 0%, rgba(255,224,0,1) 50%, rgba(255,253,194,1) 100%);
-
+    background: rgb(255,244,161);
+    background: linear-gradient(90deg, rgba(255,244,161,1) 0%, rgba(255,247,0,1) 50%, rgba(255,244,161,1) 100%);
     color: black;
 }
 
 
 .are-you-sure-popup-close {
-    background-color: #dc3545;
+    background-color: rgba(128, 128, 128, 0.36);
     color: white;
 }
