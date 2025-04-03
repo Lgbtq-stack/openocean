@@ -226,7 +226,7 @@ strong {
     max-width: 400px;
     width: 70%;
     text-align: center;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 0 30px gold;
 }
 
 .are-you-sure-popup-message {
@@ -252,8 +252,10 @@ strong {
 }
 
 .are-you-sure-popup-continue {
-    background-color: #28a745;
-    color: white;
+    background: rgb(255,253,194);
+    background: linear-gradient(90deg, rgba(255,253,194,1) 0%, rgba(255,224,0,1) 50%, rgba(255,253,194,1) 100%);
+
+    color: black;
 }
 
 

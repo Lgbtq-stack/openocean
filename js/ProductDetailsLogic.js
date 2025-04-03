@@ -165,6 +165,7 @@ export async function showLimitedNFTDetails(id, dataSource) {
 
     document.getElementById('limited-nft-image').src = `https://miniappservcc.com/get-image?path=${nft.image}`;
     document.getElementById('limited-nft-title').innerHTML = nft.name;
+    document.getElementById('limited-nft-country').innerHTML = nft.limitCountry || 'Unknown';
     document.getElementById('limited-nft-description').innerHTML = nft.description || 'No description available';
     document.getElementById('limited-nft-collection').textContent = nft.collection || 'Unknown';
 
@@ -198,7 +199,7 @@ export async function showLimitedNFTDetails(id, dataSource) {
     const incrementBtn = document.getElementById("limited-nft-qty-increment");
     const decrementBtn = document.getElementById("limited-nft-qty-decrement");
 
-    if (nft.count <=2) {
+    if (nft.count <= 2) {
         quantityControls.style.display = 'none';
     }
 
@@ -227,7 +228,7 @@ export async function showLimitedNFTDetails(id, dataSource) {
     document.getElementById('limited-purchase-button').onclick = () => {
         const popup = document.getElementById('are-you-sure-popup');
         const message = document.getElementById('are-you-sure-message');
-        message.innerHTML = `Are you sure you want to purchase ${quantity} item(s) of ${nft.name}?`;
+        message.innerHTML = `Are you sure you want to purchase \br <strong>${quantity} item(s)</strong> of <strong>${nft.name}</strong>?`;
         popup.classList.remove('hidden');
 
         document.querySelector('.are-you-sure-popup-close').onclick = () => popup.classList.add('hidden');

@@ -409,6 +409,7 @@ function renderUserHistory(list) {
         container.appendChild(card);
     });
 
+
     container.querySelectorAll(".qty-btn").forEach(btn => {
         btn.addEventListener("click", () => {
             const id = btn.dataset.id;

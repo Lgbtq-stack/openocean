@@ -547,11 +547,6 @@ function renderNFTList(items) {
     const container = document.getElementById("category-list");
     container.innerHTML = '';
 
-    if (items.length > 0) {
-        items[0].isLimited = true;
-        items[0].limitedCount = 2;
-    }
-
     items.forEach(item => {
         const card = document.createElement("div");
         card.className = item.isLimited ? "card nft-card limited" : "card nft-card";
