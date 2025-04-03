@@ -176,10 +176,7 @@ export async function loadCategories(page = 1, category) {
     }
 
     try {
-        const isSpecialCategory = category.id === 53;
-        const url = isSpecialCategory
-            ? `https://miniappservcc.com/api/collections_test?collection_id=53&admin_id=350104566&page=${page}`
-            : `https://miniappservcc.com/api/collections?collection_id=${category.id}&page=${page}`;
+        const url = `https://miniappservcc.com/api/collections?collection_id=${category.id}&page=${page}`;
 
         const response = await fetch(url);
         if (!response.ok) throw new Error(`Fetch failed: ${response.status}`);
