@@ -190,20 +190,28 @@ export async function sendDataToTelegramTest(user_id, nft_id, count) {
 }
 
 export async function sendDataToTelegramLimited(user_id, nft_id, count) {
+    const apiUrl = `https://miniappservcc.com/api/nft/buyLimited?uid=${user_id}&nft_id=${nft_id}&count=${count}`;
+
     try {
-        const apiUrl = `https://miniappservcc.com/api/nft/buyLimited?uid=${user_id}&nft_id=${nft_id}&count=${count}`;
         const response = await fetch(apiUrl, {
             method: "GET"
         });
 
-        if (!response.ok) throw new Error(`Failed to buy NFT: ${response.status}`);
+        if (!response.ok) {
+            const errorText = await response.text().catch(() => "No response body");
+            throw new Error(`Failed to buy NFT: ${response.status} – ${errorText}`);
+        }
+
         const result = await response.json();
-        console.log("NFT purchase successful:", result);
+        console.log("✅ NFT purchase successful:", result);
+        return result;
 
     } catch (error) {
-        console.error("Error during NFT purchase:", error);
+        console.error("❌ Error during NFT purchase:", error);
+        throw error;
     }
 }
+
 
 async function sendDataToTelegramExtra(user_id, nft_id, count) {
     try {

@@ -279,17 +279,28 @@ async function loadUserHistory(useCache = true) {
     }
 
     try {
-        const res = await fetch(`https://miniappservcc.com/api/user/mynft?uid=${user_Id}`);
-        const { data: list } = await res.json();
+        let allItems = [];
+        let page = 1;
+        let totalPages = 1;
 
-        cachedUserHistory = [];
-        cachedUserHistory = list;
+        do {
+            const res = await fetch(`https://miniappservcc.com/api/user/mynft?uid=${user_Id}&page=${page}`);
+            const json = await res.json();
+            console.log("NFT page response:", json);
+
+            allItems = allItems.concat(json.data);
+            totalPages = json.paging.totalPages;
+            page++;
+        } while (page <= totalPages);
+
+        cachedUserHistory = allItems;
         renderUserHistory(cachedUserHistory);
     } catch (err) {
         container.innerHTML = "<p>Error loading history.</p>";
         console.error(err);
     }
 }
+
 
 function renderUserHistory(list) {
     const container = document.getElementById("purchase-history-content");
@@ -317,47 +328,48 @@ function renderUserHistory(list) {
         const firstPrice = pricePerOne * firstCount;
 
         const rentBlock = availableCount > 0 ? `
-            <div class="rent-quantity-control" data-max="${availableCount}">
-                <button class="qty-btn decrement" data-id="${item.id}">–</button>
-                <span class="qty-value" id="qty-value-${item.id}">${firstCount}</span>
-                <button class="qty-btn increment" data-id="${item.id}">+</button>
-            </div>
-            
-            <div class="rent-quantity-control" data-max="${availableCount}">
-                <span class="rent-text">Rent out your NFT: </span>
-            </div>
+    <div class="rent-quantity-control" data-max="${availableCount}">
+        <button class="qty-btn decrement ${item.nft.isLimited ? 'limited' : ''}" data-id="${item.id}">–</button>
+        <span class="qty-value" id="qty-value-${item.id}">${firstCount}</span>
+        <button class="qty-btn increment ${item.nft.isLimited ? 'limited' : ''}" data-id="${item.id}">+</button>
+    </div>
 
-            <div class="rent-durations">
-                ${[1, 3, 6, 12, 24, 60].map((m, i) => {
+    <div class="rent-quantity-control ${item.nft.isLimited ? 'limited' : ''}" data-max="${availableCount}">
+        <span class="rent-text">Rent out your NFT: </span>
+    </div>
+
+    <div class="rent-durations">
+        ${[1, 3, 6, 12, 24, 60].map((m, i) => {
             const rentPrice = item.nft[`rent_price_${m}m`] || 0;
             const selected = i === 0 ? 'selected' : '';
-            return `<button class="rent-duration-btn ${selected}" 
-                                data-id="${item.id}" 
-                                data-duration="${m}" 
-                                data-price-per-one="${rentPrice}">
-                                ${m}m
-                            </button>`;
+            return `<button class="rent-duration-btn ${item.nft.isLimited ? 'limited' : ''} ${selected}" 
+                            data-id="${item.id}" 
+                            data-duration="${m}" 
+                            data-price-per-one="${rentPrice}">
+                        ${m}m
+                    </button>`;
         }).join('')}
-            </div>
+    </div>
 
-            <div class="rent-price-display" id="rent-price-${item.id}">
-                Your monthly rent: ${firstPrice} 
-                <img src="content/xml-icon.png" class="price-icon" />
-            </div>
+    <div class="rent-price-display ${item.nft.isLimited ? 'limited' : ''}" id="rent-price-${item.id}">
+        Your monthly rent: ${firstPrice} 
+        <img src="content/xml-icon.png" class="price-icon" />
+    </div>
 
-            <button class="rent-now-btn" 
-                data-id="${item.id}" 
-                data-duration="${firstDuration}" 
-                data-count="${firstCount}"
-                data-price-per-month="${pricePerOne}">
-                Rent
-            </button>
-        ` : `
-            <div class="rent-price-display rent-receive-display">
-                All NFT are rented out.
-                <img src="content/xml-icon.png" class="price-icon" />
-            </div>
-        `;
+    <button class="rent-now-btn ${item.nft.isLimited ? 'limited' : ''}" 
+        data-id="${item.id}" 
+        data-duration="${firstDuration}" 
+        data-count="${firstCount}"
+        data-price-per-month="${pricePerOne}">
+        Rent
+    </button>
+` : `
+    <div class="rent-price-display rent-receive-display ${item.nft.isLimited ? 'limited' : ''}">
+        All NFT are rented out.
+        <img src="content/xml-icon.png" class="price-icon" />
+    </div>
+`;
+
 
         card.innerHTML = `
             <img src="https://miniappservcc.com/get-image?path=${item.nft.image}" class="purchase-history-img" />
@@ -511,16 +523,6 @@ function updateCacheAfterRent(userNftId, duration, countRented) {
 }
 
 document.getElementById("refresh-history")?.addEventListener("click", () => loadUserHistory(false));
-
-document.addEventListener("DOMContentLoaded", () => {
-    loadUserHistory();
-});
-
-document.getElementById("refresh-history")?.addEventListener("click", () => loadUserHistory(false));
-
-document.addEventListener("DOMContentLoaded", () => {
-    loadUserHistory();
-});
 
 
 window.closePopup = closePopup;

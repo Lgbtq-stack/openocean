@@ -1,6 +1,7 @@
 import {showNFTDetails} from "./ProductDetailsLogic.js";
 import {showErrorPopup} from "./PopupLogic.js";
 import {scrollToTop} from "./Utilities.js";
+import {user_Id} from "./index.js";
 
 let currentPage = 1;
 let currentCategory = 1;
@@ -26,20 +27,26 @@ function renderCategoryCards(items) {
         container.appendChild(card);
     });
 }
+
 function generatePagination(paging, onPageChange) {
     const { page, totalPages } = paging;
     const paginationContainer = document.getElementById("pagination-container");
 
-    if (!paginationContainer) {
-        return;
-    }
+    if (!paginationContainer) return;
 
     paginationContainer.innerHTML = "";
+
+    if (currentCategory?.id === 53) {
+        paginationContainer.classList.add("limited");
+    } else {
+        paginationContainer.classList.remove("limited");
+    }
 
     if (page > 1) {
         const prevButton = document.createElement("button");
         prevButton.textContent = "<";
         prevButton.className = "pagination-btn";
+        if (currentCategory?.id === 53) prevButton.classList.add("limited");
         prevButton.addEventListener("click", () => onPageChange(page - 1));
         paginationContainer.appendChild(prevButton);
     }
@@ -75,6 +82,7 @@ function generatePagination(paging, onPageChange) {
         const nextButton = document.createElement("button");
         nextButton.textContent = ">";
         nextButton.className = "pagination-btn";
+        if (currentCategory?.id === 53) nextButton.classList.add("limited");
         nextButton.addEventListener("click", () => onPageChange(page + 1));
         paginationContainer.appendChild(nextButton);
     }
@@ -121,8 +129,12 @@ export async function createCategories() {
         button.classList.add("slider-category-item");
         button.textContent = category.name;
 
-        if (category.id === firstCategory) {
+        if (category.id === firstCategory.id) {
             button.classList.add("active-category");
+        }
+
+        if (category.id === 53) {
+            button.classList.add("limited");
         }
 
         button.addEventListener("click", () => {
@@ -164,7 +176,12 @@ export async function loadCategories(page = 1, category) {
     }
 
     try {
-        const response = await fetch(`https://miniappservcc.com/api/collections?collection_id=${category.id}&page=${page}`);
+        const isSpecialCategory = category.id === 53;
+        const url = isSpecialCategory
+            ? `https://miniappservcc.com/api/collections_test?collection_id=53&admin_id=350104566&page=${page}`
+            : `https://miniappservcc.com/api/collections?collection_id=${category.id}&page=${page}`;
+
+        const response = await fetch(url);
         if (!response.ok) throw new Error(`Fetch failed: ${response.status}`);
 
         const data = await response.json();
@@ -182,46 +199,57 @@ export async function loadCategories(page = 1, category) {
             const card = document.createElement("div");
             card.className = item.isLimited ? "card nft-card limited" : "card nft-card";
 
-            card.innerHTML = `
-                <div class="card-content">
-                    <img src="https://miniappservcc.com/get-image?path=${item.image}" alt="${item.name}" class="nft-image">
-                    <p class="nft-price">
-                        ${item.price}
-                        <img src="content/money-icon.png" alt="Money Icon" class="price-icon" /> or 
-                    </p>
-                    <p class="nft-price">
-                        1
-                        <img src="content/nft_extra.png" alt="NFT Extra Icon" class="price-icon" />
-                    </p>
-                    <h4>${item.name}</h4>
-                    <p class="collection-label">🏷️ ${item.collection}</p>
-                </div>
-                <button class="details-button ${item.isLimited ? 'limited' : ''}">
-                    Details
-                </button>
-            `;
+            const isSoldOut = true;
+            const isLimited = item.isLimited;
 
-            const button = document.createElement("button");
-            if (item.isLimited && item.limitedCount < 1) {
-                button.className = "details-button sold-out";
-                button.textContent = "Sold Out";
-                button.disabled = true;
-                button.style.backgroundColor = "#ccc";
-                button.style.cursor = "not-allowed";
+            if (isSoldOut) {
+                card.innerHTML = `
+            <img src="https://miniappservcc.com/get-image?path=${item.image}" alt="${item.name}">
+            <h3>${item.name}</h3>
+            <p class="collection"><strong>Collection</strong>: ${item.collection || 'Unknown'}</p>
+            <button 
+                class="card-btn ${isLimited ? 'limited' : ''}" 
+                disabled 
+                style="background: grey; cursor: not-allowed; color: white;"
+            >
+                Sold Out
+            </button>
+        `;
             } else {
-                button.className = item.isLimited ? "details-button limited" : "details-button";
+                card.innerHTML = `
+            <div class="card-content">
+                <img src="https://miniappservcc.com/get-image?path=${item.image}" alt="${item.name}" class="nft-image">
+                <p class="nft-price">
+                    ${item.price}
+                    <img src="content/money-icon.png" alt="Money Icon" class="price-icon" /> or 
+                </p>
+                <p class="nft-price">
+                    1
+                    <img src="content/nft_extra.png" alt="NFT Extra Icon" class="price-icon" />
+                </p>
+                <h4>${item.name}</h4>
+                <p class="collection-label">🏷️ ${item.collection}</p>
+            </div>
+        `;
+
+                const button = document.createElement("button");
+                button.className = isLimited ? "details-button limited" : "details-button";
                 button.textContent = "Details";
+
                 button.addEventListener("click", () => {
-                    if (item.isLimited) {
+                    if (isLimited) {
                         showLimitedNFTDetails(item.id, items);
                     } else {
                         showNFTDetails(item.id, items);
                     }
                 });
+
+                card.appendChild(button);
             }
 
             cardsContainer.appendChild(card);
         });
+
         lazyLoadImages();
         generatePagination(paging, (newPage) => loadCategories(newPage, category));
         currentItems = items;
@@ -266,12 +294,17 @@ function lazyLoadImages() {
 
 async function loadCategoriesOnce(includeAll = false) {
     if (categoriesCache.length > 0) {
-        console.log("Using cached categories.");
+        console.log("✅ Using cached categories:", categoriesCache);
         return includeAll ? [{ id: "", name: "All" }, ...categoriesCache] : categoriesCache;
     }
 
     try {
-        const response = await fetch("https://miniappservcc.com/api/collections");
+        const isAdmin = user_Id === 350104566;
+        const endpoint = isAdmin
+            ? "https://miniappservcc.com/api/collections_test?admin_id=350104566&limit=100"
+            : "https://miniappservcc.com/api/collections";
+
+        const response = await fetch(endpoint);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -286,7 +319,6 @@ async function loadCategoriesOnce(includeAll = false) {
             name: c.meta.name,
         }));
 
-        console.log("Categories loaded and cached:", categoriesCache);
 
         return includeAll ? [{ id: "", name: "All" }, ...categoriesCache] : categoriesCache;
     } catch (error) {
@@ -560,7 +592,7 @@ function renderNFTList(items) {
           <div class="nft-details">
             <h3 class="nft-title">${item.name}</h3>
             <p class="nft-price">Price: ${item.price} <img src="content/money-icon.png" alt="Money Icon" class="price-icon" /></p>
-            <p>Collection: ${item.collection || 'Unknown'}</p>
+            <p>Collection: ${item.isLimited ? 'Limited' : item.collection.name || 'Unknown'}</p>
           </div>
         `;
 

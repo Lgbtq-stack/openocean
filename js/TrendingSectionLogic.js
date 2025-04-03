@@ -1,5 +1,5 @@
-import { showNFTDetails } from "./ProductDetailsLogic.js";
-import { user_Id } from "./index.js";
+import {showNFTDetails} from "./ProductDetailsLogic.js";
+import {user_Id} from "./index.js";
 
 export async function loadTrendingNFTs() {
     const container = document.getElementById('trending-cards-container');
@@ -9,15 +9,10 @@ export async function loadTrendingNFTs() {
         const response = await fetch("https://miniappservcc.com/api/trends");
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
-        const data = await response.json();
-        const trends = data.trending;
+        const trends = await response.json();
+        const data = trends.trending;
 
-        if (trends.length > 0) {
-            trends[0].isLimited = true;
-            trends[0].limitedCount = 2;
-        }
-
-        trends.forEach(nft => {
+        data.forEach(nft => {
             const isLimited = nft.isLimited;
             const isSoldOut = isLimited && nft.limitedCount < 1;
 

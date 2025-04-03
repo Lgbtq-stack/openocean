@@ -165,7 +165,7 @@ export async function showLimitedNFTDetails(id, dataSource) {
 
     document.getElementById('limited-nft-image').src = `https://miniappservcc.com/get-image?path=${nft.image}`;
     document.getElementById('limited-nft-title').innerHTML = nft.name;
-    document.getElementById('limited-nft-country').innerHTML = nft.limitCountry || 'Unknown';
+    document.getElementById('limited-nft-country').innerHTML = nft.limitedCountry || 'Unknown';
     document.getElementById('limited-nft-description').innerHTML = nft.description || 'No description available';
     document.getElementById('limited-nft-collection').textContent = nft.collection || 'Unknown';
 
@@ -199,7 +199,7 @@ export async function showLimitedNFTDetails(id, dataSource) {
     const incrementBtn = document.getElementById("limited-nft-qty-increment");
     const decrementBtn = document.getElementById("limited-nft-qty-decrement");
 
-    if (nft.count <= 2) {
+    if (nft.limitedCount <= 1) {
         quantityControls.style.display = 'none';
     }
 
@@ -224,11 +224,10 @@ export async function showLimitedNFTDetails(id, dataSource) {
         }
     });
 
-    // Purchase button
     document.getElementById('limited-purchase-button').onclick = () => {
         const popup = document.getElementById('are-you-sure-popup');
         const message = document.getElementById('are-you-sure-message');
-        message.innerHTML = `Are you sure you want to purchase \br <strong>${quantity} NFT(s)</strong> of <strong>${nft.name}</strong>?`;
+        message.innerHTML = `Are you sure you want to purchase <br/><strong>${quantity} NFT(s)</strong> of <strong>${nft.name}</strong>?`;
         popup.classList.remove('hidden');
 
         document.querySelector('.are-you-sure-popup-close').onclick = () => popup.classList.add('hidden');
@@ -241,19 +240,59 @@ export async function showLimitedNFTDetails(id, dataSource) {
                 const json = await res.json();
                 const freshNFT = json.results.find(item => item.id === nft.id);
 
-                if (freshNFT && freshNFT.count >= quantity) {
-                    await sendDataToTelegramLimited(user_Id, nft.id, quantity);
-                    alert(`✅ Purchased ${quantity} item(s) of ${nft.name}`);
-                } else {
-                    showErrorPopup("error", "Insufficient NFT quantity available.");
+                if (!freshNFT) {
+                    showErrorPopup("error", "NFT not found in search results.");
+                    return;
                 }
+
+                if (freshNFT.limitedCount < quantity) {
+                    showErrorPopup("error", "Unfortunately this NFT is already sold out.");
+                    return;
+                }
+
+                try {
+                    await sendDataToTelegramLimited(user_Id, nft.id, quantity);
+                } catch (err) {
+                    console.error("Purchase error:", err);
+                    if (err.message.includes("400")) {
+                        showErrorPopup("error", "⚠️ Purchase failed – NFT may be sold out.");
+                    } else {
+                        showErrorPopup("error", "❌ Unexpected error during purchase. Please try again later.");
+                    }
+                    return;
+                }
+
+                document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
+                const successSection = document.getElementById('purchase-success');
+                const purchasedList = document.getElementById('purchased-items');
+
+                if (successSection && purchasedList) {
+                    purchasedList.innerHTML = '';
+
+                    for (let i = 0; i < quantity; i++) {
+                        const card = document.createElement('div');
+                        card.classList.add('purchased-item-card', 'limited');
+                        card.innerHTML = `
+                            <img src="https://miniappservcc.com/get-image?path=${nft.image}" class="purchased-image-small" alt="${nft.name}" />
+                            <h3 class="purchased-title">${nft.name}</h3>
+                            <p class="purchased-author">by ${nft.collection || 'Unknown'}</p>
+                            <div class="limited-badge">🔥 LIMITED</div>
+                        `;
+                        purchasedList.appendChild(card);
+                    }
+
+                    successSection.style.display = 'block';
+                    document.getElementById('limited-nftDetailsPanel').classList.remove('show');
+                    document.body.style.overflow = '';
+                }
+
             } catch (err) {
-                showErrorPopup("error", "Error verifying NFT availability.");
+                console.error("Error verifying NFT availability:", err);
+                showErrorPopup("error", "❌ Failed to check NFT availability. Please try again later.");
             }
         };
     };
 }
-
 
 export function closeNFTDetails() {
     const detailsPanel = document.getElementById('nftDetailsPanel');
